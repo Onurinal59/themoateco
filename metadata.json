@@ -1,0 +1,6 @@
+{
+  "name": "Ekonomik Hendek Akademisi",
+  "description": "Michael Mauboussin'in Morgan Stanley 'Measuring the Moat' metodolojisini öğreten, KAP ve 10-K bilanço röntgeniyle gerçek şirketlerin ekonomik hendeğini ve ROIC'ini analiz eden interaktif stüdyo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
