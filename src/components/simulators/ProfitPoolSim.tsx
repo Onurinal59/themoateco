@@ -96,62 +96,64 @@ export const ProfitPoolSim: React.FC = () => {
         </div>
 
         {/* The Profit Pool Grid Chart */}
-        <div className="relative h-64 w-full bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center overflow-hidden shadow-inner">
-          {/* Zero Spread Horizontal Line */}
-          <div className="absolute left-0 right-0 top-1/2 border-t-2 border-dashed border-slate-300 dark:border-slate-600 z-10">
-            <span className="absolute right-2 -top-5 text-[10px] font-mono text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-1 rounded border border-slate-200 dark:border-slate-700">
-              ROIC = WACC (Başabaş)
-            </span>
-          </div>
+        <div className="overflow-x-auto pb-1">
+          <div className="relative h-64 min-w-[520px] w-full bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center overflow-hidden shadow-inner">
+            {/* Zero Spread Horizontal Line */}
+            <div className="absolute left-0 right-0 top-1/2 border-t-2 border-dashed border-slate-300 dark:border-slate-600 z-10 pointer-events-none">
+              <span className="absolute right-2 -top-5 text-[10px] font-mono text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-1 rounded border border-slate-200 dark:border-slate-700">
+                ROIC = WACC (Başabaş)
+              </span>
+            </div>
 
-          {/* Activity Columns */}
-          <div className="w-full h-full flex items-center">
-            {AVIATION_ACTIVITIES.map((act, idx) => {
-              const isPositive = act.spread >= 0;
-              const isSelected = selectedActivity.name === act.name;
-              // Height proportional to spread (max scale: 20%)
-              const heightPercent = Math.min(Math.abs(act.spread) * 4, 45);
+            {/* Activity Columns */}
+            <div className="w-full h-full flex items-center">
+              {AVIATION_ACTIVITIES.map((act, idx) => {
+                const isPositive = act.spread >= 0;
+                const isSelected = selectedActivity.name === act.name;
+                // Height proportional to spread (max scale: 20%)
+                const heightPercent = Math.min(Math.abs(act.spread) * 4, 45);
 
-              return (
-                <div
-                  key={idx}
-                  onClick={() => setSelectedActivity(act)}
-                  style={{ width: `${act.capitalShare}%` }}
-                  className="h-full flex flex-col justify-center items-center relative group cursor-pointer border-r border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-                >
-                  {/* Block rendering above or below zero line */}
+                return (
                   <div
-                    style={{
-                      height: `${heightPercent}%`,
-                      transform: isPositive
-                        ? "translateY(-50%)"
-                        : "translateY(50%)",
-                    }}
-                    className={`w-[90%] rounded-lg transition-all duration-300 border flex flex-col items-center justify-center p-1 ${
-                      isPositive
-                        ? "bg-emerald-100 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-700 group-hover:bg-emerald-200/80 dark:group-hover:bg-emerald-900/60"
-                        : "bg-rose-100 dark:bg-rose-950/60 border-rose-300 dark:border-rose-700 group-hover:bg-rose-200/80 dark:group-hover:bg-rose-900/60"
-                    } ${isSelected ? "ring-2 ring-indigo-600 dark:ring-indigo-400 shadow-sm" : ""}`}
+                    key={idx}
+                    onClick={() => setSelectedActivity(act)}
+                    style={{ width: `${act.capitalShare}%` }}
+                    className="h-full flex flex-col justify-center items-center relative group cursor-pointer border-r border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shrink-0"
                   >
-                    <div className="text-[10px] font-bold font-mono text-slate-800 dark:text-slate-200 text-center leading-tight truncate w-full px-1">
-                      {act.name}
-                    </div>
+                    {/* Block rendering above or below zero line */}
                     <div
-                      className={`text-[9px] font-mono font-bold ${
-                        isPositive ? "text-emerald-800 dark:text-emerald-300" : "text-rose-800 dark:text-rose-300"
-                      }`}
+                      style={{
+                        height: `${heightPercent}%`,
+                        transform: isPositive
+                          ? "translateY(-50%)"
+                          : "translateY(50%)",
+                      }}
+                      className={`w-[90%] rounded-lg transition-all duration-300 border flex flex-col items-center justify-center p-1 ${
+                        isPositive
+                          ? "bg-emerald-100 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-700 group-hover:bg-emerald-200/80 dark:group-hover:bg-emerald-900/60"
+                          : "bg-rose-100 dark:bg-rose-950/60 border-rose-300 dark:border-rose-700 group-hover:bg-rose-200/80 dark:group-hover:bg-rose-900/60"
+                      } ${isSelected ? "ring-2 ring-indigo-600 dark:ring-indigo-400 shadow-sm" : ""}`}
                     >
-                      {act.spread > 0 ? `+${act.spread}%` : `${act.spread}%`}
+                      <div className="text-[10px] font-bold font-mono text-slate-800 dark:text-slate-200 text-center leading-tight truncate w-full px-1">
+                        {act.name}
+                      </div>
+                      <div
+                        className={`text-[9px] font-mono font-bold ${
+                          isPositive ? "text-emerald-800 dark:text-emerald-300" : "text-rose-800 dark:text-rose-300"
+                        }`}
+                      >
+                        {act.spread > 0 ? `+${act.spread}%` : `${act.spread}%`}
+                      </div>
+                    </div>
+
+                    {/* Share indicator at bottom */}
+                    <div className="absolute bottom-1 text-[9px] font-mono text-slate-400 dark:text-slate-500">
+                      %{act.capitalShare}
                     </div>
                   </div>
-
-                  {/* Share indicator at bottom */}
-                  <div className="absolute bottom-1 text-[9px] font-mono text-slate-400 dark:text-slate-500">
-                    %{act.capitalShare}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
 

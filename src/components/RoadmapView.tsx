@@ -2,6 +2,7 @@ import React from "react";
 import { MODULES_DATA } from "../data/modulesData";
 import { LearningModule, UserLearningState } from "../types";
 import { NavTab } from "./Navbar";
+import { SimTab } from "./SimulationsView";
 import {
   CheckCircle2,
   Clock,
@@ -18,6 +19,8 @@ import {
   Target,
   Swords,
   Compass,
+  Milestone,
+  Lightbulb,
 } from "lucide-react";
 
 interface RoadmapViewProps {
@@ -26,7 +29,7 @@ interface RoadmapViewProps {
   onOpenGlossary: () => void;
   onOpenAICoach: () => void;
   onOpenGuide?: () => void;
-  onNavigateTab?: (tab: NavTab) => void;
+  onNavigateTab?: (tab: NavTab, sim?: SimTab) => void;
 }
 
 export const RoadmapView: React.FC<RoadmapViewProps> = ({
@@ -41,14 +44,14 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
   const progressPercent = Math.round((completedCount / MODULES_DATA.length) * 100);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300 pb-12" id="roadmap-view">
+    <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300 pb-12" id="roadmap-view">
       {/* Hero Welcome & Learning Promise */}
-      <div className="relative rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 overflow-hidden shadow-xs">
+      <div className="relative rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-8 overflow-hidden shadow-xs">
         <div className="relative z-10 max-w-3xl">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
               <Sparkles className="w-3.5 h-3.5" />
-              Sıfırdan Başlayanlar İçin Bilimsel Öğrenme Rehberi
+              Sıfırdan İleri Düzeye 8 Adımlı Entegre Müfredat
             </div>
 
             {onOpenGuide && (
@@ -57,23 +60,49 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 cursor-pointer transition-colors"
               >
                 <Compass className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                <span>Nereden Başlamalıyım? Yol Haritası Kılavuzu</span>
+                <span>Nasıl İlerlemeliyim? Yol Haritası Kılavuzu</span>
               </button>
             )}
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight">
+          <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight">
             Michael Mauboussin: Ekonomik Hendekleri Ölçmek (Measuring the Moat)
           </h1>
 
-          <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-            Finans veya strateji geçmişiniz olmasa bile; mahalle fırını, limonata tezgahı ve iPhone gibi somut analojilerle şirketlerin nasıl milyarlarca liralık kalıcı rekabet avantajı (Moat) kurduğunu adım adım öğrenin.
+          <p className="mt-3 text-xs sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+            Finans bilginiz sıfır olsa bile adım adım ilerleyin: Mahalle kafesinden limona standına, iPhone'dan Tesla'ya günlük analojilerle şirketlerin kalıcı kâr kalelerini (Moat) ve bilanço sırlarını çözün.
           </p>
 
+          {/* Connected Flow Diagram / Stepper Teaser */}
+          <div className="mt-5 p-3.5 sm:p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 text-indigo-950 dark:text-indigo-200">
+            <div className="flex items-center gap-2 text-xs font-bold text-indigo-900 dark:text-indigo-300 mb-2">
+              <Milestone className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <span>Sıfırdan Zirveye 4 Aşamalı Öğrenme Akışı:</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-[11px] sm:text-xs">
+              <div className="p-2 rounded-xl bg-white dark:bg-slate-900/80 border border-indigo-100 dark:border-indigo-900/40">
+                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">1. Temel Mantık (1-2)</strong>
+                ROIC vs WACC & Şirketin Yaşam Döngüsü
+              </div>
+              <div className="p-2 rounded-xl bg-white dark:bg-slate-900/80 border border-indigo-100 dark:border-indigo-900/40">
+                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">2. Mikro & Sektör (3-4)</strong>
+                Değer Çubuğu (WTP) & Sektör Kâr Havuzları
+              </div>
+              <div className="p-2 rounded-xl bg-white dark:bg-slate-900/80 border border-indigo-100 dark:border-indigo-900/40">
+                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">3. Giriş & Tehdit (5-6)</strong>
+                7 Giriş Engeli & Yıkıcı İnovasyon Riski
+              </div>
+              <div className="p-2 rounded-xl bg-white dark:bg-slate-900/80 border border-indigo-100 dark:border-indigo-900/40">
+                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">4. Bilanço & Denetim (7-8)</strong>
+                DuPont ROIC Röntgeni & 60 Maddelik Test
+              </div>
+            </div>
+          </div>
+
           {/* Quick Learning Features & Practice Shortcuts */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-5">
             <button
-              onClick={() => onNavigateTab ? onNavigateTab("footnote-detective") : undefined}
+              onClick={() => onNavigateTab ? onNavigateTab("simulators", "footnote-detective") : undefined}
               className="flex items-center gap-3 p-3 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800/60 text-left transition-all cursor-pointer group"
             >
               <div className="p-2 rounded-xl bg-indigo-600 text-white shadow-xs group-hover:scale-105 transition-transform">
@@ -89,7 +118,7 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
             </button>
 
             <button
-              onClick={() => onNavigateTab ? onNavigateTab("reverse-dcf") : undefined}
+              onClick={() => onNavigateTab ? onNavigateTab("simulators", "reverse-dcf") : undefined}
               className="flex items-center gap-3 p-3 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200 dark:border-amber-800/60 text-left transition-all cursor-pointer group"
             >
               <div className="p-2 rounded-xl bg-amber-500 text-white shadow-xs group-hover:scale-105 transition-transform">
@@ -143,8 +172,8 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
       <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
         <div className="w-full sm:w-auto">
           <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">Genel İlerleme Durumunuz</div>
-          <div className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-0.5">
-            {completedCount} / {MODULES_DATA.length} Modül Tamamlandı (%{progressPercent})
+          <div className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 mt-0.5">
+            {completedCount} / {MODULES_DATA.length} Adım Tamamlandı (%{progressPercent})
           </div>
         </div>
 
@@ -161,7 +190,7 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
       {/* Modules List Grid */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Müfredat Modülleri</h2>
+          <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">8 Adımlı Müfredat</h2>
           <span className="text-xs text-slate-500 dark:text-slate-400">Toplam ~115 Dakika</span>
         </div>
 
@@ -174,27 +203,27 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
               <div
                 key={module.id}
                 onClick={() => onSelectModule(module)}
-                className={`group p-6 rounded-2xl border transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-6 ${
+                className={`group p-5 sm:p-6 rounded-2xl border transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 ${
                   isCompleted
                     ? "bg-white dark:bg-slate-900 border-emerald-300 dark:border-emerald-700/60 hover:border-emerald-500 dark:hover:border-emerald-500 shadow-xs"
                     : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-xs"
                 }`}
               >
                 {/* Left Info */}
-                <div className="flex items-start gap-4 flex-1">
+                <div className="flex items-start gap-3.5 sm:gap-4 flex-1">
                   {/* Step Number Badge */}
                   <div
-                    className={`w-12 h-12 rounded-2xl flex items-center justify-center font-mono font-bold text-base shrink-0 border transition-transform group-hover:scale-105 ${
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center font-mono font-bold text-sm sm:text-base shrink-0 border transition-transform group-hover:scale-105 ${
                       isCompleted
                         ? "bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300"
                         : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
                     }`}
                   >
-                    {isCompleted ? <CheckCircle2 className="w-6 h-6" /> : `0${module.id}`}
+                    {isCompleted ? <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" /> : `0${module.id}`}
                   </div>
 
-                  <div className="space-y-1.5 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
+                  <div className="space-y-1 sm:space-y-1.5 flex-1">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                       <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 uppercase tracking-wider border border-slate-200 dark:border-slate-700">
                         {module.subtitle}
                       </span>
@@ -208,7 +237,7 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
                       )}
                     </div>
 
-                    <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                       {module.title}
                     </h3>
 
@@ -217,23 +246,23 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
                     </p>
 
                     {/* Everyday Analogy Teaser */}
-                    <div className="inline-flex items-center gap-1.5 text-[11px] text-amber-800 dark:text-amber-300 font-medium pt-1">
+                    <div className="inline-flex items-center gap-1.5 text-[11px] text-amber-800 dark:text-amber-300 font-medium pt-0.5">
                       <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-                      <span>{module.zeroKnowledgeSummary}</span>
+                      <span className="line-clamp-1">{module.zeroKnowledgeSummary}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Right CTA Button */}
-                <div className="shrink-0 flex items-center gap-3">
+                <div className="shrink-0 flex items-center gap-3 pt-2 md:pt-0">
                   <button
-                    className={`w-full md:w-auto px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    className={`w-full md:w-auto px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                       isCompleted
                         ? "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700"
                         : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs"
                     }`}
                   >
-                    <span>{isCompleted ? "Tekrar İncele" : "Derse Başla"}</span>
+                    <span>{isCompleted ? "Tekrar İncele" : "Adıma Başla"}</span>
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </button>
                 </div>

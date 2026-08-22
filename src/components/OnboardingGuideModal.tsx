@@ -18,11 +18,12 @@ import {
   Award
 } from "lucide-react";
 import { NavTab } from "./Navbar";
+import { SimTab } from "./SimulationsView";
 
 interface OnboardingGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onNavigateTab: (tab: NavTab) => void;
+  onNavigateTab: (tab: NavTab, sim?: SimTab) => void;
   onStartFirstModule?: () => void;
 }
 
@@ -32,6 +33,7 @@ interface TourStep {
   title: string;
   badge: string;
   targetTab: NavTab;
+  targetSim?: SimTab;
   tabName: string;
   icon: React.ElementType;
   iconColor: string;
@@ -68,7 +70,8 @@ const TOUR_STEPS: TourStep[] = [
     stepNumber: 2,
     title: "2. Durak: Bilanço & Dipnot Dedektifi",
     badge: "UYGULAMALI PRATİK",
-    targetTab: "footnote-detective",
+    targetTab: "simulators",
+    targetSim: "footnote-detective",
     tabName: "Dipnot Dedektifi (10-K)",
     icon: Search,
     iconColor: "text-blue-600 dark:text-blue-400",
@@ -88,7 +91,8 @@ const TOUR_STEPS: TourStep[] = [
     stepNumber: 3,
     title: "3. Durak: Tersine DCF & Zımni CAP Simülatörü",
     badge: "İLERİ DÜZEY DEĞERLEME",
-    targetTab: "reverse-dcf",
+    targetTab: "simulators",
+    targetSim: "reverse-dcf",
     tabName: "Tersine DCF & CAP",
     icon: Target,
     iconColor: "text-amber-600 dark:text-amber-400",
@@ -176,7 +180,7 @@ export const OnboardingGuideModal: React.FC<OnboardingGuideModalProps> = ({
   const IconComponent = currentStep.icon;
 
   const handleStepAction = () => {
-    onNavigateTab(currentStep.targetTab);
+    onNavigateTab(currentStep.targetTab, currentStep.targetSim);
     if (currentStep.id === "step-1-roadmap" && onStartFirstModule) {
       onStartFirstModule();
     }

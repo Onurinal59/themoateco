@@ -10,11 +10,9 @@ import { Navbar, NavTab } from "./components/Navbar";
 import { RoadmapView } from "./components/RoadmapView";
 import { ModuleReader } from "./components/ModuleReader";
 import { SpacedRepetitionView } from "./components/SpacedRepetitionView";
-import { SimulationsView } from "./components/SimulationsView";
+import { SimulationsView, SimTab } from "./components/SimulationsView";
 import { CompanyAuditLab } from "./components/CompanyAuditLab";
 import { MoatDuelView } from "./components/MoatDuelView";
-import { FootnoteDetectiveLab } from "./components/simulators/FootnoteDetectiveLab";
-import { ReverseDCFSim } from "./components/simulators/ReverseDCFSim";
 import { INITIAL_PRESET_DOSSIERS } from "./data/companyAuditData";
 import { GlossaryModal } from "./components/GlossaryModal";
 import { AICoachDrawer } from "./components/AICoachDrawer";
@@ -57,6 +55,7 @@ export default function App() {
   };
 
   const [activeTab, setActiveTab] = useState<NavTab>("roadmap");
+  const [selectedSim, setSelectedSim] = useState<SimTab>("reverse-dcf");
   const [activeModule, setActiveModule] = useState<LearningModule | null>(null);
   const [isAICoachOpen, setIsAICoachOpen] = useState(false);
   const [aiCoachPrompt, setAiCoachPrompt] = useState<string | undefined>(undefined);
@@ -151,6 +150,11 @@ export default function App() {
             onCompleteModule={handleCompleteModule}
             onOpenAICoach={() => setIsAICoachOpen(true)}
             onOpenGlossary={handleOpenGlossary}
+            onOpenLabSim={(simId) => {
+              setSelectedSim(simId);
+              setActiveTab("simulators");
+              setActiveModule(null);
+            }}
           />
         ) : (
           <>
@@ -164,17 +168,19 @@ export default function App() {
                   setAiCoachPrompt(undefined);
                   setIsAICoachOpen(true);
                 }}
-                onNavigateTab={(tab) => setActiveTab(tab)}
+                onNavigateTab={(tab, sim) => {
+                  if (sim) setSelectedSim(sim);
+                  setActiveTab(tab);
+                  setActiveModule(null);
+                }}
               />
             )}
 
-            {activeTab === "footnote-detective" && (
-              <FootnoteDetectiveLab />
-            )}
-
-            {activeTab === "reverse-dcf" && (
-              <ReverseDCFSim
-                onAskAICoach={(prompt) => {
+            {activeTab === "simulators" && (
+              <SimulationsView
+                activeSim={selectedSim}
+                onSelectSim={(sim) => setSelectedSim(sim)}
+                onOpenAICoachWithPrompt={(prompt) => {
                   setAiCoachPrompt(prompt);
                   setIsAICoachOpen(true);
                 }}
@@ -206,8 +212,6 @@ export default function App() {
                 }}
               />
             )}
-
-            {activeTab === "simulators" && <SimulationsView />}
           </>
         )}
       </main>
@@ -315,7 +319,8 @@ export default function App() {
             // ignore
           }
         }}
-        onNavigateTab={(tab) => {
+        onNavigateTab={(tab, sim) => {
+          if (sim) setSelectedSim(sim);
           setActiveTab(tab);
           setActiveModule(null);
           try {

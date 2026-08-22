@@ -538,8 +538,8 @@ export const FootnoteDetectiveLab: React.FC = () => {
               </span>
             </div>
 
-            <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden text-xs">
-              <table className="w-full text-left">
+            <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-x-auto text-xs">
+              <table className="w-full min-w-[480px] text-left">
                 <thead className="bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
                   <tr>
                     <th className="p-3">Bilanço Kalemi</th>
@@ -758,8 +758,8 @@ export const FootnoteDetectiveLab: React.FC = () => {
               Gelir Tablosu ve NOPAT Türetimi
             </h3>
 
-            <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden text-xs">
-              <table className="w-full text-left">
+            <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-x-auto text-xs">
+              <table className="w-full min-w-[500px] text-left">
                 <thead className="bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
                   <tr>
                     <th className="p-3">Gelir Tablosu Kalemi</th>
@@ -880,8 +880,8 @@ export const FootnoteDetectiveLab: React.FC = () => {
               Ağırlıklı Ortalama Sermaye Maliyeti (WACC) Hesabı
             </h3>
 
-            <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden text-xs">
-              <table className="w-full text-left">
+            <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-x-auto text-xs">
+              <table className="w-full min-w-[500px] text-left">
                 <thead className="bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
                   <tr>
                     <th className="p-3">Sermaye Unsuru</th>
