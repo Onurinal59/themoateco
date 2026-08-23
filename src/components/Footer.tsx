@@ -108,7 +108,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </div>
 
                 <a
-                  href="https://www.linkedin.com/in/onurinal"
+                  href="https://www.linkedin.com/in/onurınal"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Onur İnal LinkedIn Profili"
@@ -225,7 +225,7 @@ export const Footer: React.FC<FooterProps> = ({
             <span>
               Yapımcı:{" "}
               <a
-                href="https://www.linkedin.com/in/onurinal"
+                href="https://www.linkedin.com/in/onurınal"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline inline-flex items-center gap-1"
