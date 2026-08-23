@@ -11,7 +11,8 @@ import {
   Award,
   DollarSign,
   Clock,
-  Percent
+  Percent,
+  CheckCircle2
 } from "lucide-react";
 
 interface ReverseDCFSimProps {
@@ -90,20 +91,20 @@ export const ReverseDCFSim: React.FC<ReverseDCFSimProps> = ({ onAskAICoach }) =>
   // Market sentiment interpretation
   let sentimentBadge = {
     title: "Dengeli & Makul Beklenti (10-18 Yıl CAP)",
-    color: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+    color: "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/50",
     description: "Piyasa şirketin 10-18 yıl boyunca sermaye maliyetinin üzerinde getiri üretmeye devam edeceğini fiyatlıyor. Güçlü ve geniş hendekli şirketler için sürdürülebilir bir seviyedir.",
   };
 
   if (impliedCapYears > 22) {
     sentimentBadge = {
       title: "Aşırı İyimser / Kusursuzluk Fiyatlaması (22+ Yıl CAP)",
-      color: "bg-rose-500/20 text-rose-300 border-rose-500/30",
+      color: "bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/50",
       description: "Piyasa şirketin 20 yıldan uzun süre sıfır rekabet baskısıyla yüksek kâr üreteceğini varsayıyor! En ufak bir büyüme yavaşlamasında hissede sert düşüş riski vardır.",
     };
   } else if (impliedCapYears < 8) {
     sentimentBadge = {
       title: "Kötümser / Fırsat Fiyatlaması (<8 Yıl CAP)",
-      color: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+      color: "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/50",
       description: "Piyasa şirketin hendeğinin çok yakında tükeneceğini veya kârlılığın hızla ortalamaya döneceğini varsayıyor. Şirket hendeğini korursa hissede ciddi prim potansiyeli doğar.",
     };
   }
@@ -113,37 +114,49 @@ export const ReverseDCFSim: React.FC<ReverseDCFSimProps> = ({ onAskAICoach }) =>
       {/* Header & Concept */}
       <div className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
+              Modül 8 Laboratuvarı
+            </span>
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 flex items-center gap-1.5">
+              <Target className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
               Expectations Investing (Beklenti Yatırımcılığı)
             </span>
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+            <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
               Michael J. Mauboussin Metodolojisi
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs">
-            <span className="text-slate-400 font-semibold">Örnek Vakalar:</span>
-            <button
-              onClick={() => handleApplyPreset("wide-tech")}
-              className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold cursor-pointer text-[11px] transition-colors"
-            >
-              🍎 Teknoloji Lideri
-            </button>
+          <div className="flex items-center gap-2">
             <button
               onClick={() => handleApplyPreset("retail")}
-              className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold cursor-pointer text-[11px] transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             >
-              🛒 BİM / Costco
-            </button>
-            <button
-              onClick={() => handleApplyPreset("cyclical")}
-              className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold cursor-pointer text-[11px] transition-colors"
-            >
-              🏭 Döngüsel Sanayi
+              <RotateCcw className="w-3.5 h-3.5" /> Sıfırla
             </button>
           </div>
+        </div>
+
+        <div className="flex items-center gap-1.5 text-xs overflow-x-auto pb-1">
+          <span className="text-slate-400 font-semibold shrink-0">Örnek Vakalar:</span>
+          <button
+            onClick={() => handleApplyPreset("wide-tech")}
+            className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold cursor-pointer text-[11px] transition-colors whitespace-nowrap"
+          >
+            🍎 Teknoloji Lideri
+          </button>
+          <button
+            onClick={() => handleApplyPreset("retail")}
+            className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold cursor-pointer text-[11px] transition-colors whitespace-nowrap"
+          >
+            🛒 BİM / Costco
+          </button>
+          <button
+            onClick={() => handleApplyPreset("cyclical")}
+            className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold cursor-pointer text-[11px] transition-colors whitespace-nowrap"
+          >
+            🏭 Döngüsel Sanayi
+          </button>
         </div>
 
         <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
@@ -369,6 +382,15 @@ export const ReverseDCFSim: React.FC<ReverseDCFSimProps> = ({ onAskAICoach }) =>
               </div>
             );
           })}
+        </div>
+      </div>
+
+      {/* Standardized Pedagogical Lesson Callout */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 flex items-start gap-3">
+        <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+        <div className="space-y-1 text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
+          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">Michael Mauboussin Beklenti Yatırımcılığı İlkesi:</strong>
+          Yatırım başarısı, şirketin harika olup olmamasından değil; <strong>şirketin gelecekteki gerçek performansının piyasa fiyatının içerdiği beklentiyi (CAP) aşıp aşamayacağından</strong> kaynaklanır.
         </div>
       </div>
     </div>

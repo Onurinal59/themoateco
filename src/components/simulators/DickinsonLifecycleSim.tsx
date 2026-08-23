@@ -410,11 +410,15 @@ export const DickinsonLifecycleSim: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Key Insight Box */}
-          <div className="p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 text-xs text-indigo-900 dark:text-indigo-200">
-            <strong>🎯 Yatırımcı Çıkarımı:</strong> "Hisselerin %74'ü Büyüme (%38) ve Olgunluk (%36) evresindedir. Uzun vadeli bileşik getirili (Compounder) şirketler genellikle <strong>[+ - -] Olgunluk</strong> evresinde olup yüksek serbest nakit akışı üreten kalelerdir."
-          </div>
+      {/* Standardized Pedagogical Lesson Callout */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 flex items-start gap-3">
+        <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+        <div className="space-y-1 text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
+          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">Victoria Dickinson Yaşam Döngüsü İlkesi:</strong>
+          Borsadaki şirketlerin %74'ü Büyüme (%38) ve Olgunluk (%36) evresindedir. Uzun vadeli bileşik getirili (Compounder) şirketler genellikle <strong>[+ - -] Olgunluk</strong> evresinde olup operasyonundan yarattığı nakitle hem yatırımlarını finanse eden hem de temettü/geri alımla hissedara nakit aktaran şirketlerdir.
         </div>
       </div>
     </div>

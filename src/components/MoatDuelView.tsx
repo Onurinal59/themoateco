@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   Swords,
   TrendingUp,
@@ -115,7 +116,14 @@ ${
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300 pb-16" id="moat-duel-view">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="space-y-8 pb-16"
+      id="moat-duel-view"
+    >
       {/* Header Banner */}
       <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-indigo-500/30 shadow-md relative overflow-hidden">
         <div className="absolute right-0 top-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -537,6 +545,6 @@ ${
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

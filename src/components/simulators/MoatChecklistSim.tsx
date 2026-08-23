@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CHECKLIST_ITEMS } from "../../data/checklistData";
-import { CheckSquare, ShieldCheck, ShieldAlert, ShieldX, Sparkles, RotateCcw } from "lucide-react";
+import { CheckSquare, ShieldCheck, ShieldAlert, ShieldX, Sparkles, RotateCcw, CheckCircle2 } from "lucide-react";
 
 interface CompanyProfile {
   name: string;
@@ -83,30 +83,33 @@ export const MoatChecklistSim: React.FC = () => {
   const VerdictIconComponent = verdictIcon;
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-slate-800 dark:text-slate-100 shadow-xs" id="checklist-sim">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs animate-in fade-in duration-200" id="checklist-sim">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
+              Modül 6 Laboratuvarı
+            </span>
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
               Morgan Stanley Kontrol Listesi
             </span>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">60 Maddelik Ekonomik Hendek Değerlendirme Aracı</h3>
           </div>
-          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
+          <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">60 Maddelik Ekonomik Hendek Değerlendirme Aracı</h3>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
             Michael Mauboussin'in makalesinde sunduğu kriterlerle bir şirketin rekabet kalesini puanlayın.
           </p>
         </div>
 
         <button
           onClick={() => setCheckedState({})}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+          className="self-start md:self-auto flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
         >
-          <RotateCcw className="w-3.5 h-3.5" /> Temizle
+          <RotateCcw className="w-3.5 h-3.5" /> Sıfırla
         </button>
       </div>
 
       {/* Preset Profiles */}
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">Örnek Şirket Yükle:</span>
         {PRESET_COMPANIES.map((comp, idx) => (
           <button
@@ -120,7 +123,7 @@ export const MoatChecklistSim: React.FC = () => {
       </div>
 
       {/* Score Header Card */}
-      <div className="mt-6 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-4">
           <div className={`p-3 rounded-2xl ${verdictBadge} border`}>
             <VerdictIconComponent className="w-8 h-8" />
@@ -152,7 +155,7 @@ export const MoatChecklistSim: React.FC = () => {
       </div>
 
       {/* Category Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2 mt-6 border-b border-slate-200 dark:border-slate-800 scrollbar-thin">
+      <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-200 dark:border-slate-800 scrollbar-thin">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -169,7 +172,7 @@ export const MoatChecklistSim: React.FC = () => {
       </div>
 
       {/* Checklist Grid */}
-      <div className="mt-4 space-y-3 max-h-[480px] overflow-y-auto pr-1">
+      <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
         {filteredItems.map((item) => {
           const isChecked = !!checkedState[item.id];
           return (
@@ -179,7 +182,7 @@ export const MoatChecklistSim: React.FC = () => {
               className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-3.5 ${
                 isChecked
                   ? "bg-indigo-50/50 dark:bg-indigo-950/30 border-indigo-300 dark:border-indigo-700/70 text-slate-900 dark:text-slate-100 shadow-xs"
-                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700"
+                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:border-slate-700"
               }`}
             >
               <input
@@ -208,6 +211,15 @@ export const MoatChecklistSim: React.FC = () => {
             </div>
           );
         })}
+      </div>
+
+      {/* Standardized Pedagogical Lesson Callout */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 flex items-start gap-3">
+        <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+        <div className="space-y-1 text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
+          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">Michael Mauboussin Hendek Kontrol Listesi İlkesi:</strong>
+          Ekonomik hendek tek bir faktörle açıklanamaz; arz tarafı avantajları (maliyet liderliği), talep tarafı kilitlenmeleri (ağ etkisi, yüksek geçiş maliyeti) ve ölçek ekonomilerinin sinerjisiyle sürdürülebilir hale gelir.
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { GLOSSARY_TERMS } from "../data/glossaryData";
 import { Search, X, BookOpen, Sparkles, Tag, HelpCircle } from "lucide-react";
 import { GlossaryTerm } from "../types";
@@ -22,8 +23,6 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
       : GLOSSARY_TERMS[0]
   );
 
-  if (!isOpen) return null;
-
   const categories = [
     "Tümü",
     "Temel Finans",
@@ -44,11 +43,27 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
   });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div
-        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden text-slate-800 dark:text-slate-100"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
+          />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative z-10 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden text-slate-800 dark:text-slate-100"
+            onClick={(e) => e.stopPropagation()}
+          >
         {/* Modal Header */}
         <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 bg-slate-50 dark:bg-slate-900/90">
           <div className="flex items-center gap-3">
@@ -188,7 +203,9 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
             Kapat
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
+  )}
+</AnimatePresence>
   );
 };

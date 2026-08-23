@@ -16,17 +16,40 @@ export interface QuizQuestion {
   practicalScenario?: string;
 }
 
+export interface ModuleBridge {
+  prevTitle?: string;
+  takeawayFromPrev?: string;
+  transitionQuestion: string;
+  nextTitle?: string;
+  whyNext?: string;
+  previewQuestion?: string;
+}
+
 export interface ModuleSection {
   id: string;
   title: string;
   summary: string;
-  content: string[]; // Pedagogical paragraphs with rich examples
+  content: string[] | string; // Pedagogical paragraphs with rich examples
   analogyBox?: {
     title: string;
     description: string;
   };
+  everydayAnalogy?: string;
+  formulaBox?: {
+    title: string;
+    equation: string;
+    variables?: { symbol: string; label: string; desc?: string }[];
+    exampleCalculation?: string;
+  };
+  stepByStepMath?: string;
+  companyExample?: {
+    company: string;
+    context: string;
+  };
   keyTakeaway: string;
-  interactiveWidgetId?: "value-stick" | "dupont" | "profit-pool" | "game-theory" | "blotto" | "ccc" | "checklist" | "life-cycle";
+  interactiveWidgetId?: string;
+  formulaDeepDiveId?: "wacc" | "roic" | "value-stick" | "dickinson" | "profit-pool" | "footnote" | "dupont-ccc" | "reverse-dcf";
+  interactiveVisualId?: "dickinson-lifecycle" | "value-stick" | "porter-forces" | "dupont-tree" | "ccc-timeline" | "profit-pool" | "reverse-dcf" | "entry-barriers";
 }
 
 export interface LearningModule {
@@ -38,6 +61,7 @@ export interface LearningModule {
   iconName: string;
   description: string;
   zeroKnowledgeSummary: string;
+  moduleBridge?: ModuleBridge;
   sections: ModuleSection[];
   quiz: QuizQuestion[];
 }
@@ -56,6 +80,39 @@ export interface Flashcard {
   easeFactor: number;
   nextReviewDate: string; // ISO string
   lastReviewedDate?: string;
+}
+
+export interface FormulaStep {
+  stepNumber: number;
+  title: string;
+  formula: string;
+  explanation: string;
+  exampleValues: string;
+}
+
+export interface FormulaGuide {
+  id: string;
+  title: string;
+  badge: string;
+  subtitle: string;
+  coreEquation: string;
+  plainLanguageSummary: string;
+  whyThisFormulaExists: string;
+  variables: {
+    symbol: string;
+    name: string;
+    description: string;
+    howToFindIt: string;
+  }[];
+  steps: FormulaStep[];
+  realWorldExample: {
+    company: string;
+    scenario: string;
+    calculationSteps: string[];
+    resultInterpretation: string;
+  };
+  commonPitfalls: string[];
+  calculatorType: "wacc" | "roic" | "value-stick" | "dickinson" | "profit-pool" | "footnote" | "dupont-ccc" | "reverse-dcf";
 }
 
 export interface UserLearningState {

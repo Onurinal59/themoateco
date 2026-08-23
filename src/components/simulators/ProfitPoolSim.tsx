@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plane, AlertCircle, Info, DollarSign } from "lucide-react";
+import { Plane, AlertCircle, Info, DollarSign, RotateCcw, CheckCircle2 } from "lucide-react";
 
 interface SubIndustry {
   name: string;
@@ -73,26 +73,39 @@ export const ProfitPoolSim: React.FC = () => {
   const [selectedActivity, setSelectedActivity] = useState<SubIndustry>(AVIATION_ACTIVITIES[0]);
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-slate-800 dark:text-slate-100 shadow-xs" id="profit-pool-sim">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs animate-in fade-in duration-200" id="profit-pool-sim">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-              Sektör Haritası (Exhibit 10)
+              Modül 4 Laboratuvarı
             </span>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">Havacılık Sektörü Kâr Havuzu (Profit Pool)</h3>
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+              Sektörel Kâr Havuzu Çarpıklığı (Exhibit 10)
+            </span>
           </div>
-          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-            Genişlik (Sermaye Payı) × Yükseklik (ROIC - WACC) = Toplam Ekonomik Kâr. 2022'de sektörün toplam zararı: -$69 Milyar!
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+            Havacılık Sektörü Kâr Havuzu (Profit Pool) Haritası
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed max-w-4xl">
+            Genişlik (Sermaye Payı) × Yükseklik (ROIC - WACC Farkı) = Toplam Ekonomik Kâr. Bir sektörde sermayenin en çok bağlandığı halkaların neden en az para kazandığını keşfedin.
           </p>
         </div>
+
+        <button
+          onClick={() => setSelectedActivity(AVIATION_ACTIVITIES[0])}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer shrink-0 self-start md:self-center"
+        >
+          <RotateCcw className="w-3.5 h-3.5" /> Sıfırla
+        </button>
       </div>
 
       {/* Visual Profit Pool Block Chart */}
-      <div className="mt-6 p-4 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/60">
+      <div className="p-4 sm:p-5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/60">
         <div className="flex justify-between items-center text-xs text-slate-600 dark:text-slate-300 mb-2 font-medium">
           <span className="text-emerald-700 dark:text-emerald-400 font-semibold">▲ Pozitif Ekonomik Kâr (ROIC &gt; WACC)</span>
-          <span className="text-slate-500 dark:text-slate-400">Share of Invested Capital (%0 - %100) ▶</span>
+          <span className="text-slate-500 dark:text-slate-400">Sermaye Payı (%0 - %100) ▶</span>
         </div>
 
         {/* The Profit Pool Grid Chart */}
@@ -110,7 +123,6 @@ export const ProfitPoolSim: React.FC = () => {
               {AVIATION_ACTIVITIES.map((act, idx) => {
                 const isPositive = act.spread >= 0;
                 const isSelected = selectedActivity.name === act.name;
-                // Height proportional to spread (max scale: 20%)
                 const heightPercent = Math.min(Math.abs(act.spread) * 4, 45);
 
                 return (
@@ -159,12 +171,12 @@ export const ProfitPoolSim: React.FC = () => {
 
         <div className="flex justify-between items-center text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
           <span className="text-rose-700 dark:text-rose-400 font-semibold">▼ Negatif Ekonomik Kâr / Değer Yıkımı (ROIC &lt; WACC)</span>
-          <span className="text-[11px] text-slate-400 dark:text-slate-500 font-mono">Kaynak: Morgan Stanley & IATA 2022 Raporu</span>
+          <span className="text-[11px] text-slate-400 dark:text-slate-500 font-mono">Kaynak: Morgan Stanley & IATA Raporu</span>
         </div>
       </div>
 
       {/* Selected Sub-Industry Inspector Card */}
-      <div className="mt-6 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span
@@ -176,22 +188,22 @@ export const ProfitPoolSim: React.FC = () => {
             >
               {selectedActivity.role}
             </span>
-            <h4 className="text-base font-bold text-slate-900 dark:text-slate-100">
+            <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">
               {selectedActivity.nameTr} ({selectedActivity.name})
             </h4>
           </div>
           <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{selectedActivity.explanation}</p>
         </div>
 
-        <div className="flex items-center gap-6 shrink-0 bg-white dark:bg-slate-900 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs">
+        <div className="flex items-center gap-5 shrink-0 bg-white dark:bg-slate-900 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs">
           <div>
             <div className="text-[11px] text-slate-500 dark:text-slate-400">Sermaye Payı</div>
-            <div className="text-base font-mono font-bold text-slate-900 dark:text-slate-100">%{selectedActivity.capitalShare}</div>
+            <div className="text-sm sm:text-base font-mono font-bold text-slate-900 dark:text-slate-100">%{selectedActivity.capitalShare}</div>
           </div>
           <div className="border-l border-slate-200 dark:border-slate-700 pl-4">
             <div className="text-[11px] text-slate-500 dark:text-slate-400">ROIC - WACC Farkı</div>
             <div
-              className={`text-base font-mono font-extrabold ${
+              className={`text-sm sm:text-base font-mono font-extrabold ${
                 selectedActivity.spread >= 0 ? "text-emerald-700 dark:text-emerald-400" : "text-rose-700 dark:text-rose-400"
               }`}
             >
@@ -201,11 +213,12 @@ export const ProfitPoolSim: React.FC = () => {
         </div>
       </div>
 
-      {/* Lesson Callout */}
-      <div className="mt-4 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200 leading-relaxed flex items-start gap-2.5">
-        <Info className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-        <div>
-          <strong>Jeff Bezos'un İlkesi:</strong> <em>"Senin kâr marjın benim fırsatımdır."</em> Bir sektörde kâr havuzunun büyük olduğu niş halkalar (GDS veya Yakıt gibi) her zaman rakiplerin hücumuna uğrar; ancak güçlü giriş engelleri olanlar kârlarını korur.
+      {/* Standardized Pedagogical Lesson Callout */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 flex items-start gap-3">
+        <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+        <div className="space-y-1 text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
+          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">Kâr Havuzu Çıkarımı:</strong>
+          Sermayenin en yoğun gömüldüğü sektör halkaları (Havayolları %52 sermaye, %-5.5 getiri) genellikle en yıkıcı rekabete maruz kalırken; varlık-hafif nişler (GDS yazılımları %1.5 sermaye, %+12 getiri) sektör kârının kaymağını yer.
         </div>
       </div>
     </div>

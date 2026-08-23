@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { LearningModule, UserLearningState } from "../types";
 import { RoicWaccSim } from "./simulators/RoicWaccSim";
 import { DickinsonLifecycleSim } from "./simulators/DickinsonLifecycleSim";
@@ -11,7 +12,13 @@ import { DuPontSim } from "./simulators/DuPontSim";
 import { CashConversionSim } from "./simulators/CashConversionSim";
 import { ReverseDCFSim } from "./simulators/ReverseDCFSim";
 import { MoatChecklistSim } from "./simulators/MoatChecklistSim";
+import { FORMULA_GUIDES_MAP } from "../data/formulaGuidesData";
 import { SimTab } from "./SimulationsView";
+import {
+  DickinsonLifecycleVisual,
+  ValueStickVisual,
+  PorterForcesVisual,
+} from "./ModuleVisualDiagrams";
 import {
   ArrowLeft,
   ArrowRight,
@@ -27,6 +34,10 @@ import {
   Layers,
   FlaskConical,
   Play,
+  Calculator,
+  Award,
+  Compass,
+  Milestone,
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
@@ -40,6 +51,7 @@ interface ModuleReaderProps {
   onOpenAICoach: () => void;
   onOpenGlossary: (termId?: string) => void;
   onOpenLabSim?: (simId: SimTab) => void;
+  onOpenFormulaWorkshop?: (formulaId: string) => void;
 }
 
 // Module to Lab Simulator Mapping for "Kendin Dene" feature
@@ -70,43 +82,43 @@ const MODULE_LAB_MAPPINGS: Record<number, ModuleLabConfig> = {
     simId: "value-stick",
     title: "Değer Çubuğu (Value Stick - WTP, Fiyat, Maliyet, WTS) Simülatörü",
     badge: "MODÜL 3 İLE İLİŞKİLİ",
-    description: "Müşterinin ödeme isteği (WTP) ile tedarikçi tabanı (WTS) arasındaki rant paylaşımını interaktif çubuk üzerinde kaydırarak test edin.",
-    buttonLabel: "Değer Çubuğunda Kendin Dene",
+    description: "Müşterinin Ödemeye İstekliliği (WTP) ile Tedarikçi Maliyetini (WTS) dinamik olarak artırıp azaltın; şirketin kâr payını canlı izleyin.",
+    buttonLabel: "Değer Çubuğu Atölyesinde Kendin Dene",
   },
   4: {
     simId: "profit-pool",
-    title: "Havacılık Sektörü Kâr Havuzu (Profit Pool) Analiz Laboratuvarı",
+    title: "Sektörel Kâr Havuzu Çarpıklığı Simülatörü",
     badge: "MODÜL 4 İLE İLİŞKİLİ",
-    description: "Sermaye payı ile ekonomik getiri (ROIC-WACC) alanlarını interaktif sütun grafiğinde keşfedin.",
-    buttonLabel: "Kâr Havuzunda Kendin Dene",
+    description: "Havacılık ve teknoloji sektörlerindeki kâr ve sermaye dağılımını inceleyin; kimin değer üretip kimin değer yok ettiğini simüle edin.",
+    buttonLabel: "Kâr Havuzu Atölyesinde Kendin Dene",
   },
   5: {
     simId: "footnote-detective",
-    title: "10-K Dipnot Dedektifi & Giriş Engelleri (Ar-Ge & Kira Düzeltmeleri)",
+    title: "10-K Dipnot Dedektifi & Bilanço Düzeltmeleri",
     badge: "MODÜL 5 İLE İLİŞKİLİ",
-    description: "Ar-Ge aktifleştirmesi ve faaliyet kiralaması kapitalizasyonu ile şirketin gerçek ekonomik sermaye tabanını ortaya çıkarın.",
-    buttonLabel: "Dipnot Dedektifinde Kendin Dene",
+    description: "Faaliyet kiralamalarını borca dönüştürün, Ar-Ge giderlerini aktifleştirin; gerçek NOPAT ve Düzeltilmiş ROIC'i adım adım hesaplayın.",
+    buttonLabel: "10-K Dipnot Dedektifinde Kendin Dene",
   },
   6: {
     simId: "game-theory",
-    title: "Oyun Teorisi & Mahkumlar İkilemi (Fiyat Savaşları ve Tit-for-Tat)",
+    title: "Oyun Teorisi & Fiyat Savaşı (Tutsak İkilemi) Simülatörü",
     badge: "MODÜL 6 İLE İLİŞKİLİ",
-    description: "Fiyat kırma savaşlarında Nash dengesini, Tit-for-Tat taktiğini ve Albay Blotto niş dağıtımını simüle edin.",
-    buttonLabel: "Oyun Teorisi Simülatöründe Kendin Dene",
+    description: "Rakibinizle fiyat kırma veya koordinasyon hamleleri yapın; Nash dengesini ve kâr havuzunun nasıl buharlaştığını deneyimleyin.",
+    buttonLabel: "Oyun Teorisi Arenasında Kendin Dene",
   },
   7: {
     simId: "dupont",
-    title: "DuPont ROIC Röntgeni & Nakit Dönüşüm Süresi (CCC)",
+    title: "5 Bileşenli DuPont & Negatif Nakit Dönüşüm Süresi (CCC)",
     badge: "MODÜL 7 İLE İLİŞKİLİ",
-    description: "Costco (Hız Şampiyonu) ile Coca-Cola (Marj Şampiyonu) arasındaki DuPont ayrıştırmasını ve Amazon'un negatif CCC döngüsünü inceleyin.",
-    buttonLabel: "DuPont Röntgeninde Kendin Dene",
+    description: "Faaliyet marjı x Sermaye devir hızı çarpımını değiştirin; Amazon'un tedarikçi parasıyla nasıl sıfır sermaye gerektiren bir hendek kurduğunu görün.",
+    buttonLabel: "DuPont & CCC Atölyesinde Kendin Dene",
   },
   8: {
     simId: "reverse-dcf",
-    title: "İleri Düzey Tersine DCF & 60 Maddelik Morgan Stanley Hendek Denetimi",
+    title: "Tersine DCF & Piyasanın İma Ettiği Hendek Süresi (CAP)",
     badge: "MODÜL 8 İLE İLİŞKİLİ",
-    description: "Büyük Final: Piyasa fiyatının ima ettiği CAP süresini (yıl) ve şirketin 60 kriterlik kurumsal hendek skorunu ölçün.",
-    buttonLabel: "Tersine DCF ve Hendek Denetiminde Kendin Dene",
+    description: "Hisse fiyatını girin, model size piyasanın bu şirketten kaç yıllık olağanüstü hendek (CAP) beklediğini söylesin.",
+    buttonLabel: "Tersine DCF Simülatöründe Kendin Dene",
   },
 };
 
@@ -120,8 +132,8 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
   onOpenAICoach,
   onOpenGlossary,
   onOpenLabSim,
+  onOpenFormulaWorkshop,
 }) => {
-  // Quiz state
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [isQuizSubmitted, setIsQuizSubmitted] = useState(false);
   const [quizScore, setQuizScore] = useState<number | null>(null);
@@ -138,7 +150,7 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
   const prevModule = currentIndex > 0 ? allModules[currentIndex - 1] : null;
   const nextModule = currentIndex < allModules.length - 1 ? allModules[currentIndex + 1] : null;
 
-  const handleSelectAnswer = (questionId: string, optionIndex: number) => {
+  const handleOptionSelect = (questionId: string, optionIndex: number) => {
     if (isQuizSubmitted) return;
     setSelectedAnswers((prev) => ({
       ...prev,
@@ -210,20 +222,31 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
   const labConfig = MODULE_LAB_MAPPINGS[module.id];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-300 pb-16 px-1 sm:px-0" id="module-reader">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="max-w-4xl mx-auto space-y-6 sm:space-y-8 pb-16 px-1 sm:px-0"
+      id="module-reader"
+    >
       {/* Top Breadcrumb & Actions */}
       <div className="flex flex-wrap items-center justify-between gap-2.5">
-        <button
+        <motion.button
+          whileHover={{ scale: 1.02, x: -2 }}
+          whileTap={{ scale: 0.98 }}
           onClick={onBackToRoadmap}
           className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-xs transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Yol Haritasına Dön</span>
-        </button>
+        </motion.button>
 
         <div className="flex items-center gap-2">
           {labConfig && onOpenLabSim && (
-            <button
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => onOpenLabSim(labConfig.simId)}
               className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-bold transition-all shadow-xs cursor-pointer"
               title="Bu modülün simülatörünü laboratuvarda aç"
@@ -231,38 +254,42 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
               <FlaskConical className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               <span className="hidden sm:inline">Laboratuvarda Dene</span>
               <span className="sm:hidden">Laboratuvar</span>
-            </button>
+            </motion.button>
           )}
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => onOpenGlossary()}
             className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 text-xs font-semibold shadow-xs cursor-pointer"
           >
             <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
             <span>Sözlük</span>
-          </button>
-          
-          <button
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={onOpenAICoach}
-            className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 text-xs font-semibold shadow-xs cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>AI Koça Sor</span>
-          </button>
+            <MessageSquare className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+            <span>Koça Sor</span>
+          </motion.button>
         </div>
       </div>
 
-      {/* Module Title Header Card */}
-      <div className="p-5 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="px-2.5 py-0.5 rounded text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50 uppercase tracking-wider">
-            Modül 0{module.id}
+      {/* Module Header Card */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-2xs">
+            Adım 0{module.id}
           </span>
-          <span className="px-2.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+          <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
             {module.subtitle}
           </span>
-          <span className="px-2.5 py-0.5 rounded text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-            ~{module.estimatedMinutes} Dakika
+          <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 ml-auto font-medium">
+            <Clock className="w-3.5 h-3.5" /> Tahmini Okuma: {module.estimatedMinutes} Dakika
           </span>
         </div>
 
@@ -270,71 +297,380 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
           {module.title}
         </h1>
 
-        <p className="mt-3 text-xs sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
           {module.description}
         </p>
 
-        {/* Zero-Knowledge Everyday Analogy Card */}
-        <div className="mt-5 p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-amber-900 dark:text-amber-200 space-y-1">
-          <div className="flex items-center gap-2 text-xs font-bold text-amber-900 dark:text-amber-300">
-            <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-            <span>0'dan Başlayanlar İçin Günlük Hayat Özeti:</span>
+        {/* Intuitive Zero-Knowledge Teaser */}
+        <div className="p-4 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/60 flex items-start gap-3">
+          <Sparkles className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <div className="space-y-1 text-xs sm:text-sm text-amber-900 dark:text-amber-200">
+            <strong className="block font-bold text-amber-950 dark:text-amber-100">
+              💡 Temel Sezgi & Günlük Hayat Analojisi
+            </strong>
+            <p className="leading-relaxed">{module.zeroKnowledgeSummary}</p>
           </div>
-          <p className="text-xs sm:text-sm leading-relaxed opacity-95">
-            {module.zeroKnowledgeSummary}
-          </p>
         </div>
+
+        {/* Pedagogical Step Bridge (Önceki Adımdan Devralınan Temel Fikir & Bu Adımın Amacı) */}
+        {module.moduleBridge && (
+          <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 space-y-2.5">
+            <div className="flex items-center gap-2 text-xs font-bold text-indigo-900 dark:text-indigo-300">
+              <Compass className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <span>🧭 Öğrenme Köprüsü & Neden Bu Adım?</span>
+            </div>
+            
+            {module.moduleBridge.takeawayFromPrev && (
+              <div className="text-xs text-slate-700 dark:text-slate-300">
+                <span className="font-semibold text-slate-900 dark:text-slate-100">
+                  {module.moduleBridge.prevTitle ? `Önceki Adım (${module.moduleBridge.prevTitle}): ` : "Önceki Adım: "}
+                </span>
+                {module.moduleBridge.takeawayFromPrev}
+              </div>
+            )}
+
+            <div className="text-xs text-indigo-950 dark:text-indigo-200 font-medium bg-white/70 dark:bg-slate-900/60 p-2.5 rounded-xl border border-indigo-100 dark:border-indigo-900/60 flex items-start gap-2">
+              <span className="text-indigo-600 dark:text-indigo-400 font-bold shrink-0">🎯 Çözeceğimiz Soru:</span>
+              <span>{module.moduleBridge.transitionQuestion}</span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Module Sections */}
+      {/* Structured Sections */}
       <div className="space-y-6">
-        {module.sections.map((section, sIdx) => (
+        {module.sections.map((section, idx) => (
           <div
             key={section.id}
-            className="p-5 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-5 sm:space-y-6"
+            className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-5"
           >
-            {/* Section Header */}
-            <div>
-              <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-1">
-                Bölüm {sIdx + 1}
-              </div>
-              <h2 className="text-base sm:text-xl font-bold text-slate-900 dark:text-slate-100">
+            <div className="flex items-center gap-2.5 pb-2 border-b border-slate-100 dark:border-slate-800">
+              <span className="w-6 h-6 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-mono font-bold text-xs flex items-center justify-center">
+                {idx + 1}
+              </span>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
                 {section.title}
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
-                {section.summary}
-              </p>
             </div>
 
-            {/* Paragraphs */}
-            <div className="space-y-3 text-xs sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-              {section.content.map((paragraph, pIdx) => (
-                <p key={pIdx} className="whitespace-pre-line leading-relaxed">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-
-            {/* Analogy Box */}
-            {section.analogyBox && (
-              <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-900 dark:text-amber-200">
-                <div className="flex items-center gap-2 text-xs font-bold text-amber-900 dark:text-amber-300 mb-1">
-                  <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  {section.analogyBox.title}
+            {/* Everyday Analogy Box */}
+            {(section.analogyBox || section.everydayAnalogy) && (
+              <div className="p-4 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 space-y-1.5">
+                <div className="flex items-center gap-2 text-xs font-bold text-indigo-900 dark:text-indigo-300">
+                  <Layers className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  <span>
+                    {section.analogyBox?.title || "Sıfırdan Analoji: Günlük Hayattan Bir Örnekle Anlayalım"}
+                  </span>
                 </div>
-                <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-300/90 leading-relaxed">
-                  {section.analogyBox.description}
+                <p className="text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
+                  {section.analogyBox?.description || section.everydayAnalogy}
                 </p>
               </div>
             )}
 
-            {/* Interactive Widget if linked */}
+            {/* Structured Formula Box (Institutional Level Math Layout) */}
+            {section.formulaBox && (
+              <div className="rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-900 text-slate-100 shadow-xl">
+                {/* Header */}
+                <div className="px-4 sm:px-5 py-3 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 font-mono text-[10px] font-black uppercase tracking-wider border border-amber-400/30">
+                      📐 TEMEL EŞİTLİK
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-200">
+                      {section.formulaBox.title}
+                    </span>
+                  </div>
+                  {section.formulaDeepDiveId && (
+                    <button
+                      onClick={() => onOpenFormulaWorkshop?.(section.formulaDeepDiveId!)}
+                      className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-600/80 hover:bg-indigo-600 text-white text-[11px] font-bold transition-all cursor-pointer"
+                    >
+                      <Calculator className="w-3.5 h-3.5" />
+                      <span>Formül Sayfasında Hesapla</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* Main Equation Box */}
+                <div className="p-4 sm:p-5 bg-gradient-to-b from-slate-900 to-slate-950 space-y-4">
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-slate-950 border border-slate-800/80 font-mono text-xs sm:text-sm text-amber-300 tracking-wide leading-relaxed shadow-inner overflow-x-auto">
+                    <pre className="font-mono font-bold whitespace-pre-wrap">{section.formulaBox.equation}</pre>
+                  </div>
+
+                  {/* Variables Breakdown Pills */}
+                  {section.formulaBox.variables && section.formulaBox.variables.length > 0 && (
+                    <div className="space-y-1.5">
+                      <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                        Değişkenler & Parametre Açıklamaları
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {section.formulaBox.variables.map((v, vIdx) => (
+                          <div
+                            key={vIdx}
+                            className="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50 flex items-start gap-2.5 text-xs"
+                          >
+                            <span className="px-2 py-0.5 rounded-md bg-indigo-950 text-indigo-300 font-mono font-black border border-indigo-800/60 shrink-0">
+                              {v.symbol}
+                            </span>
+                            <div className="min-w-0">
+                              <div className="font-bold text-slate-200">{v.label}</div>
+                              {v.desc && <div className="text-[11px] text-slate-400 leading-tight mt-0.5">{v.desc}</div>}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Example Calculation */}
+                  {section.formulaBox.exampleCalculation && (
+                    <div className="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-800/50 space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-indigo-300 uppercase tracking-wider">
+                        <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                        <span>Sayısal Örnek Sağlaması</span>
+                      </div>
+                      <pre className="font-mono text-xs text-indigo-200 whitespace-pre-wrap leading-relaxed overflow-x-auto">
+                        {section.formulaBox.exampleCalculation}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Step-by-Step Math or Breakdown */}
+            {section.stepByStepMath && (
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 text-slate-100 dark:bg-slate-950 border border-slate-800 space-y-3 font-mono text-xs shadow-inner">
+                <div className="flex items-center gap-2 font-sans font-bold text-amber-400 text-xs uppercase tracking-wider">
+                  <Calculator className="w-4 h-4 text-amber-400" />
+                  <span>Adım Adım Hesaplama Röntgeni</span>
+                </div>
+                <div className="space-y-2">
+                  {section.stepByStepMath.split("\n").map((stepLine, sIdx) => {
+                    const isStep = stepLine.startsWith("Adım");
+                    return (
+                      <div
+                        key={sIdx}
+                        className={`p-2.5 rounded-xl ${
+                          isStep
+                            ? "bg-slate-800/80 border border-slate-700/60 text-slate-200 flex items-start gap-2.5"
+                            : "text-slate-300 pl-2"
+                        }`}
+                      >
+                        {isStep && (
+                          <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 font-sans font-bold text-[10px] uppercase shrink-0">
+                            {stepLine.split(":")[0]}
+                          </span>
+                        )}
+                        <span className="leading-relaxed">
+                          {isStep ? stepLine.substring(stepLine.indexOf(":") + 1).trim() : stepLine}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Main Content Paragraphs & Structured Cards */}
+            <div className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-3">
+              {(Array.isArray(section.content)
+                ? section.content
+                : typeof section.content === "string"
+                ? (section.content as string).split("\n\n")
+                : []
+              ).map((para, pIdx) => {
+                // Match Dickinson 5 Stages (e.g. 1. Giriş (Introduction) [CFO: (-), CFI: (-), CFF: (+)]: ... (Ortalama ROIC: ...))
+                const dickinsonMatch = para.match(/^(\d+)\.\s*([^(]+)\s*\(([^)]+)\)\s*\[([^\]]+)\]:\s*([^(]+)(?:\(([^)]+)\))?/i);
+                if (dickinsonMatch) {
+                  const [, num, nameTr, nameEn, cashFlows, text, roicTag] = dickinsonMatch;
+                  const isMaturity = nameEn.toLowerCase().includes("maturity");
+                  const isDecline = nameEn.toLowerCase().includes("decline");
+                  const isGrowth = nameEn.toLowerCase().includes("growth");
+                  const isIntro = nameEn.toLowerCase().includes("intro");
+
+                  const borderClass = isMaturity
+                    ? "border-emerald-500/80 bg-emerald-50/50 dark:bg-emerald-950/20"
+                    : isDecline
+                    ? "border-rose-400/80 bg-rose-50/50 dark:bg-rose-950/20"
+                    : isGrowth
+                    ? "border-indigo-400/80 bg-indigo-50/50 dark:bg-indigo-950/20"
+                    : isIntro
+                    ? "border-amber-400/80 bg-amber-50/50 dark:bg-amber-950/20"
+                    : "border-purple-400/80 bg-purple-50/50 dark:bg-purple-950/20";
+
+                  const badgeClass = isMaturity
+                    ? "bg-emerald-600 text-white"
+                    : isDecline
+                    ? "bg-rose-600 text-white"
+                    : isGrowth
+                    ? "bg-indigo-600 text-white"
+                    : isIntro
+                    ? "bg-amber-500 text-white"
+                    : "bg-purple-600 text-white";
+
+                  return (
+                    <div
+                      key={pIdx}
+                      className={`p-4 sm:p-5 rounded-2xl border-2 shadow-xs space-y-2.5 transition-all ${borderClass}`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-slate-200 dark:border-slate-800">
+                        <div className="flex items-center gap-2">
+                          <span className={`px-2.5 py-0.5 rounded-lg text-xs font-black font-mono ${badgeClass}`}>
+                            0{num}
+                          </span>
+                          <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">
+                            {nameTr.trim()} ({nameEn.trim()})
+                          </span>
+                          {isMaturity && (
+                            <span className="px-2 py-0.5 rounded-md bg-amber-400/30 text-amber-900 dark:text-amber-200 text-[10px] font-black border border-amber-400/50">
+                              🏆 İDEAL HENDEK EVRESİ
+                            </span>
+                          )}
+                        </div>
+
+                        {roicTag && (
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-slate-900 text-slate-100 dark:bg-slate-800">
+                            {roicTag.trim()}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Cash flow pills */}
+                      <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs">
+                        <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                          Nakit Akış Yönleri:
+                        </span>
+                        {cashFlows.split(",").map((cf, cIdx) => {
+                          const isPos = cf.includes("(+)");
+                          const isNeg = cf.includes("(-)");
+                          const cfPill = isPos
+                            ? "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700"
+                            : isNeg
+                            ? "bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300 border-rose-300 dark:border-rose-700"
+                            : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700";
+                          return (
+                            <span
+                              key={cIdx}
+                              className={`px-2 py-0.5 rounded-md border font-bold text-[11px] ${cfPill}`}
+                            >
+                              {cf.trim()}
+                            </span>
+                          );
+                        })}
+                      </div>
+
+                      {/* Text Body */}
+                      <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-medium m-0">
+                        {text.trim()}
+                      </p>
+                    </div>
+                  );
+                }
+
+                // Match numbered feature list item (e.g. 1. WTP (Willingness to Pay): ... or 1. Arz Yönlü Ölçek...)
+                const numberedMatch = para.match(/^(\d+)\.\s*([^:]+):\s*(.*)/);
+                if (numberedMatch) {
+                  const [, num, label, text] = numberedMatch;
+                  return (
+                    <div
+                      key={pIdx}
+                      className="p-3.5 rounded-2xl bg-slate-50/90 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-700/60 flex items-start gap-3 my-2"
+                    >
+                      <span className="w-6 h-6 rounded-lg bg-indigo-600 text-white font-mono font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                        {num}
+                      </span>
+                      <div className="space-y-0.5 text-xs sm:text-sm">
+                        <strong className="text-slate-900 dark:text-slate-100 font-bold block">
+                          {label.trim()}
+                        </strong>
+                        <p className="text-slate-700 dark:text-slate-300 leading-relaxed m-0">
+                          {text.trim()}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                }
+
+                const isFormulaCallout = para.startsWith("Formül:") || (para.includes(" = ") && (para.includes("WACC") || para.includes("ROIC") || para.includes("Spread")));
+                if (isFormulaCallout) {
+                  return (
+                    <div
+                      key={pIdx}
+                      className="p-3.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 text-amber-900 dark:text-amber-200 font-mono text-xs flex items-start gap-2.5 my-2 shadow-xs"
+                    >
+                      <Calculator className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                      <div className="font-bold leading-relaxed">{para}</div>
+                    </div>
+                  );
+                }
+                return <p key={pIdx}>{para}</p>;
+              })}
+            </div>
+
+            {/* Interactive Visual Infographic if specified on section */}
+            {section.interactiveVisualId === "dickinson-lifecycle" && (
+              <DickinsonLifecycleVisual />
+            )}
+            {section.interactiveVisualId === "value-stick" && (
+              <ValueStickVisual />
+            )}
+            {section.interactiveVisualId === "porter-forces" && (
+              <PorterForcesVisual />
+            )}
+
+            {/* Interactive Widget if bound to section */}
             {section.interactiveWidgetId && (
-              <div className="pt-2">
-                <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-3">
-                  Bu Bölüme Özel İnteraktif Simülatör
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
+                <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" /> Canlı Etkileşimli Simülasyon
                 </div>
                 {renderWidget(section.interactiveWidgetId)}
+              </div>
+            )}
+
+            {/* Real World Company Case Study */}
+            {section.companyExample && (
+              <div className="p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 space-y-1.5">
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-900 dark:text-emerald-300">
+                  <Trophy className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span>Gerçek Şirket Vakası: {section.companyExample.company}</span>
+                </div>
+                <p className="text-xs sm:text-sm text-emerald-950 dark:text-emerald-200 leading-relaxed">
+                  {section.companyExample.context}
+                </p>
+              </div>
+            )}
+
+            {/* Formula Deep Dive Guide Trigger Card */}
+            {section.formulaDeepDiveId && FORMULA_GUIDES_MAP[section.formulaDeepDiveId] && (
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-indigo-50/90 via-purple-50/80 to-indigo-50/90 dark:from-indigo-950/40 dark:via-purple-950/30 dark:to-indigo-950/40 border border-indigo-200 dark:border-indigo-800/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+                <div className="space-y-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-indigo-600 text-white uppercase tracking-wider">
+                      🧮 Formül & Hesaplama Atölyesi
+                    </span>
+                    <span className="text-[11px] font-bold text-indigo-700 dark:text-indigo-300">
+                      Adım Adım Nasıl Hesaplanır?
+                    </span>
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                    {FORMULA_GUIDES_MAP[section.formulaDeepDiveId].title}
+                  </h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
+                    {FORMULA_GUIDES_MAP[section.formulaDeepDiveId].plainLanguageSummary}
+                  </p>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => onOpenFormulaWorkshop?.(section.formulaDeepDiveId!)}
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer"
+                >
+                  <Calculator className="w-4 h-4" />
+                  <span>Formülü İncele & Hesapla</span>
+                </motion.button>
               </div>
             )}
 
@@ -368,13 +704,34 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
             </p>
           </div>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
             onClick={() => onOpenLabSim(labConfig.simId)}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white text-indigo-900 hover:bg-indigo-50 font-black text-xs transition-all shadow-md hover:scale-103 cursor-pointer shrink-0"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-white text-indigo-900 hover:bg-indigo-50 font-black text-xs transition-all shadow-md cursor-pointer shrink-0"
           >
             <Play className="w-4 h-4 text-indigo-600 fill-indigo-600" />
             <span>Kendin Dene</span>
-          </button>
+          </motion.button>
+        </div>
+      )}
+
+      {/* Pedagogical Bridge to Next Step (Yapbozun Sıradaki Parçası) */}
+      {module.moduleBridge?.whyNext && (
+        <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-500/30 shadow-md space-y-3">
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-300">
+            <Milestone className="w-4 h-4 text-indigo-400" />
+            <span>🚀 Yapbozun Sıradaki Parçası: Neden {module.moduleBridge.nextTitle}?</span>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+            {module.moduleBridge.whyNext}
+          </p>
+          {module.moduleBridge.previewQuestion && (
+            <div className="p-3 rounded-xl bg-indigo-900/50 border border-indigo-400/30 text-xs font-semibold text-indigo-200 flex items-start gap-2">
+              <span className="text-amber-400">❓ Sıradaki Merak Sorusu:</span>
+              <span>{module.moduleBridge.previewQuestion}</span>
+            </div>
+          )}
         </div>
       )}
 
@@ -383,19 +740,21 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
             <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
-              Kavrama Testi
+              Kavrama & Ustalık Testi
             </div>
             <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
               Modül Sonu Değerlendirme Testi ({module.quiz.length} Soru)
             </h3>
           </div>
           {isQuizSubmitted && (
-            <button
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               onClick={handleResetQuiz}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" /> Tekrar Dene
-            </button>
+            </motion.button>
           )}
         </div>
 
@@ -413,133 +772,126 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
                 <div className="space-y-2">
                   {q.options.map((opt, optIdx) => {
-                    const isOptionSelected = selectedOpt === optIdx;
-                    let optionStyle =
-                      "bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-700/60 text-slate-700 dark:text-slate-300";
-
-                    if (isOptionSelected) {
-                      optionStyle =
-                        "bg-indigo-50 dark:bg-indigo-950/60 border-indigo-300 dark:border-indigo-700 text-indigo-900 dark:text-indigo-200 font-semibold";
-                    }
+                    const isSelected = selectedOpt === optIdx;
+                    let optStyle = "bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 hover:border-indigo-300 text-slate-700 dark:text-slate-300";
 
                     if (isQuizSubmitted) {
                       if (optIdx === q.correctAnswerIndex) {
-                        optionStyle =
-                          "bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 font-bold";
-                      } else if (isOptionSelected && !isCorrect) {
-                        optionStyle =
-                          "bg-red-50 dark:bg-red-950/60 border-red-400 dark:border-red-700 text-red-900 dark:text-red-200";
+                        optStyle = "bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 dark:border-emerald-600 text-emerald-900 dark:text-emerald-200 font-bold";
+                      } else if (isSelected && !isCorrect) {
+                        optStyle = "bg-rose-50 dark:bg-rose-950/60 border-rose-400 dark:border-rose-600 text-rose-900 dark:text-rose-200";
                       }
+                    } else if (isSelected) {
+                      optStyle = "bg-indigo-50 dark:bg-indigo-950/60 border-indigo-500 text-indigo-950 dark:text-indigo-100 font-bold shadow-2xs";
                     }
 
                     return (
-                      <button
+                      <motion.button
                         key={optIdx}
-                        onClick={() => handleSelectAnswer(q.id, optIdx)}
+                        whileHover={{ scale: isQuizSubmitted ? 1 : 1.01 }}
+                        whileTap={{ scale: isQuizSubmitted ? 1 : 0.99 }}
                         disabled={isQuizSubmitted}
-                        className={`w-full p-3 rounded-2xl border text-left text-xs sm:text-sm transition-all flex items-start gap-3 cursor-pointer disabled:cursor-default ${optionStyle}`}
+                        onClick={() => handleOptionSelect(q.id, optIdx)}
+                        className={`w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm transition-all flex items-start gap-3 cursor-pointer ${optStyle}`}
                       >
-                        <span className="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                        <span className="w-5 h-5 rounded-full border border-current flex items-center justify-center font-mono font-bold text-[10px] shrink-0 mt-0.5">
                           {String.fromCharCode(65 + optIdx)}
                         </span>
-                        <span className="leading-relaxed">{opt}</span>
-                      </button>
+                        <span className="flex-1">{opt}</span>
+                      </motion.button>
                     );
                   })}
                 </div>
 
-                {/* Explanation on submission */}
+                {/* Explanation on submit */}
                 {isQuizSubmitted && (
-                  <div
-                    className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className={`p-3.5 rounded-xl text-xs leading-relaxed border ${
                       isCorrect
-                        ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/50"
-                        : "bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-300 border border-red-200 dark:border-red-900/50"
+                        ? "bg-emerald-50/70 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-900/60 text-emerald-900 dark:text-emerald-200"
+                        : "bg-amber-50/70 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900/60 text-amber-900 dark:text-amber-200"
                     }`}
                   >
-                    <div className="font-bold mb-0.5 flex items-center gap-1.5">
-                      {isCorrect ? (
-                        <>
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                          <span>Doğru Cevap!</span>
-                        </>
-                      ) : (
-                        <>
-                          <AlertCircle className="w-4 h-4 text-red-600" />
-                          <span>Gözden Geçiriniz:</span>
-                        </>
-                      )}
-                    </div>
-                    <div>{q.explanation}</div>
-                  </div>
+                    <strong className="block mb-0.5 font-bold">
+                      {isCorrect ? "✅ Harika, Doğru Cevap!" : "💡 Açıklama ve Çözüm:"}
+                    </strong>
+                    {q.explanation}
+                  </motion.div>
                 )}
               </div>
             );
           })}
         </div>
 
-        {/* Submit Quiz Action / Result */}
+        {/* Quiz Submit Bar */}
         <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-xs text-slate-500 dark:text-slate-400">
+            {isQuizSubmitted ? (
+              <span className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                <Trophy className="w-4 h-4 text-amber-500" />
+                Başarı Puanınız: %{quizScore} ({quizScore! >= 66 ? "Geçtiniz 🎉" : "Gözden Geçiriniz"})
+              </span>
+            ) : (
+              <span>Cevaplarınızı seçtikten sonra sonucu kontrol edin.</span>
+            )}
+          </div>
+
           {!isQuizSubmitted ? (
-            <button
-              onClick={handleSubmitQuiz}
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               disabled={Object.keys(selectedAnswers).length < module.quiz.length}
-              className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 text-white font-bold text-xs shadow-xs transition-all cursor-pointer disabled:cursor-not-allowed"
+              onClick={handleSubmitQuiz}
+              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold shadow-xs transition-all cursor-pointer"
             >
-              Testi Tamamla ve Puanımı Hesapla
-            </button>
+              Testi Tamamla & Puanı Kaydet
+            </motion.button>
           ) : (
-            <div className="flex items-center gap-3 w-full sm:w-auto">
-              <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 flex items-center gap-3">
-                <Trophy className="w-6 h-6 text-amber-500" />
-                <div>
-                  <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
-                    Başarı Oranınız
-                  </div>
-                  <div className="text-lg font-black text-slate-900 dark:text-slate-100 font-mono">
-                    %{quizScore}
-                  </div>
-                </div>
-              </div>
-            </div>
+            nextModule && (
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => onSelectModule(nextModule)}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>Sonraki Adıma Geç (Adım 0{nextModule.id})</span>
+                <ArrowRight className="w-4 h-4" />
+              </motion.button>
+            )
           )}
         </div>
       </div>
 
-      {/* Bottom Module Navigation (Prev / Next) */}
+      {/* Bottom Prev / Next Navigation Bar */}
       <div className="flex items-center justify-between gap-4 pt-4">
         {prevModule ? (
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02, x: -2 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => onSelectModule(prevModule)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 transition-all cursor-pointer shadow-xs"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 shadow-xs transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Önceki: {prevModule.title}</span>
-            <span className="sm:hidden">Önceki Modül</span>
-          </button>
+            <span>Önceki Adım (0{prevModule.id})</span>
+          </motion.button>
         ) : (
           <div />
         )}
 
-        {nextModule ? (
-          <button
+        {nextModule && (
+          <motion.button
+            whileHover={{ scale: 1.02, x: 2 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => onSelectModule(nextModule)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer ml-auto"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
           >
-            <span className="hidden sm:inline">Sonraki: {nextModule.title}</span>
-            <span className="sm:hidden">Sonraki Modül</span>
+            <span>Sonraki Adım (0{nextModule.id})</span>
             <ArrowRight className="w-4 h-4" />
-          </button>
-        ) : (
-          <button
-            onClick={onBackToRoadmap}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer ml-auto"
-          >
-            <span>Müfredatı Tamamla (Yol Haritası)</span>
-            <CheckCircle2 className="w-4 h-4" />
-          </button>
+          </motion.button>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Flashcard, UserLearningState } from "../types";
 import { INITIAL_FLASHCARDS } from "../data/flashcardsData";
 import { calculateSM2, saveUserLearningState } from "../utils/spacedRepetition";
@@ -69,8 +70,12 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
     setUserState(newState);
     saveUserLearningState(newState);
 
-    if (quality === 4 && updatedCard.repetitions >= 3) {
-      confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+    if (quality === 4) {
+      confetti({
+        particleCount: 40,
+        spread: 50,
+        origin: { y: 0.7 },
+      });
     }
 
     // Move to next card
@@ -82,48 +87,64 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
     }
   };
 
-  const masteredTotal = (Object.values(userState.flashcardStates) as Flashcard[]).filter(
-    (c) => c.repetitions >= 3
-  ).length;
+  const filters = [
+    { id: "Tümü", label: "Tüm Kartlar" },
+    { id: 1, label: "Modül 1: ROIC vs WACC" },
+    { id: 2, label: "Modül 2: Dickinson Yaşam" },
+    { id: 3, label: "Modül 3: Değer Çubuğu" },
+    { id: 4, label: "Modül 4: Sektör & Kâr Havuzu" },
+    { id: 5, label: "Modül 5: 10-K Dipnot Düzeltmeleri" },
+    { id: 6, label: "Modül 6: Oyun Teorisi & Giriş Engelleri" },
+    { id: 7, label: "Modül 7: DuPont & CCC" },
+    { id: 8, label: "Modül 8: Tersine DCF & Hendek Denetimi" },
+  ];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-300 pb-16" id="spaced-repetition-view">
-      {/* Header Info */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-            Hermann Ebbinghaus Unutma Eğrisi & SM-2 Algoritması
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="max-w-4xl mx-auto space-y-6 sm:space-y-8 pb-16 px-1 sm:px-0"
+      id="spaced-repetition-view"
+    >
+      {/* Header */}
+      <div className="p-5 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/50 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+            SuperMemo SM-2 Algoritması ile Aralıklı Tekrar
           </span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-          Aralıklı Tekrarlama (Spaced Repetition) Laboratuvarı
+        <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+          Bilişsel Hafıza & Ustalık Kartları
         </h1>
 
-        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-          Beyniniz yeni öğrendiği bilgilerin %70'ini 24 saat içinde unutur. Bu algoritma, tam unutmak üzere olduğunuz kritik eşiklerde kartları tekrar karşınıza çıkararak bilgiyi kalıcı hafızaya kazır.
+        <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          Kritik formülleri, Mauboussin ilkelerini ve bilanço tuzaklarını aralıklı tekrar yöntemiyle unutulmaz hale getirin. Hatırlama zorluğunuza göre algoritma bir sonraki tekrar zamanını otomatik ayarlar.
         </p>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-            <div className="text-[11px] text-slate-500 dark:text-slate-400">Toplam Kart</div>
-            <div className="text-xl font-mono font-bold text-slate-900 dark:text-slate-100 mt-0.5">{INITIAL_FLASHCARDS.length}</div>
-          </div>
-          <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50">
-            <div className="text-[11px] text-emerald-700 dark:text-emerald-300 font-semibold">Kalıcı Hafızada (Usta)</div>
-            <div className="text-xl font-mono font-bold text-emerald-800 dark:text-emerald-200 mt-0.5">{masteredTotal}</div>
-          </div>
-          <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50">
-            <div className="text-[11px] text-amber-700 dark:text-amber-300 font-semibold">Öğrenme Aşamasında</div>
-            <div className="text-xl font-mono font-bold text-amber-800 dark:text-amber-200 mt-0.5">
-              {INITIAL_FLASHCARDS.length - masteredTotal}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6">
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-center">
+            <div className="text-xs text-slate-500 dark:text-slate-400">Toplam Kart</div>
+            <div className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-0.5">
+              {cardsList.length}
             </div>
           </div>
-          <div className="p-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/50">
-            <div className="text-[11px] text-indigo-700 dark:text-indigo-300 font-semibold">Aktif Seri</div>
-            <div className="text-xl font-mono font-bold text-indigo-800 dark:text-indigo-200 mt-0.5">
-              {userState.currentStreak} Gün 🔥
+
+          <div className="p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-center">
+            <div className="text-xs text-emerald-800 dark:text-emerald-300">Ustalaşılan Kartlar</div>
+            <div className="text-lg font-bold text-emerald-900 dark:text-emerald-100 mt-0.5">
+              {userState.masteredCardsCount || 0}
+            </div>
+          </div>
+
+          <div className="col-span-2 sm:col-span-1 p-3.5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 text-center flex flex-col justify-center">
+            <div className="text-xs text-indigo-800 dark:text-indigo-300">Ustalık Oranı</div>
+            <div className="text-lg font-bold text-indigo-900 dark:text-indigo-100 mt-0.5">
+              %{Math.round(((userState.masteredCardsCount || 0) / (cardsList.length || 1)) * 100)}
             </div>
           </div>
         </div>
@@ -131,39 +152,31 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
 
       {/* Module Filter Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-200 dark:border-slate-800 scrollbar-thin">
-        {[
-          { id: "Tümü" as const, label: "Tüm Kartlar" },
-          { id: 1, label: "Modül 1: ROIC & Hendek" },
-          { id: 2, label: "Modül 2: Havacılık & Sektör" },
-          { id: 3, label: "Modül 3: Değer Çubuğu (WTP)" },
-          { id: 4, label: "Modül 4: DuPont Analizi" },
-          { id: 5, label: "Modül 5: Giriş Engelleri & CCC" },
-          { id: 6, label: "Modül 6: Oyun Teorisi" },
-          { id: 7, label: "Modül 7: Yıkıcı İnovasyon" },
-          { id: 8, label: "Modül 8: 60 Maddelik Kontrol" },
-        ].map((f) => (
-          <button
-            key={String(f.id)}
+        {filters.map((f) => (
+          <motion.button
+            key={f.id}
+            whileHover={{ scale: 1.02, y: -1 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => {
-              setActiveModuleFilter(f.id);
+              setActiveModuleFilter(f.id as number | "Tümü");
               setCurrentCardIndex(0);
               setIsFlipped(false);
             }}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer shrink-0 ${
               activeModuleFilter === f.id
                 ? "bg-indigo-600 text-white shadow-xs"
                 : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 border border-slate-200 dark:border-slate-800"
             }`}
           >
             {f.label}
-          </button>
+          </motion.button>
         ))}
       </div>
 
       {/* The Interactive Flip Card */}
       {currentCard ? (
         <div className="space-y-6">
-          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium">
             <span>
               Kart {currentCardIndex + 1} / {filteredCards.length}
             </span>
@@ -173,7 +186,9 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
           </div>
 
           {/* Flip Card Container */}
-          <div
+          <motion.div
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.995 }}
             onClick={() => setIsFlipped(!isFlipped)}
             className="min-h-[300px] sm:min-h-[340px] p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all cursor-pointer flex flex-col justify-between shadow-xs relative select-none group"
           >
@@ -189,35 +204,51 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
 
             {/* Middle Question / Answer */}
             <div className="my-auto py-4 text-center">
-              {!isFlipped ? (
-                <div className="space-y-2">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    Soru / Problem
-                  </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100 leading-relaxed max-w-xl mx-auto">
-                    {currentCard.question}
-                  </h3>
-                </div>
-              ) : (
-                <div className="space-y-4 animate-in fade-in zoom-in-95 duration-150">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
-                    Cevap & Açıklama
-                  </div>
-                  <p className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200 leading-relaxed max-w-xl mx-auto">
-                    {currentCard.answer}
-                  </p>
-                  <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200 max-w-xl mx-auto leading-relaxed text-left">
-                    💡 <strong>Somut Analoji:</strong> {currentCard.analogy}
-                  </div>
-                </div>
-              )}
+              <AnimatePresence mode="wait">
+                {!isFlipped ? (
+                  <motion.div
+                    key="question"
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.18 }}
+                    className="space-y-2"
+                  >
+                    <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      Soru / Problem
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100 leading-relaxed max-w-xl mx-auto">
+                      {currentCard.question}
+                    </h3>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="answer"
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.18 }}
+                    className="space-y-4"
+                  >
+                    <div className="text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                      Cevap & Açıklama
+                    </div>
+                    <p className="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-200 leading-relaxed max-w-xl mx-auto">
+                      {currentCard.answer}
+                    </p>
+                    <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200 max-w-xl mx-auto leading-relaxed text-left">
+                      💡 <strong>Somut Analoji:</strong> {currentCard.analogy}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Bottom Tip */}
             <div className="text-center text-[11px] text-slate-400 dark:text-slate-500">
               {!isFlipped ? "Cevabı zihninizde canlandırın ve ardından kartı çevirin" : "Şimdi cevabınızı değerlendirin"}
             </div>
-          </div>
+          </motion.div>
 
           {/* SM-2 Quality Rating Buttons */}
           {isFlipped ? (
@@ -226,44 +257,54 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
                 Bu bilgiyi ne kadar rahat hatırladınız?
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => handleRate(1)}
                   className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-900/60 text-rose-800 dark:text-rose-200 text-xs font-bold transition-colors flex flex-col items-center gap-1 cursor-pointer"
                 >
                   <span>1. Unuttum (Yeniden)</span>
                   <span className="text-[10px] font-normal text-rose-600 dark:text-rose-400">Yarın tekrar sor</span>
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => handleRate(2)}
                   className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 border border-amber-200 dark:border-amber-900/60 text-amber-800 dark:text-amber-200 text-xs font-bold transition-colors flex flex-col items-center gap-1 cursor-pointer"
                 >
                   <span>2. Zor Hatırladım</span>
                   <span className="text-[10px] font-normal text-amber-600 dark:text-amber-400">2-3 gün sonra</span>
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => handleRate(3)}
                   className="p-3 rounded-2xl bg-sky-50 dark:bg-sky-950/40 hover:bg-sky-100 dark:hover:bg-sky-900/50 border border-sky-200 dark:border-sky-900/60 text-sky-800 dark:text-sky-200 text-xs font-bold transition-colors flex flex-col items-center gap-1 cursor-pointer"
                 >
                   <span>3. İyi Bildim</span>
                   <span className="text-[10px] font-normal text-sky-600 dark:text-sky-400">5-7 gün sonra</span>
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => handleRate(4)}
                   className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-200 text-xs font-bold transition-colors flex flex-col items-center gap-1 cursor-pointer"
                 >
                   <span>4. Mükemmel (Çok Kolay)</span>
                   <span className="text-[10px] font-normal text-emerald-600 dark:text-emerald-400">14+ gün sonra</span>
-                </button>
+                </motion.button>
               </div>
             </div>
           ) : (
             <div className="text-center">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={() => setIsFlipped(true)}
                 className="px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 font-bold text-white text-xs transition-all shadow-xs cursor-pointer"
               >
                 Cevabı Göster
-              </button>
+              </motion.button>
             </div>
           )}
         </div>
@@ -272,6 +313,6 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
           Bu modüle ait kart bulunamadı.
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   Building2,
   Plus,
@@ -339,24 +340,40 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
         </div>
       </div>
 
-      {/* VIEW 1: MY WORKSPACES PORTFOLIO HUB */}
-      {viewMode === "workspaces" ? (
-        <MyWorkspacesView
-          dossiers={dossiers}
-          activeDossierId={selectedId}
-          onSelectDossier={handleSelectDossier}
-          onCreateNew={handleAddNewCompany}
-          onDuplicateDossier={handleDuplicateDossier}
-          onDeleteDossier={handleDeleteDossier}
-          onImportDossiers={handleImportDossiers}
-          onResetToPresets={handleResetToPresets}
-          onOpenAuditStudio={() => setViewMode("studio")}
-        />
-      ) : (
-        /* VIEW 2: ACTIVE COMPANY AUDIT STUDIO */
-        <div className="space-y-8 animate-in fade-in duration-200">
-          {/* Header Banner */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xs">
+      {/* VIEW MODES WITH SMOOTH TRANSITIONS */}
+      <AnimatePresence mode="wait">
+        {viewMode === "workspaces" ? (
+          <motion.div
+            key="workspaces-view"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.2 }}
+          >
+            <MyWorkspacesView
+              dossiers={dossiers}
+              activeDossierId={selectedId}
+              onSelectDossier={handleSelectDossier}
+              onCreateNew={handleAddNewCompany}
+              onDuplicateDossier={handleDuplicateDossier}
+              onDeleteDossier={handleDeleteDossier}
+              onImportDossiers={handleImportDossiers}
+              onResetToPresets={handleResetToPresets}
+              onOpenAuditStudio={() => setViewMode("studio")}
+            />
+          </motion.div>
+        ) : (
+          /* VIEW 2: ACTIVE COMPANY AUDIT STUDIO */
+          <motion.div
+            key="studio-view"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.2 }}
+            className="space-y-8"
+          >
+            {/* Header Banner */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xs">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
@@ -531,9 +548,18 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 onOpenGlossary={onOpenGlossary}
               />
 
-          {/* STEP 1: FINANCIAL INPUTS & ROIC / DUPONT */}
-          {activeStep === 1 && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
+              {/* ANIMATED STEP CONTENT CONTAINER */}
+              <AnimatePresence mode="wait">
+                {/* STEP 1: FINANCIAL INPUTS & ROIC / DUPONT */}
+                {activeStep === 1 && (
+                  <motion.div
+                    key="step-1"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs"
+                  >
               <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
                 <div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
@@ -690,19 +716,28 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
 
               {/* Next Step Action */}
               <div className="pt-4 flex justify-end">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(2)}
                   className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
                   Adım 2'ye Geç: Sektör Yapısı <ArrowRight className="w-4 h-4" />
-                </button>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* STEP 2: INDUSTRY STRUCTURE & PROFIT POOL */}
           {activeStep === 2 && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
+            <motion.div
+              key="step-2"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs"
+            >
               <div className="pb-4 border-b border-slate-100 dark:border-slate-800">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <Layers className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
@@ -807,25 +842,36 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               </div>
 
               <div className="pt-4 flex justify-between">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(1)}
                   className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs cursor-pointer"
                 >
                   ◀ Finansallara Dön
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(3)}
                   className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
                   Adım 3'e Geç: Hendek Motorları <ArrowRight className="w-4 h-4" />
-                </button>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* STEP 3: VALUE STICK & COMPETITIVE ADVANTAGE DRIVERS */}
           {activeStep === 3 && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
+            <motion.div
+              key="step-3"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs"
+            >
               <div className="pb-4 border-b border-slate-100 dark:border-slate-800">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <Shield className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
@@ -961,25 +1007,36 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               </div>
 
               <div className="pt-4 flex justify-between">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(2)}
                   className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs cursor-pointer"
                 >
                   ◀ Sektör Yapısına Dön
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(4)}
                   className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
                   Adım 4'e Geç: Oyun Teorisi <ArrowRight className="w-4 h-4" />
-                </button>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* STEP 4: INTERACTION, GAME THEORY & CAPITAL ALLOCATION */}
           {activeStep === 4 && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
+            <motion.div
+              key="step-4"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs"
+            >
               <div className="pb-4 border-b border-slate-100 dark:border-slate-800">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <Zap className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
@@ -1086,25 +1143,36 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               </div>
 
               <div className="pt-4 flex justify-between">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(3)}
                   className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs cursor-pointer"
                 >
                   ◀ Değer Çubuğuna Dön
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(5)}
                   className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
                   Son Adım: Raporu Oluştur <ArrowRight className="w-4 h-4" />
-                </button>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* STEP 5: SUSTAINABILITY & FULL DOSSIER REPORT */}
           {activeStep === 5 && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
+            <motion.div
+              key="step-5"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs"
+            >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
                 <div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
@@ -1243,14 +1311,16 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   </p>
                 </div>
 
-                <button
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setIsCommitteeModalOpen(true)}
-                  className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shrink-0 shadow-xs"
+                  className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shrink-0 shadow-sm"
                 >
                   <ShieldAlert className="w-4 h-4" />
                   <span>Komiteye Sun</span>
-                </button>
+                </motion.button>
               </div>
 
               {/* Dossier Danger Zone / Delete */}
@@ -1263,8 +1333,9 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 </button>
                 <span className="text-[11px] text-slate-400">Son Güncelleme: {currentDossier.updatedAt}</span>
               </div>
-            </div>
+            </motion.div>
           )}
+          </AnimatePresence>
         </div>
 
         {/* Right Column: Live Diagnostic Dashboard & DuPont Card (4 cols) */}
@@ -1361,8 +1432,9 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )}
+</AnimatePresence>
 
       {/* MODAL: Balance Sheet & 10-K Field Guide */}
       {isGuideModalOpen && (

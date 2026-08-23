@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { LearningModule, UserLearningState } from "./types";
 import { MODULES_DATA } from "./data/modulesData";
 import {
@@ -17,6 +18,9 @@ import { INITIAL_PRESET_DOSSIERS } from "./data/companyAuditData";
 import { GlossaryModal } from "./components/GlossaryModal";
 import { AICoachDrawer } from "./components/AICoachDrawer";
 import { OnboardingGuideModal } from "./components/OnboardingGuideModal";
+import { FormulaDeepDiveModal } from "./components/FormulaDeepDiveModal";
+import { FormulaWorkshopView } from "./components/FormulaWorkshopView";
+import { Footer } from "./components/Footer";
 
 export default function App() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -39,6 +43,10 @@ export default function App() {
       return false;
     }
   });
+
+  // Formula Deep Dive Modal Global State
+  const [isFormulaModalOpen, setIsFormulaModalOpen] = useState<boolean>(false);
+  const [selectedFormulaId, setSelectedFormulaId] = useState<string | null>(null);
 
   // Get current dossiers for duel
   const getDossiers = () => {
@@ -134,155 +142,147 @@ export default function App() {
         onOpenAICoach={() => setIsAICoachOpen(true)}
         onOpenGlossary={() => handleOpenGlossary()}
         onOpenGuide={() => setIsGuideOpen(true)}
+        onOpenFormulas={() => {
+          setSelectedFormulaId(null);
+          setActiveTab("formulas");
+          setActiveModule(null);
+        }}
         isDarkMode={isDarkMode}
         onToggleDarkMode={toggleDarkMode}
       />
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
-        {activeModule ? (
-          <ModuleReader
-            module={activeModule}
-            allModules={MODULES_DATA}
-            userState={userState}
-            onBackToRoadmap={handleBackToRoadmap}
-            onSelectModule={handleSelectModule}
-            onCompleteModule={handleCompleteModule}
-            onOpenAICoach={() => setIsAICoachOpen(true)}
-            onOpenGlossary={handleOpenGlossary}
-            onOpenLabSim={(simId) => {
-              setSelectedSim(simId);
-              setActiveTab("simulators");
-              setActiveModule(null);
-            }}
-          />
-        ) : (
-          <>
-            {activeTab === "roadmap" && (
-              <RoadmapView
+        <AnimatePresence mode="wait">
+          {activeModule ? (
+            <motion.div
+              key={`module-${activeModule.id}`}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+            >
+              <ModuleReader
+                module={activeModule}
+                allModules={MODULES_DATA}
                 userState={userState}
+                onBackToRoadmap={handleBackToRoadmap}
                 onSelectModule={handleSelectModule}
-                onOpenGlossary={() => handleOpenGlossary()}
-                onOpenGuide={() => setIsGuideOpen(true)}
-                onOpenAICoach={() => {
-                  setAiCoachPrompt(undefined);
-                  setIsAICoachOpen(true);
-                }}
-                onNavigateTab={(tab, sim) => {
-                  if (sim) setSelectedSim(sim);
-                  setActiveTab(tab);
+                onCompleteModule={handleCompleteModule}
+                onOpenAICoach={() => setIsAICoachOpen(true)}
+                onOpenGlossary={handleOpenGlossary}
+                onOpenLabSim={(simId) => {
+                  setSelectedSim(simId);
+                  setActiveTab("simulators");
                   setActiveModule(null);
                 }}
-              />
-            )}
-
-            {activeTab === "simulators" && (
-              <SimulationsView
-                activeSim={selectedSim}
-                onSelectSim={(sim) => setSelectedSim(sim)}
-                onOpenAICoachWithPrompt={(prompt) => {
-                  setAiCoachPrompt(prompt);
-                  setIsAICoachOpen(true);
+                onOpenFormulaWorkshop={(formulaId) => {
+                  setSelectedFormulaId(formulaId);
+                  setActiveTab("formulas");
+                  setActiveModule(null);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
               />
-            )}
+            </motion.div>
+          ) : (
+            <motion.div
+              key={`tab-${activeTab}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+            >
+              {activeTab === "roadmap" && (
+                <RoadmapView
+                  userState={userState}
+                  onSelectModule={handleSelectModule}
+                  onOpenGlossary={() => handleOpenGlossary()}
+                  onOpenGuide={() => setIsGuideOpen(true)}
+                  onOpenAICoach={() => {
+                    setAiCoachPrompt(undefined);
+                    setIsAICoachOpen(true);
+                  }}
+                  onNavigateTab={(tab, sim) => {
+                    if (sim) setSelectedSim(sim);
+                    setActiveTab(tab);
+                    setActiveModule(null);
+                  }}
+                />
+              )}
 
-            {activeTab === "company-audit" && (
-              <CompanyAuditLab
-                onOpenAICoachWithPrompt={(prompt) => {
-                  setAiCoachPrompt(prompt);
-                  setIsAICoachOpen(true);
-                }}
-                onOpenGlossary={handleOpenGlossary}
-              />
-            )}
+              {activeTab === "formulas" && (
+                <FormulaWorkshopView
+                  selectedFormulaId={selectedFormulaId}
+                  onSelectFormula={(id) => setSelectedFormulaId(id)}
+                  onNavigateToModule={(moduleId) => {
+                    const target = MODULES_DATA.find((m) => m.id === moduleId);
+                    if (target) {
+                      setActiveModule(target);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }
+                  }}
+                  onNavigateToSim={(simId) => {
+                    setSelectedSim(simId as any);
+                    setActiveTab("simulators");
+                    setActiveModule(null);
+                  }}
+                />
+              )}
 
-            {activeTab === "moat-duel" && (
-              <MoatDuelView dossiers={getDossiers()} />
-            )}
+              {activeTab === "simulators" && (
+                <SimulationsView
+                  activeSim={selectedSim}
+                  onSelectSim={(sim) => setSelectedSim(sim)}
+                  onOpenAICoachWithPrompt={(prompt) => {
+                    setAiCoachPrompt(prompt);
+                    setIsAICoachOpen(true);
+                  }}
+                />
+              )}
 
-            {activeTab === "spaced-repetition" && (
-              <SpacedRepetitionView
-                userState={userState}
-                setUserState={setUserState}
-                onOpenGlossary={handleOpenGlossary}
-                onOpenAICoach={() => {
-                  setAiCoachPrompt(undefined);
-                  setIsAICoachOpen(true);
-                }}
-              />
-            )}
-          </>
-        )}
+              {activeTab === "company-audit" && (
+                <CompanyAuditLab
+                  onOpenAICoachWithPrompt={(prompt) => {
+                    setAiCoachPrompt(prompt);
+                    setIsAICoachOpen(true);
+                  }}
+                  onOpenGlossary={handleOpenGlossary}
+                />
+              )}
+
+              {activeTab === "moat-duel" && (
+                <MoatDuelView dossiers={getDossiers()} />
+              )}
+
+              {activeTab === "spaced-repetition" && (
+                <SpacedRepetitionView
+                  userState={userState}
+                  setUserState={setUserState}
+                  onOpenGlossary={handleOpenGlossary}
+                  onOpenAICoach={() => {
+                    setAiCoachPrompt(undefined);
+                    setIsAICoachOpen(true);
+                  }}
+                />
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
 
-      {/* Footer */}
-      <footer className="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-8 text-xs text-slate-500 dark:text-slate-400">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5 text-center md:text-left">
-            <div className="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-900/50 text-indigo-700 dark:text-indigo-300 flex items-center justify-center font-bold text-xs">
-              M
-            </div>
-            <div>
-              <span className="font-semibold text-slate-900 dark:text-slate-100">
-                Ekonomik Hendek Akademisi & Bilanço Atölyesi
-              </span>
-              <span className="block text-[11px] text-slate-500 dark:text-slate-400">
-                Michael J. Mauboussin & Dan Callahan (Measuring the Moat Uygulaması)
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-4 text-[11px]">
-            <button
-              onClick={() => {
-                setActiveTab("company-audit");
-                setActiveModule(null);
-              }}
-              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold cursor-pointer"
-            >
-              Şirket Analiz Atölyesi
-            </button>
-            <span>•</span>
-            <button
-              onClick={() => handleOpenGlossary()}
-              className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
-            >
-              Terimler Sözlüğü
-            </button>
-            <span>•</span>
-            <button
-              onClick={() => {
-                setActiveTab("spaced-repetition");
-                setActiveModule(null);
-              }}
-              className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
-            >
-              Aralıklı Tekrarlama (SM-2)
-            </button>
-            <span>•</span>
-            <button
-              onClick={() => {
-                setActiveTab("simulators");
-                setActiveModule(null);
-              }}
-              className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
-            >
-              Simülasyon Laboratuvarı
-            </button>
-            <span>•</span>
-            <button
-              onClick={() => {
-                setAiCoachPrompt(undefined);
-                setIsAICoachOpen(true);
-              }}
-              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-semibold cursor-pointer"
-            >
-              Sokratik AI Koçu
-            </button>
-          </div>
-        </div>
-      </footer>
+      {/* Modern Footer with Creator LinkedIn Link */}
+      <Footer
+        onNavigateTab={(tab) => {
+          setActiveTab(tab);
+          setActiveModule(null);
+        }}
+        onOpenGlossary={() => handleOpenGlossary()}
+        onOpenAICoach={() => {
+          setAiCoachPrompt(undefined);
+          setIsAICoachOpen(true);
+        }}
+        onOpenGuide={() => setIsGuideOpen(true)}
+      />
 
       {/* Floating Socratic AI Coach Drawer */}
       <AICoachDrawer
@@ -339,6 +339,21 @@ export default function App() {
           } catch {
             // ignore
           }
+        }}
+      />
+
+      {/* Global Formula Deep Dive Atelier Modal */}
+      <FormulaDeepDiveModal
+        isOpen={isFormulaModalOpen}
+        initialFormulaId={selectedFormulaId || undefined}
+        onClose={() => {
+          setIsFormulaModalOpen(false);
+          setSelectedFormulaId(null);
+        }}
+        onOpenFullPage={(fId) => {
+          setSelectedFormulaId(fId);
+          setActiveTab("formulas");
+          setActiveModule(null);
         }}
       />
     </div>

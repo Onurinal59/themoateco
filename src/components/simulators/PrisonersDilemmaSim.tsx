@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Swords, RefreshCw, Trophy, ShieldAlert, Sparkles, Award } from "lucide-react";
+import { Swords, RotateCcw, Trophy, ShieldAlert, Sparkles, Award, CheckCircle2 } from "lucide-react";
 
 type StrategyType = "tit-for-tat" | "aggressive" | "cooperative";
 
@@ -69,36 +69,44 @@ export const PrisonersDilemmaSim: React.FC = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-slate-800 dark:text-slate-100 shadow-xs" id="prisoners-dilemma-sim">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs animate-in fade-in duration-200" id="prisoners-dilemma-sim">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-              Oyun Teorisi (Exhibit 36)
+              Modül 6 Laboratuvarı
             </span>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">Mahkumlar İkilemi & Bilet Fiyat Savaşı Arenası</h3>
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+              Oyun Teorisi & Fiyat Savaşları (Exhibit 36)
+            </span>
           </div>
-          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-            Havayolu A (Siz) vs Havayolu B (Bot). Uçuş başı maliyet $160. Fiyatı kıracak mısınız yoksa işbirliği mi yapacaksınız?
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+            Mahkumlar İkilemi & Bilet Fiyat Savaşı Arenası
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed max-w-4xl">
+            Havayolu A (Siz) vs Havayolu B (Bot). Uçuş başı maliyet $160. Fiyatı kırıp pazar payı mı çalacaksınız yoksa işbirliğiyle kâr marjını mı koruyacaksınız?
           </p>
         </div>
 
         <button
           onClick={resetGame}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer shrink-0 self-start md:self-center"
         >
-          <RefreshCw className="w-3.5 h-3.5" /> Yeniden Başlat
+          <RotateCcw className="w-3.5 h-3.5" /> Sıfırla
         </button>
       </div>
 
-      {/* Opponent Selection */}
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Rakip Havayolu B Karakteri:</span>
-        <div className="flex flex-wrap gap-2">
+      {/* Opponent Strategy Selection */}
+      <div>
+        <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2.5">
+          Rakip Havayolu B Stratejisi:
+        </label>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           {[
-            { id: "tit-for-tat", label: "Tit-for-Tat (Kısasa Kısas - Akıllı)" },
-            { id: "aggressive", label: "Sürekli Fiyat Kıran (Agresif)" },
-            { id: "cooperative", label: "Sürekli Yüksek Tutan (Saf Barışçıl)" },
+            { id: "tit-for-tat", title: "Tit-for-Tat (Kısasa Kısas)", desc: "İşbirliği ile başlar, son hamlenizi aynen taklit eder." },
+            { id: "aggressive", title: "Sürekli Agresif (Fiyat Kırıcı)", desc: "Her turda fiyatı $200'a indirerek pazar payınızı hedefler." },
+            { id: "cooperative", title: "Saf Barışçıl (Yüksek Fiyat)", desc: "Siz ne yaparsanız yapın $220 yüksek fiyatta kalır." },
           ].map((s) => (
             <button
               key={s.id}
@@ -106,13 +114,18 @@ export const PrisonersDilemmaSim: React.FC = () => {
                 setBotStrategy(s.id as StrategyType);
                 resetGame();
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
+              className={`p-3 rounded-2xl border text-left transition-all text-xs cursor-pointer group ${
                 botStrategy === s.id
-                  ? "bg-indigo-50 dark:bg-indigo-950/60 border-indigo-300 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300 font-semibold"
-                  : "bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
+                  ? "bg-indigo-50/80 dark:bg-indigo-950/60 border-indigo-300 dark:border-indigo-700 ring-2 ring-indigo-500/20"
+                  : "bg-slate-50 dark:bg-slate-800/60 hover:bg-indigo-50/40 border-slate-200 dark:border-slate-700/80"
               }`}
             >
-              {s.label}
+              <div className="font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                {s.title}
+              </div>
+              <div className="text-slate-500 dark:text-slate-400 text-[11px] mt-1 leading-tight">
+                {s.desc}
+              </div>
             </button>
           ))}
         </div>
@@ -238,6 +251,15 @@ export const PrisonersDilemmaSim: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Standardized Pedagogical Lesson Callout */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 flex items-start gap-3">
+        <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+        <div className="space-y-1 text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
+          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">Oyun Teorisi & Fiyat Disiplini:</strong>
+          Kapasite fazlası ve yüksek sabit maliyetli sektörlerde (Havayolları, Çimento, Deniz Taşımacılığı) fiyat kırmak kısa vadeli kurnazlık gibi görünse de rakibin misillemesiyle sektörün tüm sermaye getirisini (ROIC) yok eder.
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Shield, Target, Award, RotateCcw, HelpCircle } from "lucide-react";
+import { Shield, Target, Award, RotateCcw, HelpCircle, CheckCircle2 } from "lucide-react";
 
 export const ColonelBlottoSim: React.FC = () => {
   const [b1, setB1] = useState<number>(33);
@@ -28,17 +28,23 @@ export const ColonelBlottoSim: React.FC = () => {
   const overallWinner = playerWins > oppWins ? "Siz Kazandınız!" : oppWins > playerWins ? "Pazar Lideri Kazandı" : "Berabere";
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-slate-800 dark:text-slate-100 shadow-xs" id="blotto-sim">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs animate-in fade-in duration-200" id="blotto-sim">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-              Oyun Teorisi (Exhibit 37)
+              Modül 6+ İleri Strateji
             </span>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">Albay Blotto Stratejik Kaynak Dağıtım Oyunu</h3>
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+              Albay Blotto Kaynak Dağıtımı (Exhibit 37)
+            </span>
           </div>
-          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">
-            Toplam 100 askerinizi (bütçenizi) 3 cepheye dağıtın. En az 2 cepheyi kazanan savaşı kazanır!
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+            Albay Blotto Stratejik Kaynak Dağıtım Simülasyonu
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed max-w-4xl">
+            Toplam 100 birimlik bütçenizi 3 farklı pazar/ürün cephesine dağıtın. En az 2 cephede lider rakibi geçen savaşı kazanır!
           </p>
         </div>
 
@@ -48,26 +54,26 @@ export const ColonelBlottoSim: React.FC = () => {
             setB2(33);
             setB3(34);
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer shrink-0 self-start md:self-center"
         >
           <RotateCcw className="w-3.5 h-3.5" /> Sıfırla
         </button>
       </div>
 
       {/* Soldier Balance Status */}
-      <div className="mt-4 flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+      <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
         <div className="text-xs text-slate-700 dark:text-slate-300">
-          Kullanılan Asker: <strong className={isValid ? "text-emerald-700 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}>{totalSoldiers} / 100</strong>
+          Kullanılan Asker/Bütçe: <strong className={isValid ? "text-emerald-700 dark:text-emerald-400 font-mono text-sm" : "text-rose-600 dark:text-rose-400 font-mono text-sm"}>{totalSoldiers} / 100</strong>
         </div>
         {!isValid && (
           <div className="text-xs text-rose-600 dark:text-rose-400 font-bold">
-            Toplam tam olarak 100 asker olmalıdır! (Fark: {100 - totalSoldiers})
+            Toplam tam olarak 100 olmalıdır! (Kalan/Fazla: {100 - totalSoldiers})
           </div>
         )}
       </div>
 
       {/* 3 Battlefields Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Battlefield 1 */}
         <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col justify-between">
           <div>
@@ -196,7 +202,7 @@ export const ColonelBlottoSim: React.FC = () => {
       </div>
 
       {/* Outcome Verdict */}
-      <div className="mt-6 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-700 dark:text-amber-300">
             <Award className="w-6 h-6" />
@@ -207,8 +213,19 @@ export const ColonelBlottoSim: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-xs text-slate-600 dark:text-slate-300 max-w-md leading-relaxed text-right">
-          💡 <strong>Stratejik Ders:</strong> Zayıf oyuncu, dev rakibin en çok asker yığdığı 3. cepheyi (40 asker) terk edip; 1. ve 2. cephelere 33'er asker yığarak 2-1 savaşı kazanabilir (Favorable Mismatch)!
+        <div className="text-xs text-slate-600 dark:text-slate-300 max-w-md leading-relaxed">
+          {playerWins > oppWins
+            ? "Tebrikler! Odaklı kaynak tahsisi sayesinde pazar liderini kritik cephelerde geçtiniz."
+            : "Pazar liderinin kaynak üstünlüğü dengeli dağılımda öne geçiyor. Cephe odaklanmanızı gözden geçirin."}
+        </div>
+      </div>
+
+      {/* Standardized Pedagogical Lesson Callout */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 flex items-start gap-3">
+        <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+        <div className="space-y-1 text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
+          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">Albay Blotto Kaynak İlkesi (Favorable Mismatch):</strong>
+          Daha az kaynağa sahip bir meydan okuyucu, dev rakibin en güçlü olduğu cepheyi (40 asker) terk edip kalan cephelere yoğunlaşarak (33'er askerle 30'luk cepheleri ezerek) savaşı 2-1 kazanabilir.
         </div>
       </div>
     </div>

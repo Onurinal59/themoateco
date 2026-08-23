@@ -6,10 +6,18 @@ export const MODULES_DATA: LearningModule[] = [
     slug: "hendek-ve-deger-yaratma",
     title: "1. Adım: Şato, Timsahlı Hendek & Gerçek Değer Yaratma",
     subtitle: "Sıfırdan Başlangıç: Bir Şirket Gerçekte Ne Zaman Para Kazanır?",
-    estimatedMinutes: 12,
+    estimatedMinutes: 14,
     iconName: "Shield",
-    description: "Warren Buffett'ın ünlü ekonomik hendek metaforu, sermaye getirisi (ROIC), sermaye maliyeti (WACC) ve 'Ciro Yapmak' ile 'Değer Yaratmak' arasındaki hayati fark.",
-    zeroKnowledgeSummary: "Hiç finans bilmeseniz bile: Bir bakkal veya limonata tezgahı açtığınızı düşünün. Bankadan %10 faizle para alıp, dükkandan sadece %5 kâr ediyorsanız, çok satış yapsanız bile gizlice batıyorsunuzdur!",
+    description:
+      "Warren Buffett'ın ünlü ekonomik hendek metaforu, sermaye getirisi (ROIC), sermaye maliyeti (WACC) ve 'Ciro Yapmak' ile 'Hissedar Değeri Yaratmak' arasındaki hayati matematiksel fark.",
+    zeroKnowledgeSummary:
+      "Hiç finans bilmeseniz bile: Bir bakkal veya limonata tezgahı açtığınızı düşünün. Bankadan veya ailenizden %10 faizle para alıp, dükkandan sadece %5 kâr ediyorsanız; dükkan tıklım tıklım olsa ve rekor satış yapsanız bile gizlice batıyorsunuzdur! Gerçek zenginlik, kârınızın (ROIC) borç/sermaye maliyetinizi (WACC) aştığı anda başlar.",
+    moduleBridge: {
+      transitionQuestion: "Bir şirket ne zaman gerçek bir zenginlik üretir ve bu zenginliği rakiplerinden nasıl korur?",
+      nextTitle: "2. Adım: Şirket Yaşam Döngüsü (Dickinson Modeli)",
+      whyNext: "ROIC ve WACC'nin değer yaratma matematiğini öğrendik. Ancak şirketlerin bu yüksek getiriyi ömürleri boyunca sürekli üretmesi mümkün müdür? Şirketin takvim yaşına değil, nakit akışı evresine bakarak ne zaman zirvede olduğunu tespit etmeliyiz.",
+      previewQuestion: "Bir şirketin nakit akış tablosundaki (+ / -) işaretleri onun gerçek yaşını ve ROIC potansiyelini nasıl ele verir?",
+    },
     sections: [
       {
         id: "m1-s1",
@@ -18,13 +26,16 @@ export const MODULES_DATA: LearningModule[] = [
         content: [
           "Düşünün ki sokağınızda çok lezzetli kahve yapan, tıklım tıklım dolu harika bir kafe açtınız. Kapitalizmin doğası gereği, sizin bu yüksek kârınızı gören onlarca girişimci hemen yan dükkanda benzer kafeler açacaktır.",
           "Warren Buffett şöyle der: 'Biz her işletmeyi bir ekonomik şato olarak düşünürüz. Ve serbest piyasada şatolar sürekli saldırıya uğramaya mahkumdur. Milyonlarca insan o kârı sizden nasıl alacağını düşünür. Asıl soru şudur: O şatoyu koruyan nasıl bir hendeğiniz var?'",
-          "Ekonomik Hendek (Economic Moat), rakiplerinizin sizin kârınızı ve müşterilerinizi çalmasını engelleyen, aşılması son derece zor bir koruma kalkanıdır. Hendek ne kadar geniş ve derinse, şirket o kadar uzun yıllar yüksek kâr etmeye devam eder."
+          "Ekonomik Hendek (Economic Moat), rakiplerinizin sizin kârınızı ve müşterilerinizi çalmasını engelleyen, aşılması son derece zor bir koruma kalkanıdır. Hendek ne kadar geniş ve derinse, şirket o kadar uzun yıllar yüksek kâr etmeye devam eder.",
+          "Michael Mauboussin'in Morgan Stanley araştırmalarına göre, şirketlerin yalnızca %17'si 20 yıldan uzun sürebilen 'Geniş Hendek' (Wide Moat) sahibidir."
         ],
         analogyBox: {
           title: "🏰 Şato ve Timsahlı Hendek Benzetmesi",
-          description: "Kalenin içindeki hazine: Şirketin kârları. Kaleye hücum eden askerler: Rakipler. Kalenin etrafındaki timsahlı su hendeği: Şirketin patentleri, marka gücü, ağ etkisi veya maliyet avantajı."
+          description:
+            "Kalenin içindeki hazine: Şirketin kârları. Kaleye hücum eden askerler: Rakipler. Kalenin etrafındaki timsahlı su hendeği: Şirketin patentleri, marka gücü, ağ etkisi veya maliyet avantajı."
         },
-        keyTakeaway: "Bir şirkete uzun vadeli yatırım yaparken ilk ve en temel soru şudur: Bu şirketin kârını rakiplerin taklitlerinden koruyan sürdürülebilir bir hendeği var mı?"
+        keyTakeaway:
+          "Bir şirkete uzun vadeli yatırım yaparken ilk ve en temel soru şudur: Bu şirketin kârını rakiplerin taklitlerinden koruyan sürdürülebilir bir hendeği var mı?"
       },
       {
         id: "m1-s2",
@@ -33,14 +44,30 @@ export const MODULES_DATA: LearningModule[] = [
         content: [
           "ROIC (Return on Invested Capital - Yatırılan Sermayenin Getirisi): Şirketin fabrikalarına, mağazalarına, makinelerine ve stoklarına bağladığı her 100 TL'lik sermaye ile yılda kaç TL net faaliyet kârı (NOPAT) ürettiğidir.",
           "WACC (Weighted Average Cost of Capital - Sermaye Maliyeti): Şirketin bu parayı bulmasının (hissedarların beklediği getiri + banka kredi faizi) yıllık fırsat maliyetidir.",
-          "Örnek Hesap: Eğer bir şirketin sermaye maliyeti %8 (WACC) ise ve yatırdığı sermayeden %16 (ROIC) kazanıyorsa, aradaki +%8'lik fark (Ekonomik Yayılım / Spread) şirketin hissedarlarına yarattığı gerçek refahtır.",
-          "Michael Mauboussin'in araştırması gösteriyor ki: Borsa hisse fiyatlarının ortalama %67'si mevcut durumu, %33'ü ise gelecekte yaratılması beklenen bu katma değeri yansıtır."
+          "Örnek Hesap: Eğer bir şirketin sermaye maliyeti %13.9 (WACC) ise ve yatırdığı sermayeden %18.0 (ROIC) kazanıyorsa, aradaki +%4.1'lik fark (Ekonomik Yayılım / Economic Spread) şirketin hissedarlarına yarattığı gerçek refahtır.",
+          "Tersine Durum: Bir şirket %20 büyüyebilir, cirosunu ikiye katlayabilir; ancak ROIC'si %7 ve WACC'si %10 ise, büyüdükçe daha fazla parayı yakıyor demektir (Value Destruction)."
         ],
+        formulaBox: {
+          title: "WACC & ROIC ve Ekonomik Yayılım (Spread) Eşitliği",
+          equation: "WACC = (E/V × Ke) + (D/V × Kd × (1 - t))\nROIC = NOPAT / Yatırılan Sermaye\nEkonomik Yayılım (Spread) = ROIC - WACC",
+          variables: [
+            { symbol: "E / V", label: "Özsermaye Ağırlığı", desc: "Piyasa Değeri / Toplam Sermaye (%70)" },
+            { symbol: "Ke", label: "Özsermaye Maliyeti", desc: "CAPM: Risksiz Faiz + Beta × Risk Primi (%16)" },
+            { symbol: "D / V", label: "Net Borç Ağırlığı", desc: "Finansal Borç / Toplam Sermaye (%30)" },
+            { symbol: "Kd × (1 - t)", label: "Net Borç Maliyeti", desc: "Vergi Kalkanı Sonrası Faiz Oranı (%9)" },
+            { symbol: "NOPAT", label: "Faaliyet Kârı", desc: "Vergi Sonrası Net Faaliyet Kârı (EBIT × (1 - t))" }
+          ],
+          exampleCalculation: "WACC = (0.70 × %16) + (0.30 × %12 × (1 - 0.25)) = %11.2 + %2.7 = %13.9\nROIC = 180 TL / 1.000 TL = %18.0\nEkonomik Yayılım = %18.0 - %13.9 = +%4.1 (Hissedar Değeri Yaratılıyor)"
+        },
+        stepByStepMath: "Adım 1: Özsermaye Maliyeti = %10 Risksiz Faiz + (1.2 Beta × %5 Risk Primi) = %16.0\nAdım 2: Net Borçlanma = %12 Faiz × (1 - 0.25 Vergi) = %9.0\nAdım 3: Ağırlıklı Ortalama = (0.70 × %16.0) + (0.30 × %9.0) = %13.9 WACC\nAdım 4: ROIC (%18.0) > WACC (%13.9) -> Yıllık +%4.1 Pozitif Ekonomik Yayılım",
+        formulaDeepDiveId: "wacc",
         analogyBox: {
           title: "🍋 Limonata Standı Örneği",
-          description: "Standı kurmak için ailenizden %10 faizle (WACC = %10) 1.000 TL borç aldınız. Yaz sonunda 160 TL net kâr ettiniz (ROIC = %16). Ailenize 100 TL faiz ödedikten sonra cebinize 60 TL net refah kalır. Ama sadece 60 TL kâr etseydiniz (%6 ROIC), borcun faizini bile karşılayamazdınız!"
+          description:
+            "Standı kurmak için ailenizden %10 faizle (WACC = %10) 1.000 TL borç aldınız. Yaz sonunda 180 TL net kâr ettiniz (ROIC = %18). Ailenize 100 TL faiz ödedikten sonra cebinize 80 TL net refah kalır. Ama sadece 60 TL kâr etseydiniz (%6 ROIC), borcun faizini bile karşılayamazdınız!"
         },
-        keyTakeaway: "ROIC sermaye maliyetini (WACC) aşmadıkça, ciro rekoru kıran şirketler bile aslında gizlice hissedar servetini yok etmektedir."
+        keyTakeaway:
+          "ROIC sermaye maliyetini (WACC) aşmadıkça, ciro rekoru kıran şirketler bile aslında gizlice hissedar servetini yok etmektedir."
       },
       {
         id: "m1-s3",
@@ -48,15 +75,18 @@ export const MODULES_DATA: LearningModule[] = [
         summary: "Değer = Farkın Büyüklüğü (Magnitude) × Farkın Süresi (Sustainability / CAP).",
         content: [
           "Yalnızca tek bir yıl yüksek ROIC kazanmak yetmez. İkinci ve çok daha kritik boyut, bu yüksek getiri oranını kaç yıl boyunca rakiplere kaptırmadan koruyabileceğinizdir (Competitive Advantage Period - CAP).",
-          "Ortalamaya Dönüş (Regression to the Mean): Mauboussin'in binlerce şirketi incelediği veriler, en yüksek kârlılığa sahip ilk %20'lik şirketlerin bile 5-10 yıl içinde kârlarının piyasa ortalamasına doğru gerilediğini göstermektedir.",
+          "Ortalamaya Dönüş (Regression to the Mean): Mauboussin'in binlerce şirketi incelediği veriler, en yüksek kârlılığa sahip ilk %20'lik şirketlerin bile 5-10 yıl içinde kârlarının piyasa ortalamasına doğru hızla gerilediğini göstermektedir.",
           "Bunun istisnası olan nadir şirketlere 'Compounder' (Bileşik Büyüyenler) denir. Coca-Cola, Apple, Microsoft gibi şirketler 20+ yıl boyunca ROIC > WACC farkını koruyabilmiştir.",
-          "Morningstar verilerine göre incelenen şirketlerin yalnızca %17'si 20 yıldan uzun süren 'Geniş Hendek' (Wide Moat) sahibidir."
+          "Mauboussin araştırması: Borsa hisse fiyatlarının ortalama %67'si mevcut durumu, %33'ü ise gelecekte yaratılması beklenen bu katma değeri yansıtır."
         ],
+        formulaDeepDiveId: "roic",
         analogyBox: {
           title: "🏃‍♂️ Depar vs Maraton Koşucusu",
-          description: "Çok hızlı koşan bir koşucu 100 metrede rekor kırabilir ama 42 kilometrelik maratonda yorulup yavaşlayabilir. Geniş hendekli şirketler, maraton boyunca tempolarını koruyan dünya şampiyonlarıdır."
+          description:
+            "Çok hızlı koşan bir koşucu 100 metrede rekor kırabilir ama 42 kilometrelik maratonda yorulup yavaşlayabilir. Geniş hendekli şirketler, maraton boyunca tempolarını koruyan dünya şampiyonlarıdır."
         },
-        keyTakeaway: "Yatırım dünyasında en büyük servetler, hendeği piyasanın tahmin ettiğinden çok daha uzun yıllar dayanabilen 'bileşik getirili' şirketlerden gelir."
+        keyTakeaway:
+          "Yatırım dünyasında en büyük servetler, hendeği piyasanın tahmin ettiğinden çok daha uzun yıllar dayanabilen 'bileşik getirili' şirketlerden gelir."
       }
     ],
     quiz: [
@@ -70,31 +100,34 @@ export const MODULES_DATA: LearningModule[] = [
           "Şirketin çalışanlarına ödediği toplam maaş bütçesini"
         ],
         correctAnswerIndex: 1,
-        explanation: "Ekonomik hendek, şatoyu (şirketi ve kârlarını) dışarıdaki akıncılardan (rakiplerden) koruyan derin su çukuru gibi, rakiplerin kârları aşındırmasını engelleyen stratejik üstünlüktür."
+        explanation:
+          "Ekonomik hendek, şatoyu (şirketi ve kârlarını) dışarıdaki akıncılardan (rakiplerden) koruyan derin su çukuru gibi, rakiplerin kârları aşındırmasını engelleyen stratejik üstünlüktür."
       },
       {
         id: "q1-2",
-        question: "Bir şirketin sermaye maliyeti (WACC) %9 ve yatırılan sermaye getirisi (ROIC) %6 ise ne gerçekleşmektedir?",
+        question: "Bir şirketin sermaye maliyeti (WACC) %10 ve yatırılan sermaye getirisi (ROIC) %7 ise ne gerçekleşmektedir?",
         options: [
           "Şirket hissedarları için harika bir ekonomik katma değer üretmektedir.",
-          "Şirket kâr etmesine rağmen sermayenin fırsat maliyetini karşılayamadığı için değer yok etmektedir (Value Destruction).",
+          "Şirket muhasebede kâr etmesine rağmen sermaye fırsat maliyetini karşılayamadığı için değer yok etmektedir (Value Destruction).",
           "Şirketin hisse fiyatı kesinlikle ikiye katlanacaktır.",
           "Şirketin hiçbir borcu veya sermaye ihtiyacı kalmamıştır."
         ],
         correctAnswerIndex: 1,
-        explanation: "ROIC (%6) < WACC (%9) olduğunda, şirket kullandığı paranın maliyetinden daha az getiri ürettiği için her yeni yatırımda aslında hissedar servetini eritmektedir."
+        explanation:
+          "ROIC (%7) < WACC (%10) olduğunda, şirket kullandığı paranın maliyetinden daha az getiri ürettiği için her yeni yatırımda aslında hissedar servetini eritmektedir."
       },
       {
         id: "q1-3",
-        question: "Mauboussin'in makalesine göre hisse senedi fiyatlarının ortalama ne kadarı 'Gelecekte Yaratılması Beklenen Değeri' yansıtır?",
+        question: "WACC hesaplanırken borç faizinin (1 - t) ile çarpılmasının (Vergi Kalkanı) temel sebebi nedir?",
         options: [
-          "Yaklaşık %5",
-          "Yaklaşık %33 (üçte bir)",
-          "Yaklaşık %90",
-          "%0 (fiyatlar sadece geçmişe bakar)"
+          "Bankaların devlete ceza ödemesi",
+          "Faiz giderlerinin kurumlar vergisinden düşülebilmesi sebebiyle borcun şirkete net maliyetinin ucuzlaması",
+          "Hissedarların hiç vergi ödememesi",
+          "Enflasyonun borçları silmesi"
         ],
         correctAnswerIndex: 1,
-        explanation: "Piyasa fiyatlarının yaklaşık 2/3'ü mevcut operasyonel durumu, 1/3'ü ise şirketin gelecekte yaratması beklenen sürdürülebilir artı değeri temsil eder."
+        explanation:
+          "Faiz ödemeleri gelir tablosunda vergiden önce düşüldüğü için şirketin vergi faturasını azaltır (Vergi Kalkanı). Bu yüzden borcun net maliyeti Kd × (1 - t) olur."
       }
     ]
   },
@@ -103,10 +136,20 @@ export const MODULES_DATA: LearningModule[] = [
     slug: "sirket-yasam-donguleri",
     title: "2. Adım: Şirket Yaşam Döngüsü (Dickinson Modeli)",
     subtitle: "Önce Şirketin Hangi Yaşta Olduğunu Anla: Nakit Akışı Röntgeni",
-    estimatedMinutes: 14,
+    estimatedMinutes: 15,
     iconName: "TrendingUp",
-    description: "Modül 1'de ROIC'i öğrendik. Peki şirketler hayatlarının hangi döneminde yüksek ROIC kazanır? Victoria Dickinson'ın 5 evreli nakit akışı yaşam döngüsü modeli.",
-    zeroKnowledgeSummary: "Bir bebeğin, üniversite öğrencisinin, çalışan bir yetişkinin ve emeklinin para harcama alışkanlıkları çok farklıdır. Şirketlerin yaşını da takvimdeki kuruluş yılı değil; nakit akış tablosundaki işaretler (+ / -) belirler.",
+    description:
+      "Modül 1'de ROIC'i öğrendik. Peki şirketler hayatlarının hangi döneminde yüksek ROIC kazanır? Victoria Dickinson'ın 5 evreli nakit akışı yaşam döngüsü modeli ve 8 nakit akış kombinasyonu.",
+    zeroKnowledgeSummary:
+      "Bir bebeğin, üniversite öğrencisinin, çalışan bir yetişkinin ve emeklinin para harcama alışkanlıkları çok farklıdır. Şirketlerin yaşını da takvimdeki kuruluş yılı değil; nakit akış tablosundaki işaretler (+ / -) belirler. Kârı kağıt üstünde olup kasası boşalan şirketleri bu yöntemle anında yakalayabilirsiniz.",
+    moduleBridge: {
+      prevTitle: "1. Adım: Şato, Timsahlı Hendek & Gerçek Değer Yaratma",
+      takeawayFromPrev: "Bir şirket ancak ROIC > WACC olduğu zaman gerçek ekonomik refah üretir.",
+      transitionQuestion: "Peki bir şirket ömrünün hangi evresinde bu yüksek ROIC'e ulaşır ve nakit basma makinesine dönüşür?",
+      nextTitle: "3. Adım: Değer Çubuğu (Mikroekonomik Temeller)",
+      whyNext: "Şirketin yaşam evresini ve nakit gücünü belirledik. Şimdi mikroskobumuzu tek bir ürünün fiyat ve maliyet yapısına yaklaştırıyoruz: Şirket kârını nereden çıkarır?",
+      previewQuestion: "Müşterinin gönlündeki tavan değer (WTP) ile şirketin maliyet tabanı arasındaki rant nasıl paylaşılır?",
+    },
     sections: [
       {
         id: "m2-s1",
@@ -114,31 +157,47 @@ export const MODULES_DATA: LearningModule[] = [
         summary: "100 yıllık bir şirket yeni bir sektöre girip gençleşebilir; 2 yıllık bir girişim erkenden çökebilir.",
         content: [
           "Geleneksel analizde şirketlerin kuruluş yılına bakılırdı. Ancak teknoloji çağında kuruluş tarihi şirketin hangi aşamada olduğunu göstermez.",
-          "Muhasebe profesörü Victoria Dickinson, şirketleri sınıflandırmak için mükemmel bir yöntem geliştirdi: Şirketin Nakit Akış Tablosundaki 3 ana kalemin işaretine (+ veya -) bakmak!",
-          "Bu 3 kalem: 1. Faaliyet Nakit Akışı (İşten gelen para), 2. Yatırım Nakit Akışı (Geleceğe harcanan para), 3. Finansman Nakit Akışı (Borçlanma/Hisse basımı veya temettü/borç ödeme)."
+          "Muhasebe profesörü Victoria Dickinson (2011), şirketleri sınıflandırmak için mükemmel bir yöntem geliştirdi: Şirketin Nakit Akış Tablosundaki 3 ana damarın işaretine (+ veya -) bakmak!",
+          "Bu 3 damar: 1. CFO: Faaliyet Nakit Akışı (İşten gelen gerçek nakit), 2. CFI: Yatırım Nakit Akışı (Geleceğe harcanan fabrika/makine parası), 3. CFF: Finansman Nakit Akışı (Borçlanma/Hisse basımı veya temettü/borç ödeme)."
         ],
         analogyBox: {
           title: "🌱 İnsan Yaşamı ile Şirket Yaşamı",
-          description: "Bir üniversite öğrencisi henüz maaş alamaz (Faaliyet -), eğitimine para harcar (Yatırım -) ve ailesinden harçlık alır (Finansman +). Bu tam olarak 'Giriş Evresi' şirketidir!"
+          description:
+            "Bir üniversite öğrencisi henüz maaş alamaz (Faaliyet -), eğitimine para harcar (Yatırım -) ve ailesinden harçlık alır (Finansman +). Bu tam olarak 'Giriş Evresi' şirketidir!"
         },
-        keyTakeaway: "Şirketin biyolojik yaşı yoktur; nakit hareketlerinin yönü şirketin yaşam evresini belirler."
+        keyTakeaway:
+          "Şirketin biyolojik yaşı yoktur; nakit hareketlerinin yönü şirketin yaşam evresini belirler."
       },
       {
         id: "m2-s2",
         title: "2. 5 Yaşam Döngüsü Evresi ve Dickinson İşaretleri",
         summary: "Faaliyet, Yatırım ve Finansman akışlarının kombinasyonundan 5 temel evre türer.",
         content: [
-          "1. Giriş (Introduction) [Faaliyet (-), Yatırım (-), Finansman (+)]: Şirket henüz işinden nakit üretemez, yoğun yatırım yapar ve dışarıdan borç/yatırımcı parası bulur. (Ortalama ROIC: -%2.8)",
-          "2. Büyüme (Growth) [Faaliyet (+), Yatırım (-), Finansman (+)]: Artık kendi işinden nakit üretir ama o kadar hızlı büyür ki hem kendi nakdini hem dış kaynakları yatırıma gömer. (Ortalama ROIC: +%10.6)",
-          "3. Olgunluk (Maturity) [Faaliyet (+), Yatırım (-), Finansman (-)]: Şirket nakit basma makinesine dönmüştür! İşten devasa nakit girer, yatırımlarını kendi karşılar ve üstüne borç öder ya da temettü dağıtır. (Ortalama ROIC: +%11.2)",
+          "1. Giriş (Introduction) [CFO: (-), CFI: (-), CFF: (+)]: Şirket henüz işinden nakit üretemez, yoğun yatırım yapar ve dışarıdan borç/yatırımcı parası bulur. (Ortalama ROIC: -%2.8)",
+          "2. Büyüme (Growth) [CFO: (+), CFI: (-), CFF: (+)]: Artık kendi işinden nakit üretir ama o kadar hızlı büyür ki hem kendi nakdini hem dış kaynakları yatırıma gömer. (Ortalama ROIC: +%10.6)",
+          "3. Olgunluk (Maturity) [CFO: (+), CFI: (-), CFF: (-)]: Şirket nakit basma makinesine dönmüştür! İşten devasa nakit girer, yatırımlarını kendi karşılar ve üstüne borç öder ya da temettü dağıtır. (Ortalama ROIC: +%11.2 - İDEAL HENDEK EVRESİ)",
           "4. Sarsıntı (Shake-Out) [Karışık Akışlar]: Sektörde büyüme yavaşlar, zayıf şirketler elenir, kârlar dalgalanır. (Ortalama ROIC: +%3.8)",
-          "5. Düşüş (Decline) [Faaliyet (-), Yatırım (+), Finansman (+/-)]: İşten para gelmez, şirket varlıklarını ve fabrikalarını satarak nakit yaratmaya çalışır. (Ortalama ROIC: -%12.0)"
+          "5. Düşüş (Decline) [CFO: (-), CFI: (+), CFF: (+/-)]: İşten para gelmez, şirket varlıklarını ve fabrikalarını satarak nakit yaratmaya çalışır (CFI +). (Ortalama ROIC: -%12.0)"
         ],
+        interactiveVisualId: "dickinson-lifecycle",
+        formulaBox: {
+          title: "Victoria Dickinson Nakit Akışı Yaşam Döngüsü Modeli",
+          equation: "Yaşam Döngüsü Evresi = Kombinasyon( CFO [Faaliyet], CFI [Yatırım], CFF [Finansman] )",
+          variables: [
+            { symbol: "CFO", label: "Faaliyet Nakit Akışı", desc: "Müşterilerden gelen gerçek nakit eksi faaliyet giderleri" },
+            { symbol: "CFI", label: "Yatırım Nakit Akışı", desc: "Fabrika, makine, Ar-Ge ve duran varlık harcamaları (-: Alım, +: Satış)" },
+            { symbol: "CFF", label: "Finansman Nakit Akışı", desc: "Kredi, hisse ihracı (+: Para Girişi) veya temettü/borç ödeme (-: Para Çıkışı)" }
+          ],
+          exampleCalculation: "Olgunluk Evresi: CFO (+300M TL) / CFI (-80M TL) / CFF (-150M TL)\nSonuç: Operasyon kendi kendini finanse ediyor, borçlar kapatılıyor ve hissedara temettü ödeniyor!"
+        },
+        formulaDeepDiveId: "dickinson",
         analogyBox: {
           title: "🍎 Apple'ın Evreleri",
-          description: "Apple 1976'da garajda Giriş evresindeydi. 2007'de iPhone ile devasa bir Büyüme evresine girdi. Bugün ise her yıl 100 milyar dolar nakit üreten, hisselerini geri alan tam bir Olgunluk kalesidir."
+          description:
+            "Apple 1976'da garajda Giriş evresindeydi. 2007'de iPhone ile devasa bir Büyüme evresine girdi. Bugün ise her yıl 100 milyar dolar nakit üreten, hisselerini geri alan tam bir Olgunluk kalesidir."
         },
-        keyTakeaway: "Halka açık şirketlerin yaklaşık %74'ü Büyüme (%38) veya Olgunluk (%36) evresindedir; en sağlam ekonomik hendekler Olgunluk döneminde test edilir."
+        keyTakeaway:
+          "Halka açık şirketlerin yaklaşık %74'ü Büyüme (%38) veya Olgunluk (%36) evresindedir; en sağlam ekonomik hendekler Olgunluk döneminde test edilir."
       }
     ],
     quiz: [
@@ -152,19 +211,21 @@ export const MODULES_DATA: LearningModule[] = [
           "Düşüş (Decline)"
         ],
         correctAnswerIndex: 2,
-        explanation: "Olgunluk evresinde şirket kendi operasyonundan yüksek nakit üretir (+), yatırımlarını finanse eder (-) ve kalan nakitle borç öder veya temettü/hisse geri alımı yaparak finansman çıkışı (-) gerçekleştirir."
+        explanation:
+          "Olgunluk evresinde şirket kendi operasyonundan yüksek nakit üretir (+), yatırımlarını finanse eder (-) ve kalan nakitle borç öder veya temettü/hisse geri alımı yaparak finansman çıkışı (-) gerçekleştirir."
       },
       {
         id: "q2-2",
-        question: "Dickinson yaşam döngüsü analizine göre hangi evredeki şirketlerin ortalama ROIC oranı negatiftir?",
+        question: "Dickinson analizinde Yatırım Nakit Akışının (CFI) pozitif (+) olması neyin işaretidir?",
         options: [
-          "Büyüme ve Olgunluk",
-          "Giriş ve Düşüş",
-          "Yalnızca Olgunluk",
-          "Bütün evrelerde ROIC pozitiftir"
+          "Şirketin harika yeni fabrikalar açtığının",
+          "Şirketin operasyonel nakit açığını kapatmak için eski fabrikalarını veya duran varlıklarını sattığının (Düşüş/Kriz işareti)",
+          "Şirketin borçsuz olduğunun",
+          "Hissedarlara rekor temettü ödendiğinin"
         ],
         correctAnswerIndex: 1,
-        explanation: "Giriş evresinde ortalama ROIC -%2.8, Düşüş evresinde ise -%12.0 olarak ölçülmüştür."
+        explanation:
+          "Yatırım nakit akışının pozitif olması şirketin varlık satın almadığını, aksine elindeki bina, makine veya fabrikaları satarak nakit çıkardığını gösterir."
       }
     ]
   },
@@ -173,26 +234,52 @@ export const MODULES_DATA: LearningModule[] = [
     slug: "deger-cubugu-mikroekonomi",
     title: "3. Adım: Değer Çubuğu (Mikroekonomik Temeller)",
     subtitle: "Müşterinin Gönlündeki Değer (WTP) vs Şirketin Maliyeti",
-    estimatedMinutes: 15,
+    estimatedMinutes: 16,
     iconName: "Sliders",
-    description: "Şirketin evresini belirledik. Peki şirket ürün seviyesinde nasıl kâr yaratır? Felix Oberholzer-Gee'nin Değer Çubuğu (Value Stick): WTP, Fiyat, Maliyet ve WTS.",
-    zeroKnowledgeSummary: "İş dünyası sadece fiyata zam yapmaktan ibaret değildir. Başarılı şirketler müşterinin ürüne verdiği değeri (WTP) artırır veya tedarikçilerin maliyet tabanını (WTS) düşürerek pastayı herkes için büyütür.",
+    description:
+      "Şirketin evresini belirledik. Peki şirket ürün seviyesinde nasıl kâr yaratır? Felix Oberholzer-Gee'nin Değer Çubuğu (Value Stick): WTP, Fiyat, Maliyet ve WTS arasındaki rant paylaşımı.",
+    zeroKnowledgeSummary:
+      "İş dünyası sadece fiyata zam yapmaktan ibaret değildir. Başarılı şirketler müşterinin ürüne verdiği değeri (WTP) artırır veya tedarikçilerin maliyet tabanını (WTS) düşürerek pastayı herkes için büyütür. Müşteri aldığı fiyattan mutlu, tedarikçi sattığı maliyetten mutluysa şirket dev bir kâr marjı yakalar.",
+    moduleBridge: {
+      prevTitle: "2. Adım: Şirket Yaşam Döngüsü (Dickinson Modeli)",
+      takeawayFromPrev: "Şirketin nakit akış profili (CFO+, CFI-, CFF-) onun olgunluk kalesinde olduğunu kanıtladı.",
+      transitionQuestion: "Peki bu kale, tek bir ürün veya hizmet satarken kârını mikro düzeyde nereden üretir?",
+      nextTitle: "4. Adım: Sektör Haritası ve Kâr Havuzları",
+      whyNext: "Ürün bazında kârın WTP ve Maliyet farkından doğduğunu gördük. Peki şirket bu kârı tek başına mı kazanır, yoksa sektördeki diğer oyuncular (tedarikçiler, aracılar) bu kârı süpürür mü?",
+      previewQuestion: "Bir sektörde milyarlarca liralık toplam kâr gerçekte hangi halkada toplanır?",
+    },
     sections: [
       {
         id: "m3-s1",
         title: "1. Değer Çubuğunun 4 Kritik Çizgisi",
         summary: "Bir ürünün yolculuğu müşterinin kafasındaki tavan değer ile tedarikçinin dip maliyeti arasında gerçekleşir.",
         content: [
-          "1. WTP (Willingness to Pay - Ödemeye İsteklilik): Müşterinin o ürün için cebinden çıkarmaya razı olduğu en yüksek tavan fiyattır. (Algılanan değer)",
-          "2. Fiyat (Price): Şirketin kasada müşteriden fiilen talep ettiği para.",
-          "3. Maliyet (Cost): Şirketin o ürünü üretmek ve sunmak için harcadığı kaynak tutarı.",
+          "1. WTP (Willingness to Pay - Ödemeye İsteklilik): Müşterinin o ürün için cebinden çıkarmaya razı olduğu en yüksek tavan fiyattır. (Algılanan değer ve fayda).",
+          "2. Fiyat (Price): Şirketin kasada müşteriden fiilen talep ettiği etiket fiyatı.",
+          "3. Maliyet (Cost): Şirketin o ürünü üretmek, taşımak ve sunmak için harcadığı toplam kaynak tutarı.",
           "4. WTS (Willingness to Sell - Satmaya İsteklilik): Tedarikçinin veya çalışanın o girdi/emek için kabul edeceği asgari dip taban fiyat (fırsat maliyeti)."
         ],
+        interactiveVisualId: "value-stick",
+        formulaBox: {
+          title: "Felix Oberholzer-Gee Değer Çubuğu Eşitlikleri",
+          equation: "Toplam Yaratılan Değer = WTP - WTS\nTüketici Rantı = WTP - Fiyat\nŞirket Kârı = Fiyat - Maliyet\nTedarikçi Rantı = Maliyet - WTS",
+          variables: [
+            { symbol: "WTP", label: "Ödemeye İsteklilik", desc: "Müşterinin ürüne biçtiği azami tavan değer (Fayda)" },
+            { symbol: "Fiyat", label: "Etiket Fiyatı", desc: "Kasada fiilen tahsil edilen satış bedeli" },
+            { symbol: "Maliyet", label: "Birim Maliyet", desc: "Şirketin hammadde, işçilik ve operasyon maliyeti" },
+            { symbol: "WTS", label: "Satmaya İsteklilik", desc: "Tedarikçinin razı olduğu asgari dip taban maliyet" }
+          ],
+          exampleCalculation: "WTP (100 TL) - Fiyat (60 TL) = 40 TL Tüketici Rantı\nFiyat (60 TL) - Maliyet (25 TL) = 35 TL Şirket Kârı\nMaliyet (25 TL) - WTS (15 TL) = 10 TL Tedarikçi Rantı\nToplam Refah = 100 - 15 = 85 TL"
+        },
+        formulaDeepDiveId: "value-stick",
+        interactiveWidgetId: "value-stick",
         analogyBox: {
           title: "☕ Bir Fincan Özel Kahve",
-          description: "Çok sevdiğiniz bir kahve için 100 TL vermeye razısınız (WTP = 100 TL). Kafe bunu 60 TL'ye satıyor (Fiyat = 60 TL). Kahvenin kafe için maliyeti 25 TL (Maliyet = 25 TL). Kahve çekirdeğini getiren çiftçi ise en az 15 TL'ye razıydı (WTS = 15 TL)."
+          description:
+            "Çok sevdiğiniz bir kahve için 100 TL vermeye razısınız (WTP = 100 TL). Kafe bunu 60 TL'ye satıyor (Fiyat = 60 TL). Kahvenin kafe için maliyeti 25 TL (Maliyet = 25 TL). Kahve çekirdeğini getiren çiftçi ise en az 15 TL'ye razıydı (WTS = 15 TL)."
         },
-        keyTakeaway: "Toplam yaratılan değer (WTP - WTS) ne kadar genişse, paylaşılabilecek refah o kadar büyüktür."
+        keyTakeaway:
+          "Toplam yaratılan değer (WTP - WTS) ne kadar genişse, paylaşılabilecek refah o kadar büyüktür."
       },
       {
         id: "m3-s2",
@@ -202,39 +289,33 @@ export const MODULES_DATA: LearningModule[] = [
           "Tüketici Rantı (Consumer Surplus) = WTP - Fiyat. Müşteri 100 TL değer biçtiği şeye 60 TL ödeyince 40 TL'lik 'iyi ki aldım' mutluluğu yaşar. Memnun müşteri geri gelir!",
           "Şirket Değer Yaratımı / Kârı (Firm Value Creation) = Fiyat - Maliyet. Şirket 60 TL'ye satıp 25 TL harcadığında 35 TL brüt kâr eder.",
           "Tedarikçi / Çalışan Rantı (Supplier Surplus) = Maliyet - WTS. Tedarikçi en az 15 TL'ye razıyken şirketten 25 TL aldığında 10 TL'lik kazanç elde eder.",
-          "Şirketlerin değer yaratmasının 2 yolu vardır: Ya üst çizgiyi (WTP) yukarı itmek (Farklılaşma Stratejisi) ya da alt çizgiyi (WTS) aşağı çekmek (Düşük Maliyet Liderliği)."
+          "Şirketlerin değer yaratmasının 2 yolu vardır: Ya üst çizgiyi (WTP) yukarı itmek (Farklılaşma Stratejisi - Apple) ya da alt çizgiyi (WTS) aşağı çekmek (Düşük Maliyet Liderliği - Costco)."
         ],
         analogyBox: {
           title: "🤝 Sıfır Toplamlı Oyun vs Kazan-Kazan",
-          description: "Kötü şirketler tedarikçinin boğazını sıkarak maliyeti düşürmeye çalışır (sıfır toplamlı). Harika şirketler ise tedarikçiye veri paylaşımı yaparak onun işini kolaylaştırır ve WTS'ini aşağı çeker (kazan-kazan)."
+          description:
+            "Kötü şirketler tedarikçinin boğazını sıkarak maliyeti düşürmeye çalışır (sıfır toplamlı). Harika şirketler ise tedarikçiye veri paylaşımı yaparak onun işini kolaylaştırır ve WTS'ini aşağı çeker (kazan-kazan)."
         },
-        keyTakeaway: "Sadece zam yaparak kâr artırmaya çalışmak tehlikelidir; sürdürülebilir başarı müşterinin ödeme isteğini (WTP) yükselterek tüketici rantını büyütmekten geçer."
+        keyTakeaway:
+          "Sadece zam yaparak kâr artırmaya çalışmak tehlikelidir; sürdürülebilir başarı müşterinin ödeme isteğini (WTP) yükselterek tüketici rantını büyütmekten geçer."
       }
     ],
     quiz: [
       {
         id: "q3-1",
         question: "Bir müşteri bir kulaklığa en fazla 2.000 TL ödemeye razıyken (WTP), mağaza bu kulaklığı 1.400 TL'ye satıyorsa Tüketici Rantı (Consumer Surplus) nedir?",
-        options: [
-          "3.400 TL",
-          "2.000 TL",
-          "600 TL",
-          "0 TL"
-        ],
+        options: ["3.400 TL", "2.000 TL", "600 TL", "0 TL"],
         correctAnswerIndex: 2,
-        explanation: "Tüketici Rantı = WTP (2.000 TL) - Fiyat (1.400 TL) = 600 TL. Müşteri zihninde 600 TL'lik bir kâr ve memnuniyet elde ettiğini hisseder."
+        explanation:
+          "Tüketici Rantı = WTP (2.000 TL) - Fiyat (1.400 TL) = 600 TL. Müşteri zihninde 600 TL'lik bir kâr ve memnuniyet elde ettiğini hisseder."
       },
       {
         id: "q3-2",
         question: "Değer Çubuğunda (Value Stick) 'Farklılaşma Stratejisi' (Differentiation) temel olarak hangi çizgiyi yukarı taşımayı hedefler?",
-        options: [
-          "WTS (Satmaya İsteklilik)",
-          "Maliyet (Cost)",
-          "WTP (Ödemeye İsteklilik)",
-          "Banka Kredi Faizi"
-        ],
+        options: ["WTS (Satmaya İsteklilik)", "Maliyet (Cost)", "WTP (Ödemeye İsteklilik)", "Banka Kredi Faizi"],
         correctAnswerIndex: 2,
-        explanation: "Farklılaşma stratejisi; üstün tasarım, kalite, marka ve hizmetle müşterinin ürüne biçtiği tavan değeri (WTP - Willingness to Pay) yukarı taşır."
+        explanation:
+          "Farklılaşma stratejisi; üstün tasarım, kalite, marka ve hizmetle müşterinin ürüne biçtiği tavan değeri (WTP - Willingness to Pay) yukarı taşır."
       }
     ]
   },
@@ -243,10 +324,20 @@ export const MODULES_DATA: LearningModule[] = [
     slug: "sektor-analizi-ve-haritasi",
     title: "4. Adım: Sektör Haritası ve Kâr Havuzları",
     subtitle: "Dış Çevre: Balık İyi Olabilir Ama Deniz Fırtınalı mı?",
-    estimatedMinutes: 15,
+    estimatedMinutes: 16,
     iconName: "Compass",
-    description: "Ürün bazında değer yaratmayı anladık. Şimdi mikrodan sektöre çıkıyoruz: Sektör haritası çıkarma, havacılık sektörü kâr havuzu (-$69 milyar analiz) ve pazar payı istikrarı (%2 kuralı).",
-    zeroKnowledgeSummary: "Dünyanın en yetenekli kaptanı bile olsanız, su alan batık bir gemide yüzemezsiniz. Bazı sektörler doğası gereği para yutar, bazıları ise altın madenidir.",
+    description:
+      "Ürün bazında değer yaratmayı anladık. Şimdi mikrodan sektöre çıkıyoruz: Sektör haritası çıkarma, havacılık sektörü kâr havuzu (-$69 milyar analiz) ve pazar payı istikrarı (%2 kuralı).",
+    zeroKnowledgeSummary:
+      "Dünyanın en yetenekli kaptanı bile olsanız, su alan batık bir gemide yüzemezsiniz. Bazı sektörler doğası gereği para yutar, bazıları ise altın madenidir. Bu modülde sektördeki tüm paranın gerçekte hangi halkada toplandığını haritalandırıyoruz.",
+    moduleBridge: {
+      prevTitle: "3. Adım: Değer Çubuğu (Mikroekonomik Temeller)",
+      takeawayFromPrev: "Tek bir ürün satışında kârın WTP ve Maliyet farkından doğduğunu öğrendik.",
+      transitionQuestion: "Peki bu kârı sektör genelinde kim kazanıyor? Neden bazı halkalar kan ağlarken bazıları köşeyi dönüyor?",
+      nextTitle: "5. Adım: Porter'ın 5 Gücü, Giriş Engelleri & 10-K Dipnotları",
+      whyNext: "Kâr havuzunda paranın nereye aktığını tespit ettik. Peki o kârlı havuza yeni rakiplerin hücum etmesini ne engeller? Michael Porter'ın 5 gücünü ve kaleyi koruyan 7 giriş engelini çözüyoruz.",
+      previewQuestion: "Rakipleri kapıda tutan 7 zırh (Ölçek, Ağ Etkisi, Geçiş Maliyeti vb.) nedir?",
+    },
     sections: [
       {
         id: "m4-s1",
@@ -259,9 +350,11 @@ export const MODULES_DATA: LearningModule[] = [
         ],
         analogyBox: {
           title: "🥪 Sandviç Arasındaki Havayolları",
-          description: "Havayolu şirketi lezzetli bir sandviçin arasındaki ince peynir gibidir; üstten dev tekel uçak üreticileri ve havalimanları bastırır, alttan ise en ucuz bilet arayan yolcular bastırır."
+          description:
+            "Havayolu şirketi lezzetli bir sandviçin arasındaki ince peynir gibidir; üstten dev tekel uçak üreticileri ve havalimanları bastırır, alttan ise en ucuz bilet arayan yolcular bastırır."
         },
-        keyTakeaway: "Bir şirketin başarısı, sadece kendi yönetimine değil, değer zincirindeki oyuncuların pazarlık gücüne bağlıdır."
+        keyTakeaway:
+          "Bir şirketin başarısı, sadece kendi yönetimine değil, değer zincirindeki oyuncuların pazarlık gücüne bağlıdır."
       },
       {
         id: "m4-s2",
@@ -269,14 +362,28 @@ export const MODULES_DATA: LearningModule[] = [
         summary: "Sektörde sermayeyi kim bağlıyor, kârı kim cebe indiriyor?",
         content: [
           "Kâr Havuzu, X ekseninde yatırılan sermaye payını (%0-%100), Y ekseninde ise ekonomik getiri oranını (ROIC - WACC) gösterir.",
-          "Kutunun Alanı = Şirketin Toplam Ekonomik Kârı veya Zararıdır.",
-          "Havacılık Şoku: Havacılık sektörünün toplam ekonomik kârında sermayenin %75'inden fazlasını havayolları bağlamış ve zarar etmiştir. Buna karşın az sermaye bağlayan Jet Yakıtı üreticileri ve Bilet Sistemleri (GDS) dev kârlar elde etmiştir."
+          "Kutunun Alanı = Şirketin Toplam Ekonomik Kârı veya Zararıdır. Formül: Ekonomik Kâr = Yatırılan Sermaye × (ROIC - WACC).",
+          "Havacılık Şoku: Havacılık sektörünün toplam ekonomik kârında sermayenin %75'inden fazlasını havayolları bağlamış ve zarar etmiştir. Buna karşın az sermaye bağlayan Jet Yakıtı üreticileri ve Bilet Sistemleri (GDS/Amadeus) dev kârlar elde etmiştir."
         ],
+        formulaBox: {
+          title: "Ekonomik Kâr Havuzu (Profit Pool) Geometrisi",
+          equation: "Ekonomik Kâr ($) = Yatırılan Sermaye ($) × [ ROIC (%) - WACC (%) ]\nSegment Alanı = Segment Sermaye Payı × Segment Yayılımı (Spread)",
+          variables: [
+            { symbol: "Sermaye Payı", label: "X Ekseni Genişliği", desc: "Segmentin sektördeki toplam sermaye ağırlığı" },
+            { symbol: "ROIC - WACC", label: "Y Ekseni Yüksekliği", desc: "Segmentin birim sermaye başına yarattığı net yayılım" },
+            { symbol: "Kutu Alanı", label: "Toplam Ekonomik Kâr", desc: "Segmentin hissedarlarına ürettiği net dolar bazlı değer" }
+          ],
+          exampleCalculation: "Havayolları: 100M$ Sermaye × (%5 ROIC - %9 WACC) = -4M$ Değer Yıkımı\nRezervasyon Sistemleri: 10M$ Sermaye × (%35 ROIC - %9 WACC) = +2.6M$ Net Değer!"
+        },
+        formulaDeepDiveId: "profit-pool",
+        interactiveWidgetId: "profit-pool",
         analogyBox: {
           title: "🍿 Sinema Salonu vs Mısır Büfesi",
-          description: "Sinema salonu devasa bina ve ses sistemi yatırımı yapar ama asıl net kârı lobideki 2 metrekarelik mısır ve gazoz standı kazanır."
+          description:
+            "Sinema salonu devasa bina ve ses sistemi yatırımı yapar ama asıl net kârı lobideki 2 metrekarelik mısır ve gazoz standı kazanır."
         },
-        keyTakeaway: "Büyük ciro veya devasa fabrikalar kâr garantisi değildir; kâr havuzunda yüksek getiri sağlayan niş halkayı bulmak esastır."
+        keyTakeaway:
+          "Büyük ciro veya devasa fabrikalar kâr garantisi değildir; kâr havuzunda yüksek getiri sağlayan niş halkayı bulmak esastır."
       },
       {
         id: "m4-s3",
@@ -290,9 +397,11 @@ export const MODULES_DATA: LearningModule[] = [
         ],
         analogyBox: {
           title: "💺 Sandalye Kapmaca Oyunu",
-          description: "Müzik çaldıkça herkesin yer değiştirdiği oynak bir oyunda kalıcı kâr elde edemezsiniz; sandalyelerin sabit olduğu oturmuş salonlarda kârlar korunur."
+          description:
+            "Müzik çaldıkça herkesin yer değiştirdiği oynak bir oyunda kalıcı kâr elde edemezsiniz; sandalyelerin sabit olduğu oturmuş salonlarda kârlar korunur."
         },
-        keyTakeaway: "Pazar payı istikrarı yüksek olan sektörlerde şirketler fiyat kırmak yerine daha rasyonel rekabet eder."
+        keyTakeaway:
+          "Pazar payı istikrarı yüksek olan sektörlerde şirketler fiyat kırmak yerine daha rasyonel rekabet eder."
       }
     ],
     quiz: [
@@ -306,36 +415,43 @@ export const MODULES_DATA: LearningModule[] = [
           "Yıllık enflasyon oranına"
         ],
         correctAnswerIndex: 1,
-        explanation: "Kâr havuzunda X ekseni yatırılan sermayeyi, Y ekseni (ROIC - WACC) farkını temsil eder; dikdörtgenin alanı ise o grubun toplam net ekonomik kârını verir."
+        explanation:
+          "Kâr havuzunda X ekseni yatırılan sermayeyi, Y ekseni (ROIC - WACC) farkını temsil eder; dikdörtgenin alanı ise o grubun toplam net ekonomik kârını verir."
       },
       {
         id: "q4-2",
         question: "Bruce Greenwald'ın pazar payı istikrarı kuralına göre 5 yıllık ortalama pazar payı değişimi neyin altında olduğunda sektör 'istikrarlı' kabul edilir?",
-        options: [
-          "%20",
-          "%10",
-          "%2 veya daha az",
-          "%0.01"
-        ],
+        options: ["%20", "%10", "%2 veya daha az", "%0.01"],
         correctAnswerIndex: 2,
-        explanation: "5 yıllık ortalama mutlak pazar payı değişimi %2 veya daha düşükse sektörün istikrarlı ve hendek korumaya elverişli olduğu kabul edilir."
+        explanation:
+          "5 yıllık ortalama mutlak pazar payı değişimi %2 veya daha düşükse sektörün istikrarlı ve hendek korumaya elverişli olduğu kabul edilir."
       }
     ]
   },
   {
     id: 5,
     slug: "porter-bes-guc-giris-engelleri",
-    title: "5. Adım: Porter'ın 5 Gücü ve 7 Giriş Engeli",
-    subtitle: "Rakipleri Kapıda Tutan Zırh: Ölçek, Ağ Etkisi ve Geçiş Maliyetleri",
+    title: "5. Adım: Porter'ın 5 Gücü, Giriş Engelleri & 10-K Dipnotları",
+    subtitle: "Rakipleri Kapıda Tutan Zırh: Ölçek, Ağ Etkisi ve Ar-Ge Düzeltmeleri",
     estimatedMinutes: 18,
     iconName: "Lock",
-    description: "Sektör haritasını çıkardık. Şimdi rakiplerin içeri girmesini engelleyen kaleleri inceliyoruz: Michael Porter'ın 5 Gücü ve 7 Giriş Engeli (Ölçek, Ağ Etkisi, Wright Öğrenme Yasası).",
-    zeroKnowledgeSummary: "Yeni bir rakibin sizin işinize girmesi ne kadar zorsa, kârınız o kadar güvendedir. Bu bölümde rakiplerin kapıdan içeri girmesini engelleyen 7 devasa duvarı inceliyoruz.",
+    description:
+      "Sektör haritasını çıkardık. Şimdi rakiplerin içeri girmesini engelleyen kaleleri inceliyoruz: Michael Porter'ın 5 Gücü, 7 Giriş Engeli ve Ar-Ge/Kira kapitalizasyonu dipnot dedektifliği.",
+    zeroKnowledgeSummary:
+      "Yeni bir rakibin sizin işinize girmesi ne kadar zorsa, kârınız o kadar güvendedir. Ayrıca muhasebe kuralları yazılım ve ilaç şirketlerinin Ar-Ge harcamalarını 'çöpe gitmiş masraf' gibi gösterir; bu modülde gerçek bilanço sermayesini düzeltmeyi öğreniyoruz.",
+    moduleBridge: {
+      prevTitle: "4. Adım: Sektör Haritası ve Kâr Havuzları",
+      takeawayFromPrev: "Sektörün en kârlı havuzunun nerede oluştuğunu belirledik.",
+      transitionQuestion: "Peki bu kârlı havuza yeni rakiplerin hücum etmesini hangi kaleler ve engeller durdurur?",
+      nextTitle: "6. Adım: Oyun Teorisi & Yıkıcı İnovasyon",
+      whyNext: "Mevcut kaleleri ve giriş engellerini tanıdık. Ancak rakipler sadece doğrudan saldırmaz; fiyat kırma oyunları oynar veya yıkıcı yeniliklerle eski devleri gafil avlar!",
+      previewQuestion: "Rakipler fiyat savaşında nasıl disipline edilir ve eski devler neden yeni girişimcilere yenilir?",
+    },
     sections: [
       {
         id: "m5-s1",
-        title: "1. Michael Porter'ın 5 Güç Modeli",
-        summary: "Sektör kârlılığını belirleyen 5 temel çekim gücü.",
+        title: "1. Michael Porter'ın 5 Güç Modeli ve Giriş Engelleri",
+        summary: "Sektör kârlılığını belirleyen 5 temel çekim gücü ve yeni girenlerin tehdidi.",
         content: [
           "1. Yeni Girenlerin Tehdidi (Threat of New Entrants) - En kritik güç!",
           "2. Mevcut Rakipler Arasındaki Rekabet (Rivalry)",
@@ -343,11 +459,14 @@ export const MODULES_DATA: LearningModule[] = [
           "4. Alıcıların Pazarlık Gücü (Buyer Power)",
           "5. İkame Ürünlerin Tehdidi (Threat of Substitutes)"
         ],
+        interactiveVisualId: "porter-forces",
         analogyBox: {
           title: "🌊 5 Farklı Yönden Esen Rüzgarlar",
-          description: "Bir gemidesiniz (şirket). 5 farklı yönden fırtına esiyor: Mal satanlar, mal alanlar, yanınızdaki gemiler, yeni gelen korsanlar ve uçaklar (ikame ürünler). Geminizin sağlamlığı bu 5 kuvvete dayanabilmesindedir."
+          description:
+            "Bir gemidesiniz (şirket). 5 farklı yönden fırtına esiyor: Mal satanlar, mal alanlar, yanınızdaki gemiler, yeni gelen korsanlar ve uçaklar (ikame ürünler). Geminizin sağlamlığı bu 5 kuvvete dayanabilmesindedir."
         },
-        keyTakeaway: "Bruce Greenwald'a göre 'Yeni girenlerin tehdidi' diğer 4 gücü domine eden en belirleyici kuvvettir."
+        keyTakeaway:
+          "Bruce Greenwald'a göre 'Yeni girenlerin tehdidi' diğer 4 gücü domine eden en belirleyici kuvvettir."
       },
       {
         id: "m5-s2",
@@ -358,53 +477,89 @@ export const MODULES_DATA: LearningModule[] = [
           "2. Sermaye Gereksinimi: TSMC'nin tek bir çip fabrikası için 20 milyar dolar harcaması gibi devasa peşin yatırım ihtiyacı.",
           "3. Ağ Etkileri (Demand-side scale): Kullanıcı sayısı arttıkça platformun değerinin katlanması (Örn: Uber, WhatsApp, Instagram).",
           "4. Müşteri Geçiş Maliyetleri (Lock-in): Müşterinin başka ürüne geçmesinin çok zahmetli veya pahalı olması (Örn: SAP muhasebe sistemi veya Apple ekosistemi).",
-          "5. Büyüklükten Bağımsız Avantajlar & Wright Yasası: Kümülatif üretim ikiye katlandıkça maliyet %20 düşer (Öğrenme eğrisi). Uzun vadeli enerji kontratları (Amazon-Nükleer santral).",
-          "6. Dağıtım Kanallarına Eşitsiz Erişim: Süpermarket raf payı veya akıllı telefonlarda varsayılan arama motoru olmak (Google'ın Apple'a yılda 20 milyar dolar ödemesi).",
-          "7. Hükümet Düzenlemeleri & Ruhsatlar: Lisans zorunlulukları ve regülasyon engelleri ('Regülasyon mevcut liderin dostudur' - Bill Gurley)."
+          "5. Büyüklükten Bağımsız Avantajlar & Wright Yasası: Kümülatif üretim ikiye katlandıkça maliyet %20 düşer (Öğrenme eğrisi).",
+          "6. Dağıtım Kanallarına Eşitsiz Erişim: Süpermarket raf payı veya varsayılan arama motoru olmak (Google'ın Apple'a yılda 20 milyar dolar ödemesi).",
+          "7. Hükümet Düzenlemeleri & Ruhsatlar: Lisans zorunlulukları ('Regülasyon mevcut liderin dostudur')."
         ],
         analogyBox: {
           title: "🔌 Wright Yasası ve Bataryalar",
-          description: "İlk elektrikli araç bataryaları kilovat-saat başına binlerce dolarken, fabrikalar milyonlarca batarya ürettikçe maliyet 100 doların altına düşmüştür."
+          description:
+            "İlk elektrikli araç bataryaları kilovat-saat başına binlerce dolarken, fabrikalar milyonlarca batarya ürettikçe maliyet 100 doların altına düşmüştür."
         },
-        keyTakeaway: "Yüksek giriş engelleri olan sektörlerde mevcut liderler yüksek ROIC oranlarını on yıllarca koruyabilir."
+        keyTakeaway:
+          "Yüksek giriş engelleri olan sektörlerde mevcut liderler yüksek ROIC oranlarını on yıllarca koruyabilir."
+      },
+      {
+        id: "m5-s3",
+        title: "3. 10-K Dipnot Düzeltmeleri: Ar-Ge & Faaliyet Kirası Kapitalizasyonu",
+        summary: "Ar-Ge harcamasını tek seferde gider yazmak yerine bilançoda varlık olarak aktifleştirmek.",
+        content: [
+          "GAAP/IFRS muhasebesi, bir yazılım veya biyoteknoloji şirketinin geleceği inşa eden Ar-Ge bütçesini cari yılda gider yazar. Bu da şirketi zararda gösterir ve bilançodaki gerçek sermayeyi gizler.",
+          "Mauboussin Düzeltmesi: Ar-Ge harcamasını EBIT'e geri ekleyin ve 3-5 yıllık faydalı ömrü boyunca amorti edin. Net Ar-Ge varlığını bilançonun 'Yatırılan Sermaye' tabanına ekleyin.",
+          "Faaliyet Kiralamaları: Şirketin kiraladığı mağaza ve uçakların gelecek kira ödemelerinin bugünkü değerini (PV) bularak hem borçlara hem duran varlıklara ekleyin."
+        ],
+        formulaBox: {
+          title: "10-K Bilanço Düzeltmeleri & Ar-Ge / Faaliyet Kiralaması",
+          equation: "Düzeltilmiş NOPAT = [ Raporlanan EBIT + Cari Ar-Ge - Yıllık Ar-Ge İtfası + Faiz Bileşeni ] × (1 - t)\nDüzeltilmiş Sermaye = Raporlanan Sermaye + Net Ar-Ge Varlığı + Kiralama PV'si - Fazla Nakit",
+          variables: [
+            { symbol: "Net Ar-Ge Varlığı", label: "Aktifleştirilmiş Ar-Ge", desc: "Son 3-5 yılın itfa edilmemiş kümülatif Ar-Ge bilançosu" },
+            { symbol: "Kiralama PV'si", label: "Faaliyet Kirası Borcu", desc: "Gelecek kira taahhütlerinin iskonto edilmiş bugünkü değeri" },
+            { symbol: "Fazla Nakit", label: "Atıl Hazine Bonosu", desc: "Operasyona bağlı olmayan, bilançoda uyuyan nakit (çıkarılır)" }
+          ],
+          exampleCalculation: "Raporlanan EBIT: 500M TL | Cari Ar-Ge: 300M TL | İtfa: 100M TL\nDüzeltilmiş EBIT = 500 + (300 - 100) = 700M TL\nBilançoya Eklenen Sermaye Tabanı = +500M TL Net Ar-Ge Varlığı"
+        },
+        formulaDeepDiveId: "footnote",
+        analogyBox: {
+          title: "🧪 Laboratuvar vs Çelik Fırını",
+          description:
+            "Bir çelik şirketi fabrika kurduğunda bunu 30 yıla yayıp varlık yazar; ilaç şirketi aşı geliştirdiğinde ise muhasebeci bunu bir günlük masraf sanır! Dipnot düzeltmesi bu adaletsizliği giderir."
+        },
+        keyTakeaway:
+          "Teknoloji ve ilaç şirketlerinin gerçek ROIC'sini görmek için Ar-Ge aktifleştirmesi ve faaliyet kiralaması kapitalizasyonu zorunludur."
       }
     ],
     quiz: [
       {
         id: "q5-1",
-        question: "Wright Yasası'na (Öğrenme Eğrisi) göre kümülatif üretim miktarı her iki katına çıktığında birim işçilik/üretim maliyeti yaklaşık ne kadar düşer?",
-        options: [
-          "%1",
-          "%20",
-          "%50",
-          "%0 (maliyet hiç değişmez)"
-        ],
+        question: "Wright Yasası'na (Öğrenme Eğrisi) göre kümülatif üretim miktarı her iki katına çıktığında birim üretim maliyeti yaklaşık ne kadar düşer?",
+        options: ["%1", "%20", "%50", "%0 (maliyet hiç değişmez)"],
         correctAnswerIndex: 1,
         explanation: "Wright Yasası'na göre kümülatif üretim ikiye katlandığında birim maliyet yaklaşık %20 azalır."
       },
       {
         id: "q5-2",
-        question: "Bir kullanıcının WhatsApp'tan ayrılıp kimsenin kullanmadığı yeni bir mesajlaşma uygulamasına geçmek istememesi hangi giriş engeline örnektir?",
+        question: "Ar-Ge harcamalarının muhasebede doğrudan gider yazılmayıp 'aktifleştirilmesi ve amorti edilmesi' şirketin bilançosuna nasıl etki eder?",
         options: [
-          "Ağ Etkisi (Network Effect)",
-          "Devlet Lisans Zorunluluğu",
-          "Yüksek Fabrika İnşaat Maliyeti",
-          "Hammadde Kıtlığı"
+          "Şirketin iflas etmesine yol açar",
+          "Şirketin gerçek Yatırılan Sermaye tabanını ve düzeltilmiş NOPAT kârını gerçeğe uygun şekilde ortaya çıkarır",
+          "Şirketin vergi oranını sıfıra indirir",
+          "Hisse senedi sayısını artırır"
         ],
-        correctAnswerIndex: 0,
-        explanation: "Ağ etkisi, bir platformu kullanan kişi sayısı arttıkça platformun değerinin artması ve kullanıcıların arkadaşlarının orada olması sebebiyle ayrılamamasıdır."
+        correctAnswerIndex: 1,
+        explanation:
+          "Ar-Ge aktifleştirildiğinde geleceğe değer katan bir varlık olarak bilançoya eklenir ve NOPAT ile Yatırılan Sermaye gerçek ekonomik boyutuna kavuşur."
       }
     ]
   },
   {
     id: 6,
     slug: "yikici-inovasyon-ve-cozulme",
-    title: "6. Adım: Yıkıcı İnovasyon (Hendekler Nasıl Çöker?)",
-    subtitle: "Davud Golyat'ı Nasıl Yener? Christensen Modeli & Modülerleşme",
-    estimatedMinutes: 16,
+    title: "6. Adım: Yıkıcı İnovasyon ve Oyun Teorisi",
+    subtitle: "Davud Golyat'ı Nasıl Yener? Christensen Modeli & Tit-for-Tat",
+    estimatedMinutes: 17,
     iconName: "Zap",
-    description: "Kalenin duvarları çok yüksek olsa bile, ya düşman içeriye yer altından tünel kazarsa? Clayton Christensen'ın Yıkıcı İnovasyon Teorisi ve alt segmentten gelen tehlikeler.",
-    zeroKnowledgeSummary: "Bazen dev şirketler işlerini çok iyi yaptıkları, müşterilerini dinledikleri ve kârlarını maksimize ettikleri için batarlar! Çünkü küçük bir girişimci alt segmentten sessizce gelip onları yıkar.",
+    description:
+      "Kalenin duvarları çok yüksek olsa bile, ya düşman içeriye yer altından tünel kazarsa? Clayton Christensen'ın Yıkıcı İnovasyon Teorisi, Fiyat Savaşlarında Mahkumlar İkilemi ve Albay Blotto stratejisi.",
+    zeroKnowledgeSummary:
+      "Bazen dev şirketler işlerini çok iyi yaptıkları, müşterilerini dinledikleri ve kârlarını maksimize ettikleri için batarlar! Çünkü küçük bir girişimci alt segmentten sessizce gelip onları yıkar. Ayrıca rakiplerle fiyat kırma yarışına giren şirketler birbirini mahveder.",
+    moduleBridge: {
+      prevTitle: "5. Adım: Porter'ın 5 Gücü, Giriş Engelleri & 10-K Dipnotları",
+      takeawayFromPrev: "Rakipleri kapıda tutan 7 giriş engelini ve bilançodaki gizli Ar-Ge sermayesini inceledik.",
+      transitionQuestion: "Peki ya rakipler kaleye önden saldırmak yerine alttan sessizce iş modelini değiştirirse?",
+      nextTitle: "7. Adım: Şirket İçi Analiz & DuPont ROIC Röntgeni",
+      whyNext: "Dış rekabeti, yıkıcı tehditleri ve oyun teorisini tamamladık. Şimdi şirketin kendi bilançosuna girip kâr motorunu röntgene alıyoruz: Marjla mı yoksa Devir Hızıyla mı kazanıyor?",
+      previewQuestion: "Coca-Cola ile Costco tamamen farklı iş modelleriyle aynı %16 ROIC'e nasıl ulaşır?",
+    },
     sections: [
       {
         id: "m6-s1",
@@ -417,9 +572,11 @@ export const MODULES_DATA: LearningModule[] = [
         ],
         analogyBox: {
           title: "📼 Blockbuster vs Netflix",
-          description: "Blockbuster dev mağazalarıyla en yeni filmleri kiralıyordu ve gelirinin %15'i müşterilerin nefret ettiği 'gecikme cezalarından' geliyordu. Netflix posta ile DVD gönderip gecikme cezasını sıfırladı; ardından streaming'e geçti. Blockbuster 2010'da iflas etti!"
+          description:
+            "Blockbuster dev mağazalarıyla en yeni filmleri kiralıyordu ve gelirinin %15'i müşterilerin nefret ettiği 'gecikme cezalarından' geliyordu. Netflix posta ile DVD gönderip gecikme cezasını sıfırladı; ardından streaming'e geçti. Blockbuster 2010'da iflas etti!"
         },
-        keyTakeaway: "Yıkıcı inovasyon bir teknoloji problemi değil, bir İŞ MODELİ problemidir."
+        keyTakeaway:
+          "Yıkıcı inovasyon bir teknoloji problemi değil, bir İŞ MODELİ problemidir."
       },
       {
         id: "m6-s2",
@@ -432,24 +589,29 @@ export const MODULES_DATA: LearningModule[] = [
         ],
         analogyBox: {
           title: "🪜 Merdivenin Alt Basamağı",
-          description: "Düşmanınız merdivenin en alt basamağına bastığında 'zaten orası kirliydi' deyip bir üst basamağa kaçarsanız, eninde sonunda merdivenin tepesinde sıkışıp düşersiniz."
+          description:
+            "Düşmanınız merdivenin en alt basamağına bastığında 'zaten orası kirliydi' deyip bir üst basamağa kaçarsanız, eninde sonunda merdivenin tepesinde sıkışıp düşersiniz."
         },
-        keyTakeaway: "Liderlerin en kârlı müşterilerine odaklanıp alt pazarı küçümsemesi, yıkıcı rakiplerin güçlenip onları tahttan indirmesine zemin hazırlar."
+        keyTakeaway:
+          "Liderlerin en kârlı müşterilerine odaklanıp alt pazarı küçümsemesi, yıkıcı rakiplerin güçlenip onları tahttan indirmesine zemin hazırlar."
       },
       {
         id: "m6-s3",
-        title: "3. Dikeyden Yatay Modüler Yapıya Geçiş (Tesla Örneği)",
-        summary: "Bir sektör olgunlaştıkça dikey entegrasyon çözülür ve modüler uzmanlar ortaya çıkar.",
+        title: "3. Mahkumlar İkilemi & Fiyat Savaşlarında Tit-for-Tat",
+        summary: "Fiyat kırma savaşlarında Nash dengesini kırmak için Robert Axelrod'un Kısasa Kısas kuralı.",
         content: [
-          "1980'lerde Bilgisayar: IBM gibi şirketler çipten işletim sistemine, montajdan satışa her şeyi kendisi yapardı (Dikey Entegrasyon).",
-          "1995'te Bilgisayar: Sektör standartlaştı (Modülerleşti). Çipi Intel, işletim sistemini Microsoft, montajı Dell/HP yapar hale geldi (Yatay Entegrasyon).",
-          "Otomotiv ve Elektrikli Araç (EV) Paradoksu: Ford içten yanmalı motorlarda 1.400 tedarikçiye modüler iş verirken; Tesla elektrikli araçlarda yazılımdan bataryaya aşırı dikey entegre olarak büyük avantaj sağladı. Ford 150 farklı tedarikçinin birbiriyle konuşmayan yazılımları yüzünden 2024'te her elektrikli araç başına $40.000 zarar ettiğini bildirdi!"
+          "İki rakip havayolu aynı rotada yarışır. İkisi de yüksek fiyatta kalırsa (İşbirliği) yüksek kâr eder. Biri fiyat kırıp diğerini gafil avlarsa kısa vadede pazar çalar.",
+          "Ancak diğeri de fiyat kırınca ikisi de maliyetin altına düşüp zarar eder (Nash Dengesi Tuzağı).",
+          "Robert Axelrod turnuvasında kanıtlanan en kârlı strateji 'Tit-for-Tat'tır: 1. İlk turda işbirliğiyle (yüksek fiyat) başla, 2. Rakip fiyat kırarsa derhal misilleme yap, 3. Rakip tekrar fiyatı yükseltirse anında affet ve işbirliğine dön."
         ],
+        interactiveWidgetId: "game-theory",
         analogyBox: {
-          title: "🧩 Lego Parçaları vs Tek Parça Heykel",
-          description: "Yeni ve karmaşık bir teknolojide parçaların birbirine uyması için tek bir heykeltıraş (dikey) gerekir. Standartlar oturduğunda ise herkes lego parçası (modüler) üretip birleştirebilir."
+          title: "🕊️ Barış Güvercini vs Şahin",
+          description:
+            "Fiyat savaşları başlatan şirketler genellikle kendi kâr havuzlarını dinamitler. En akıllı şirketler örtük işbirliği (tacit coordination) sinyalleri gönderir."
         },
-        keyTakeaway: "Yeni teknolojilerin başlangıcında dikey entegrasyon; sektör olgunlaştığında ise yatay modüler uzmanlaşma üstünlük sağlar."
+        keyTakeaway:
+          "Rakipleri yok etmeye çalışmak sektörel kârlılığı eritir; disiplinli oyun teorisi ve örtük koordinasyon refahı korur."
       }
     ],
     quiz: [
@@ -463,19 +625,21 @@ export const MODULES_DATA: LearningModule[] = [
           "Şirketin sadece tek bir ülkede satış yapması"
         ],
         correctAnswerIndex: 1,
-        explanation: "Pazarın aşılması; şirketlerin ürüne müşterinin aslında ihtiyaç duymadığı ve parasını ödemek istemediği kadar çok özellik eklemesi durumudur."
+        explanation:
+          "Pazarın aşılması; şirketlerin ürüne müşterinin aslında ihtiyaç duymadığı ve parasını ödemek istemediği kadar çok özellik eklemesi durumudur."
       },
       {
         id: "q6-2",
-        question: "Tesla'nın elektrikli araç üretiminde rakiplerine karşı sağladığı en büyük ilk dönem avantajı neydi?",
+        question: "Oyun teorisinde tekrarlanan fiyat savaşlarında en yüksek kârlılığı sağlayan 'Tit-for-Tat' (Kısasa Kısas) stratejisinin ilk adımı nedir?",
         options: [
-          "Her parçayı 150 farklı dış tedarikçiden satın alması",
-          "Yazılım, batarya ve üretimi kendi bünyesinde toplayan yüksek dikey entegrasyon (Vertical Integration)",
-          "Sadece benzinli araç motoru üretmesi",
-          "Hiçbir mühendis çalıştırmaması"
+          "İlk turda hemen fiyat kırıp rakibe saldırmak",
+          "İlk turda işbirliği yaparak yüksek fiyattan başlamak",
+          "Oyundan tamamen çekilmek",
+          "Rastgele fiyat belirlemek"
         ],
         correctAnswerIndex: 1,
-        explanation: "Tesla'nın dikey entegrasyonu, karmaşık yazılım ve batarya koordinasyonunu tek çatı altında mükemmel optimize etmesini sağlayarak geleneksel üreticilerin modüler karmaşasının önüne geçmesini sağlamıştır."
+        explanation:
+          "Tit-for-Tat stratejisi her zaman işbirliğiyle (fiyat kırmadan) başlar; rakip saldırırsa anında misilleme yapar, rakip barışırsa hemen barışır."
       }
     ]
   },
@@ -486,12 +650,22 @@ export const MODULES_DATA: LearningModule[] = [
     subtitle: "Marj Şampiyonu mu Hız Şampiyonu mu? Costco vs Coca-Cola",
     estimatedMinutes: 18,
     iconName: "PieChart",
-    description: "Sektör ve rekabet dinamiklerini kavradık. Şimdi bir şirketin bilançosunu açıp ROIC motorunun içine giriyoruz: DuPont ayrıştırması (Marj × Devir Hızı) ve Amazon'un Negatif Nakit Döngüsü (CCC).",
-    zeroKnowledgeSummary: "Aynı %16 kârlılığa sahip iki şirketten biri pahalı satarak (yüksek kâr marjı), diğeri ise ucuza satıp rafları ışık hızında boşaltarak (yüksek devir hızı) bu başarıya ulaşır. Bu bölümde bilanço röntgenini çekmeyi öğreniyoruz.",
+    description:
+      "Sektör ve rekabet dinamiklerini kavradık. Şimdi bir şirketin bilançosunu açıp ROIC motorunun içine giriyoruz: DuPont ayrıştırması (Marj × Devir Hızı) ve Amazon'un Negatif Nakit Döngüsü (CCC = DIO + DSO - DPO).",
+    zeroKnowledgeSummary:
+      "Aynı %16 kârlılığa sahip iki şirketten biri pahalı satarak (yüksek kâr marjı: Coca-Cola), diğeri ise ucuza satıp rafları ışık hızında boşaltarak (yüksek devir hızı: Costco) bu başarıya ulaşır. Bu bölümde bilanço röntgenini çekmeyi öğreniyoruz.",
+    moduleBridge: {
+      prevTitle: "6. Adım: Yıkıcı İnovasyon ve Oyun Teorisi",
+      takeawayFromPrev: "Fiyat savaşları dinamiklerini ve alttan gelen yıkıcı inovasyon tuzaklarını kavradık.",
+      transitionQuestion: "Peki bir şirketin kâr motoru içten nasıl çalışır? Kâr marjıyla mı yoksa varlık devir hızıyla mı kazanıyor?",
+      nextTitle: "8. Adım: Tersine DCF, Markalar ve 60 Maddelik Hendek Denetimi",
+      whyNext: "Şirketin tüm iç ve dış anatomisini çözdük! Şimdi büyük finale ulaşıyoruz: Piyasanın hisse fiyatına gizlediği hendek süresini (CAP) tersine mühendislikle çözeceğiz.",
+      previewQuestion: "Hisse fiyatının kaç yıllık kusursuz bir kâr süresi ima ettiğini nasıl hesaplarız?",
+    },
     sections: [
       {
         id: "m7-s1",
-        title: "1. Operasyonel Etkinlik (Aynılık) vs Stratejik Konumlanma (Farklılık)",
+        title: "1. Operasyonel Etkinlik vs Stratejik Konumlanma",
         summary: "Herkes gibi yapıp sadece 'daha iyi' yapmaya çalışmak strateji değildir; strateji 'farklı seçimler' yapmaktır.",
         content: [
           "Michael Porter uyarır: Operasyonel etkinlik, rakiplerinizle aynı şeyleri yapıp biraz daha hızlı olmaktır. Bu bir strateji değildir çünkü en iyi uygulamalar hızla taklit edilir ve kârlar erir.",
@@ -500,9 +674,11 @@ export const MODULES_DATA: LearningModule[] = [
         ],
         analogyBox: {
           title: "🎯 Herkesi Memnun Etmeye Çalışmak",
-          description: "Hem dünyanın en lüks Michelin yıldızlı restoranı hem de en ucuz fast-food zinciri olamazsınız. Birini seçip diğerinden bilinçli olarak vazgeçmek zorundasınız."
+          description:
+            "Hem dünyanın en lüks Michelin yıldızlı restoranı hem de en ucuz fast-food zinciri olamazsınız. Birini seçip diğerinden bilinçli olarak vazgeçmek zorundasınız."
         },
-        keyTakeaway: "Strateji, ne yapacağınızı seçmek kadar neyi YAPMAYACAĞINIZI seçmektir."
+        keyTakeaway:
+          "Strateji, ne yapacağınızı seçmek kadar neyi YAPMAYACAĞINIZI seçmektir."
       },
       {
         id: "m7-s2",
@@ -510,43 +686,66 @@ export const MODULES_DATA: LearningModule[] = [
         summary: "ROIC = NOPAT Marjı (%) × Yatırılan Sermaye Devir Hızı (x).",
         content: [
           "Bu matematiksel formülde Satışlar sadeleşir: (NOPAT / Satışlar) × (Satışlar / Sermaye) = NOPAT / Sermaye = ROIC.",
-          "Farklılaşma Yolu (Yüksek Marj / Düşük Devir): Coca-Cola (%26 marj, 0.6x devir = %16 ROIC), Apple.",
-          "Maliyet Liderliği Yolu (Düşük Marj / Yüksek Devir): Costco (%4 marj, 4.3x devir = %16 ROIC), Walmart.",
+          "Farklılaşma Yolu (Yüksek Marj / Düşük Devir): Coca-Cola (%26 marj, 0.6x devir = %16 ROIC), Apple, Ferrari.",
+          "Maliyet Liderliği Yolu (Düşük Marj / Yüksek Devir): Costco (%3.8 marj, 4.2x devir = %16 ROIC), Walmart.",
           "Görüldüğü gibi Costco ve Coca-Cola tamamen aynı %16 ROIC'e sahiptir ama biri marjla, diğeri süratle kazanır!"
         ],
+        formulaBox: {
+          title: "DuPont ROIC Ayrıştırma Eşitliği",
+          equation: "ROIC (%) = NOPAT Marjı (%) × Yatırılan Sermaye Devir Hızı (x)\nROIC = ( NOPAT / Satışlar ) × ( Satışlar / Yatırılan Sermaye )",
+          variables: [
+            { symbol: "NOPAT Marjı", label: "Kâr Marjı (Fiyatlama Gücü)", desc: "Şirketin her 100 TL'lik satışından kalan net faaliyet kârı" },
+            { symbol: "Sermaye Devri", label: "Devir Hızı (Varlık Verimi)", desc: "Bağlanan her 1 TL sermayenin yılda kaç kez ciroya döndüğü" },
+            { symbol: "Satışlar", label: "Sadeleşen Terim", desc: "Formülde pay ve paydayı birbirine bağlayan köprü cirodur" }
+          ],
+          exampleCalculation: "Coca-Cola: %26.2 NOPAT Marjı × 0.61x Sermaye Devri = %16.0 ROIC\nCostco: %3.8 NOPAT Marjı × 4.21x Sermaye Devri = %16.0 ROIC"
+        },
+        formulaDeepDiveId: "dupont-ccc",
+        interactiveWidgetId: "dupont",
         analogyBox: {
           title: "🏎️ Tır vs Ferrari",
-          description: "Ferrari tek bir arabadan devasa kâr eder (yüksek marj). Tır ise tonlarca yükü durmaksızın taşıyarak aynı toplam parayı kazanır (yüksek devir)."
+          description:
+            "Ferrari tek bir arabadan devasa kâr eder (yüksek marj). Tır ise tonlarca yükü durmaksızın taşıyarak aynı toplam parayı kazanır (yüksek devir)."
         },
-        keyTakeaway: "Uzun vadede en kalıcı başarıyı yakalayanlar 'Ucuzluktan önce Kalite' (Better before Cheaper) ve 'Maliyetten önce Gelir' (Revenues before Cost) diyen Farklılaşma şirketleridir."
+        keyTakeaway:
+          "Uzun vadede en kalıcı başarıyı yakalayanlar 'Ucuzluktan önce Kalite' (Better before Cheaper) ve 'Maliyetten önce Gelir' (Revenues before Cost) diyen Farklılaşma şirketleridir."
       },
       {
         id: "m7-s3",
         title: "3. Amazon'un Gizli Silahı: Negatif Nakit Dönüşüm Süresi (CCC)",
         summary: "Müşteriden parayı anında alıp tedarikçiye aylar sonra ödeyerek başkasının parasıyla bedava büyümek.",
         content: [
-          "Nakit Dönüşüm Süresi (CCC) = Stok Süresi + Tahsilat Süresi - Ödeme Süresi.",
+          "Nakit Dönüşüm Süresi (CCC) = Stokta Kalma Süresi (DIO) + Tahsilat Süresi (DSO) - Tedarikçiye Ödeme Süresi (DPO).",
           "1999 Barnes & Noble: Kitabı 149 gün rafta tuttu, parayı 6 günde tahsil etti, toptancıya 75 günde ödedi. CCC = 149 + 6 - 75 = +80 Gün! (Parası 80 gün boyunca raflarda kilitli kaldı).",
           "1999 Amazon: Kitabı 29 günde sattı, parayı karttan 2 günde aldı, yayıncıya 60 günde ödedi. CCC = 29 + 2 - 60 = -29 Gün!",
           "Bu ne anlama gelir? Amazon sattığı kitabın parasını 58 gün boyunca bankada faizsiz işletme sermayesi olarak tuttu ve tek kuruş kredi çekmeden devasa büyümesini finanse etti!"
         ],
+        formulaBox: {
+          title: "Nakit Dönüşüm Döngüsü (Cash Conversion Cycle - CCC)",
+          equation: "CCC (Gün) = DIO (Stok Günü) + DSO (Tahsilat Günü) - DPO (Ödeme Günü)",
+          variables: [
+            { symbol: "DIO", label: "Stokta Kalma Süresi", desc: "(Ortalama Stok / Satılan Mal Maliyeti) × 365 Gün" },
+            { symbol: "DSO", label: "Alacak Tahsilat Süresi", desc: "(Ticari Alacaklar / Toplam Gelir) × 365 Gün" },
+            { symbol: "DPO", label: "Borç Ödeme Süresi", desc: "(Ticari Borçlar / Satılan Mal Maliyeti) × 365 Gün" }
+          ],
+          exampleCalculation: "Barnes & Noble: 149 (DIO) + 6 (DSO) - 75 (DPO) = +80 Gün (Pozitif CCC: Para Bağlar)\nAmazon: 29 (DIO) + 2 (DSO) - 60 (DPO) = -29 Gün (Negatif CCC: Faizsiz Fon Üretir)"
+        },
+        formulaDeepDiveId: "dupont-ccc",
+        interactiveWidgetId: "ccc",
         analogyBox: {
           title: "🏦 Başkasının Parasıyla Ticaret",
-          description: "Müşteri size parayı 1 Ocak'ta peşin ödüyor, siz malı teslim ediyorsunuz ama malı aldığınız fabrikaya 1 Mart'ta ödüyorsunuz. İki ay boyunca para sizin hesabınızda büyür!"
+          description:
+            "Müşteri size parayı 1 Ocak'ta peşin ödüyor, siz malı teslim ediyorsunuz ama malı aldığınız fabrikaya 1 Mart'ta ödüyorsunuz. İki ay boyunca para sizin hesabınızda büyür!"
         },
-        keyTakeaway: "Bilanço verimliliği ve negatif işletme sermayesi döngüsü, yıkıcı şirketlerin en güçlü kaldıraçlarından biridir."
+        keyTakeaway:
+          "Bilanço verimliliği ve negatif işletme sermayesi döngüsü, yıkıcı şirketlerin en güçlü kaldıraçlarından biridir."
       }
     ],
     quiz: [
       {
         id: "q7-1",
         question: "Costco %4 NOPAT kâr marjına ve 4.0x sermaye devir hızına sahipse, ROIC oranı kaçtır?",
-        options: [
-          "%8",
-          "%16 (%4 × 4.0)",
-          "%1",
-          "%40"
-        ],
+        options: ["%8", "%16 (%4 × 4.0)", "%1", "%40"],
         correctAnswerIndex: 1,
         explanation: "DuPont formülüne göre ROIC = NOPAT Marjı (%4) × Sermaye Devir Hızı (4.0) = %16."
       },
@@ -560,53 +759,63 @@ export const MODULES_DATA: LearningModule[] = [
           "Şirketin sadece nakit para ile alışveriş yaptığı"
         ],
         correctAnswerIndex: 1,
-        explanation: "Negatif CCC, şirketin malı satıp parasını cebine koyduktan günler/aylar sonra tedarikçisine ödeme yapması demektir; bu sayede şirket kendi büyümesini tedarikçi kredisiyle finanse eder."
+        explanation:
+          "Negatif CCC, şirketin malı satıp parasını cebine koyduktan günler/aylar sonra tedarikçisine ödeme yapması demektir; bu sayede şirket kendi büyümesini tedarikçi kredisiyle finanse eder."
       }
     ]
   },
   {
     id: 8,
     slug: "oyun-teorisi-markalar-ve-kontrol-listesi",
-    title: "8. Adım: Oyun Teorisi, Markalar ve 60 Maddelik Hendek Denetimi",
-    subtitle: "Büyük Final: Fiyat Savaşları, Tiffany Testi ve Morgan Stanley Listesi",
+    title: "8. Adım: Tersine DCF, Markalar ve 60 Maddelik Hendek Denetimi",
+    subtitle: "Büyük Final: Piyasa Beklentisini Çöz, Tiffany Testi ve Morgan Stanley Listesi",
     estimatedMinutes: 20,
     iconName: "CheckSquare",
-    description: "Tüm parçaları birleştiriyoruz: Fiyat savaşlarında Mahkumlar İkilemi ve Tit-for-Tat, Albay Blotto niş stratejisi, Marka bir hendek midir? (Tiffany pırlanta testi) ve Morgan Stanley Hendek Kontrol Listesi.",
-    zeroKnowledgeSummary: "Rakiplerle savaşırken satranç gibi onların hamlelerini öngörmek gerekir. Ayrıca her ünlü marka bir hendek değildir. Bu son bölümde tüm öğrendiklerimizi profesyonel bir yatırımcı kontrol listesiyle taçlandırıyoruz.",
+    description:
+      "Tüm parçaları birleştiriyoruz: Tersine DCF ile piyasanın kaç yıllık hendek (CAP) fiyatladığını çözme, Marka bir hendek midir? (Tiffany pırlanta testi) ve Morgan Stanley 60 Maddelik Hendek Kontrol Listesi.",
+    zeroKnowledgeSummary:
+      "Geleceği kristal küreyle tahmin edemezsiniz. Ama hisse fiyatının kaç yıllık kusursuz büyüme ima ettiğini tersine mühendislikle (Reverse DCF) çözebilirsiniz. Bu son modülde tüm öğrendiklerimizi profesyonel bir yatırımcı kontrol listesiyle taçlandırıyoruz.",
+    moduleBridge: {
+      prevTitle: "7. Adım: Şirket İçi Analiz & DuPont ROIC Röntgeni",
+      takeawayFromPrev: "DuPont ve Negatif Nakit Dönüşüm Süresi (CCC) ile şirketin kâr ve nakit motorunu çözdük.",
+      transitionQuestion: "Peki borsadaki hisse fiyatı bu şirketin hendeğine kaç yıllık bir ömür biçiyor? Şirket ucuz mu pahalı mı?",
+      nextTitle: "Tebrikler! 8 Adımlı Moat Academy Eğitim Yolculuğunu Tamamladınız 🎓",
+      whyNext: "Artık profesyonel bir hendek analiz uzmanısınız. Öğrendiklerinizi interaktif simülatörler ve kontrol listesiyle gerçek şirketlere uygulayabilirsiniz.",
+      previewQuestion: "Gerçek bilançoları analiz etmeye ve hendek avına başlamaya hazır mısınız?",
+    },
     sections: [
       {
         id: "m8-s1",
-        title: "1. Mahkumlar İkilemi ve Fiyatlandırma Stratejisi",
-        summary: "Tek seferlik oyunda iki taraf da fiyat kırıp batar; tekrarlanan oyunda 'Kısasa Kısas' (Tit-for-Tat) kazanır.",
+        title: "1. Tersine DCF (Reverse DCF) ve İma Edilen CAP Süresi",
+        summary: "Geleceği tahmin etmeyin; hisse fiyatının hangi geleceği fiyatladığını tersine mühendislikle çözün.",
         content: [
-          "Havayolu A ve B aynı rotada uçuyor. Bilet maliyeti 160$. İki seçenek var: 220$ (yüksek) veya 200$ (düşük).",
-          "İkisi de 220$ yaparsa toplam kâr 600$ olur (En iyi ortak sonuç).",
-          "Ama A şirketi 'Ben 200$'a düşüreyim, bütün yolcular bana gelsin' derse A 320$ kazanır, B 120$'a düşer. Ancak B de misilleme yapıp 200$'a indirirse ikisi de 200$'ar dolar kazanır ve toplam kâr 400$'a çakılır (Nash Dengesi).",
-          "Robert Axelrod'un turnuvasında kanıtlanan en iyi strateji 'Tit-for-Tat'tır: İşbirliğiyle başla, rakip fiyat kırarsa hemen cezalandır, rakip tekrar fiyata zam yaparsa hemen affet ve işbirliğine dön."
+          "Geleneksel DCF modelinde analist 10 yıl sonrasını tahmin etmeye çalışır ve genellikle yanılır.",
+          "Mauboussin'in Tersine DCF Yöntemi: Soru tersine çevrilir: 'Mevcut hisse fiyatının haklı çıkması için bu şirketin kaç yıl boyunca WACC'nin üzerinde ROIC kazanması gerekiyor?' (Competitive Advantage Period - CAP).",
+          "Hisse Fiyatı = Sıfır Büyüme Değeri (Steady-State Value) + Gelecekteki Değer Yaratma (CAP Yılları).",
+          "Eğer piyasa bir şirket için 25 yıllık hendek (CAP) fiyatlıyorsa ve sektör hızla değişiyorsa hisse aşırı pahalıdır. Eğer piyasa sadece 4 yıllık hendek fiyatlıyor ama şirketin 15 yıllık patenti varsa hisse muazzam bir fırsattır."
         ],
-        analogyBox: {
-          title: "🕊️ Barış Güvercini vs Şahin",
-          description: "Fiyat savaşları başlatan şirketler genellikle kendi kâr havuzlarını dinamitler. En akıllı şirketler örtük işbirliği (tacit coordination) sinyalleri gönderir."
+        formulaBox: {
+          title: "Michael Mauboussin Tersine DCF & İma Edilen CAP",
+          equation: "Hisse Fiyatı ($) = Sıfır Büyüme Değeri (NOPAT / WACC) + Gelecek Büyüme Beklentisi (PVGO)\nİma Edilen CAP Yılı = f( Piyasa Fiyatı, ROIC, WACC, Büyüme Hızı )",
+          variables: [
+            { symbol: "Sıfır Büyüme Değeri", label: "Steady-State Value", desc: "Şirketin hiç büyümeden mevcut faaliyet kârını sonsuza kadar üretmesi (NOPAT / WACC)" },
+            { symbol: "PVGO", label: "Gelecek Büyüme Opsiyonu", desc: "Piyasa fiyatının gelecekteki değer yaratımına ve yeni yatırımlara biçtiği prim" },
+            { symbol: "CAP (Yıl)", label: "İma Edilen Hendek Süresi", desc: "Fiyatı haklı çıkarmak için ROIC > WACC getirisinin sürmesi gereken yıl sayısı" }
+          ],
+          exampleCalculation: "NOPAT: 10 TL/hisse | WACC: %8.0 | Hisse Fiyatı: 350 TL\nSıfır Büyüme Değeri = 10 / 0.08 = 125 TL (%36)\nPVGO (Gelecek Büyüme Payı) = 350 - 125 = 225 TL (%64)\nİma Edilen CAP = 18 Yıl (Piyasa 18 yıl boyunca aralıksız rekabetsiz yüksek getiri fiyatlıyor!)"
         },
-        keyTakeaway: "Rakipleri alt etmeye odaklanmak kârlılığı yok eder; değer yaratmaya ve akıllı oyun teorisine odaklanmak kazandırır."
+        formulaDeepDiveId: "reverse-dcf",
+        analogyBox: {
+          title: "🎯 Hedefe Göre Nişan Almak",
+          description:
+            "Hisse senedi fiyatı bir hedeftir. 'Bu oku kim attı?' diye tahmin etmek yerine 'Bu hedefi vurmak için şirketin ne kadar hızlı ve kaç yıl koşması gerekiyor?' diye soruyoruz."
+        },
+        keyTakeaway:
+          "Tersine DCF, geleceği tahmin etme stresinden kurtarıp 'Piyasa ne kadar hayalperest?' sorusunu cevaplar."
       },
       {
         id: "m8-s2",
-        title: "2. Albay Blotto Oyunu & Linking-Leveraging (Amazon)",
-        summary: "Zayıf olan şirket cephe sayısını artırarak devi yener.",
-        content: [
-          "Albay Blotto Oyunu: 100 askeri 3 cepheye dağıtacaksınız. Rakip dev 1. ve 2. ana cepheye 40'ar asker koyarken, siz zayıf askerlerinizi rakibin ihmal ettiği 3. ve 4. cephelere yığarak çoğunluk cepheyi kazanırsınız.",
-          "Linking & Leveraging: Amazon kitap sattı -> Altyapısını AWS bulut bilişime bağladı -> Video akışına bağladı -> Dijital reklama bağladı. Mevcut gücünü kaldıraç yaparak her yıl yeni kâr cepheleri açtı."
-        ],
-        analogyBox: {
-          title: "♟️ Satrançta Beklenmedik Hamle",
-          description: "Rakibinizin en güçlü olduğu yerde onunla göğüs göğüse çarpışmayın; onun dikkat etmediği boş karelere yayılın."
-        },
-        keyTakeaway: "Küçük şirketler devlerle aynı kurallarla yarışmamalı; kendi yeni oyun alanlarını inşa etmelidir."
-      },
-      {
-        id: "m8-s3",
-        title: "3. Marka Tek Başına Bir Hendek midir? (Tiffany vs Costco)",
+        title: "2. Marka Tek Başına Bir Hendek midir? (Tiffany vs Costco)",
         summary: "Bilinir olmak değer yaratmak değildir. Marka, WTP'yi artırabiliyorsa veya WTS'i düşürüyorsa hendektir.",
         content: [
           "Interbrand'in 'Dünyanın En Değerli 25 Markası' listesi ile bu şirketlerin ROIC oranları karşılaştırıldığında korelasyonun çok zayıf olduğu görülür!",
@@ -615,38 +824,49 @@ export const MODULES_DATA: LearningModule[] = [
         ],
         analogyBox: {
           title: "💎 Mavi Kutu Büyüsü",
-          description: "Pırlanta aynı pırlantadır; ancak Tiffany kutusunu hediye ettiğinizde aldığınız tebessüm ile süpermarket poşetiyle verdiğinizdeki tebessüm farklıdır. İşte o fark WTP'dir."
+          description:
+            "Pırlanta aynı pırlantadır; ancak Tiffany kutusunu hediye ettiğinizde aldığınız tebessüm ile süpermarket poşetiyle verdiğinizdeki tebessüm farklıdır. İşte o fark WTP'dir."
         },
-        keyTakeaway: "Bir markanın gücü logosunda değil; müşterinin onun için fazladan para ödemeye (WTP) ne kadar razı olduğunda saklıdır."
+        keyTakeaway:
+          "Bir markanın gücü logosunda değil; müşterinin onun için fazladan para ödemeye (WTP) ne kadar razı olduğunda saklıdır."
+      },
+      {
+        id: "m8-s3",
+        title: "3. Morgan Stanley 60 Maddelik Hendek Kontrol Listesi",
+        summary: "Bir şirketi yatırım komitesine sunmadan önce 5 kategoride 60 maddelik titiz denetim.",
+        content: [
+          "1. Sektör Yapısı ve Kâr Havuzu (Tedarikçi/Müşteri pazarlık gücü)",
+          "2. Giriş Engelleri ve Ölçek Avantajları (MES, Wright Yasası, Ağ Etkisi)",
+          "3. Tüketici Avantajları ve Geçiş Maliyetleri (WTP tavanı, Lock-in)",
+          "4. Yönetimin Sermaye Tahsisi Disiplini (Gereksiz satın almalardan kaçınma, hisse geri alımı)",
+          "5. Hendek Sürdürülebilirliği ve Yıkım Tehdidi (CAP süresi, teknolojik ikameler)"
+        ],
+        interactiveWidgetId: "checklist",
+        analogyBox: {
+          title: "📋 Pilot Kontrol Listesi",
+          description:
+            "Nasıl ki bir uçak kalkmadan önce pilot tek tek tüm sistemleri kontrol ederse; profesyonel bir yatırımcı da 60 kriteri denetlemeden tek bir hisse almaz."
+        },
+        keyTakeaway:
+          "Kapsamlı bir kontrol listesi, duygusal önyargılardan arınmış objektif ve kârlı kararlar almanın en güvenilir rehberidir."
       }
     ],
     quiz: [
       {
         id: "q8-1",
-        question: "Oyun teorisinde tekrarlanan Mahkumlar İkileminde en başarılı ve kârlı sonuçları veren 'Tit-for-Tat' stratejisinin ilk kuralı nedir?",
+        question: "Tersine DCF (Reverse DCF) analizinin geleneksel değerlemeye göre en büyük avantajı nedir?",
         options: [
-          "İlk turda hemen fiyatta indirim yaparak rakibe saldırmak",
-          "İlk turda işbirliği yaparak yüksek fiyattan başlamak",
-          "Oyundan tamamen çekilmek",
-          "Rastgele fiyat belirlemek"
+          "Geleceği 10 yıl boyunca tahmin etme zorunluluğunu ortadan kaldırıp mevcut hisse fiyatının kaç yıllık hendek (CAP) ima ettiğini çözmesi",
+          "Şirketin borçlarını tamamen silmesi",
+          "Sadece geçmiş yılın net kârına bakması",
+          "Hiçbir matematiksel hesaplama gerektirmemesi"
         ],
-        correctAnswerIndex: 1,
-        explanation: "Tit-for-Tat stratejisi her zaman işbirliğiyle (fiyat kırmadan) başlar; rakip saldırırsa anında misilleme yapar, rakip barışırsa hemen barışır."
+        correctAnswerIndex: 0,
+        explanation:
+          "Tersine DCF, geleceği tahmin etmeye çalışmak yerine borsa fiyatının içine gömülü olan büyüme ve hendek süresi (CAP) beklentisini ortaya çıkarır."
       },
       {
         id: "q8-2",
-        question: "Albay Blotto oyun modeline göre kaynakları daha az olan zayıf bir şirketin pazar devlerine karşı en etkili taktiği nedir?",
-        options: [
-          "Bütün askerlerini devin en güçlü olduğu ana cepheye yığmak",
-          "Cephe sayısını artırarak devin kaynak ayıramadığı niş/ikincil alanlarda zafer kazanmak",
-          "Üretimi tamamen durdurmak",
-          "Fiyatları iki katına çıkarmak"
-        ],
-        correctAnswerIndex: 1,
-        explanation: "Albay Blotto modelinde zayıf oyuncu, devin her yere yetişemeyeceğini bilerek yeni ve alternatif cepheler (niş pazarlar) açıp buraları kazanmayı hedefler."
-      },
-      {
-        id: "q8-3",
         question: "Tiffany pırlanta yüzüğünün Costco'daki eşdeğer pırlantadan 10.000$ daha pahalıya satılabilmesi Değer Çubuğunda neyi gösterir?",
         options: [
           "Pırlantanın maden çıkarma maliyetinin arttığını",
@@ -655,7 +875,8 @@ export const MODULES_DATA: LearningModule[] = [
           "Tiffany'nin iflas ettiğini"
         ],
         correctAnswerIndex: 1,
-        explanation: "Tiffany markası, statü ve güven sinyali vererek tüketicinin ödeme isteğini (WTP) devasa ölçüde yukarı taşımakta ve yüksek fiyatlama gücü sağlamaktadır."
+        explanation:
+          "Tiffany markası, statü ve güven sinyali vererek tüketicinin ödeme isteğini (WTP) devasa ölçüde yukarı taşımakta ve yüksek fiyatlama gücü sağlamaktadır."
       }
     ]
   }
