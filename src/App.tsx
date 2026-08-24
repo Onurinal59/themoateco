@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { LearningModule, UserLearningState } from "./types";
-import { MODULES_DATA } from "./data/modulesData";
+import { useLanguage } from "./context/LanguageContext";
 import {
   loadUserLearningState,
   saveUserLearningState,
@@ -23,6 +23,9 @@ import { FormulaWorkshopView } from "./components/FormulaWorkshopView";
 import { Footer } from "./components/Footer";
 
 export default function App() {
+  const { getModules, isEnglish } = useLanguage();
+  const currentModules = getModules();
+
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem("theme");
     if (saved) return saved === "dark";
@@ -64,12 +67,13 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState<NavTab>("roadmap");
   const [selectedSim, setSelectedSim] = useState<SimTab>("reverse-dcf");
-  const [activeModule, setActiveModule] = useState<LearningModule | null>(null);
+  const [activeModuleId, setActiveModuleId] = useState<number | null>(null);
   const [isAICoachOpen, setIsAICoachOpen] = useState(false);
   const [aiCoachPrompt, setAiCoachPrompt] = useState<string | undefined>(undefined);
   const [isGlossaryOpen, setIsGlossaryOpen] = useState(false);
   const [selectedGlossaryTermId, setSelectedGlossaryTermId] = useState<string | null>(null);
 
+  const activeModule = activeModuleId ? currentModules.find(m => m.id === activeModuleId) || null : null;
 
   // Apply dark mode class to html document element
   useEffect(() => {
@@ -93,12 +97,12 @@ export default function App() {
   };
 
   const handleSelectModule = (module: LearningModule) => {
-    setActiveModule(module);
+    setActiveModuleId(module.id);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleBackToRoadmap = () => {
-    setActiveModule(null);
+    setActiveModuleId(null);
     setActiveTab("roadmap");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -136,7 +140,7 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={(tab) => {
           setActiveTab(tab);
-          setActiveModule(null);
+          setActiveModuleId(null);
         }}
         userState={userState}
         onOpenAICoach={() => setIsAICoachOpen(true)}
@@ -145,7 +149,7 @@ export default function App() {
         onOpenFormulas={() => {
           setSelectedFormulaId(null);
           setActiveTab("formulas");
-          setActiveModule(null);
+          setActiveModuleId(null);
         }}
         isDarkMode={isDarkMode}
         onToggleDarkMode={toggleDarkMode}
@@ -164,7 +168,7 @@ export default function App() {
             >
               <ModuleReader
                 module={activeModule}
-                allModules={MODULES_DATA}
+                allModules={currentModules}
                 userState={userState}
                 onBackToRoadmap={handleBackToRoadmap}
                 onSelectModule={handleSelectModule}
@@ -174,12 +178,12 @@ export default function App() {
                 onOpenLabSim={(simId) => {
                   setSelectedSim(simId);
                   setActiveTab("simulators");
-                  setActiveModule(null);
+                  setActiveModuleId(null);
                 }}
                 onOpenFormulaWorkshop={(formulaId) => {
                   setSelectedFormulaId(formulaId);
                   setActiveTab("formulas");
-                  setActiveModule(null);
+                  setActiveModuleId(null);
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
               />
@@ -205,7 +209,7 @@ export default function App() {
                   onNavigateTab={(tab, sim) => {
                     if (sim) setSelectedSim(sim);
                     setActiveTab(tab);
-                    setActiveModule(null);
+                    setActiveModuleId(null);
                   }}
                 />
               )}
@@ -215,16 +219,16 @@ export default function App() {
                   selectedFormulaId={selectedFormulaId}
                   onSelectFormula={(id) => setSelectedFormulaId(id)}
                   onNavigateToModule={(moduleId) => {
-                    const target = MODULES_DATA.find((m) => m.id === moduleId);
+                    const target = currentModules.find((m) => m.id === moduleId);
                     if (target) {
-                      setActiveModule(target);
+                      setActiveModuleId(target.id);
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }
                   }}
                   onNavigateToSim={(simId) => {
                     setSelectedSim(simId as any);
                     setActiveTab("simulators");
-                    setActiveModule(null);
+                    setActiveModuleId(null);
                   }}
                 />
               )}
@@ -274,7 +278,7 @@ export default function App() {
       <Footer
         onNavigateTab={(tab) => {
           setActiveTab(tab);
-          setActiveModule(null);
+          setActiveModuleId(null);
         }}
         onOpenGlossary={() => handleOpenGlossary()}
         onOpenAICoach={() => {
@@ -293,10 +297,10 @@ export default function App() {
         }}
         currentTopic={
           activeTab === "company-audit"
-            ? "Şirket Bilançosu Röntgeni & Hendek Teşhisi"
+            ? (isEnglish ? "Company Balance Sheet X-Ray & Moat Diagnostic" : "Şirket Bilançosu Röntgeni & Hendek Teşhisi")
             : activeModule
             ? activeModule.title
-            : "Genel Hendek Stratejisi"
+            : (isEnglish ? "General Moat Strategy" : "Genel Hendek Stratejisi")
         }
         initialPrompt={aiCoachPrompt}
       />
@@ -322,7 +326,7 @@ export default function App() {
         onNavigateTab={(tab, sim) => {
           if (sim) setSelectedSim(sim);
           setActiveTab(tab);
-          setActiveModule(null);
+          setActiveModuleId(null);
           try {
             localStorage.setItem("moat_guide_seen", "true");
           } catch {
@@ -331,8 +335,8 @@ export default function App() {
         }}
         onStartFirstModule={() => {
           setActiveTab("roadmap");
-          if (MODULES_DATA.length > 0) {
-            setActiveModule(MODULES_DATA[0]);
+          if (currentModules.length > 0) {
+            setActiveModuleId(currentModules[0].id);
           }
           try {
             localStorage.setItem("moat_guide_seen", "true");
@@ -353,9 +357,10 @@ export default function App() {
         onOpenFullPage={(fId) => {
           setSelectedFormulaId(fId);
           setActiveTab("formulas");
-          setActiveModule(null);
+          setActiveModuleId(null);
         }}
       />
     </div>
   );
 }
+

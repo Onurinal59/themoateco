@@ -1,9 +1,9 @@
 import React from "react";
 import { motion } from "motion/react";
-import { MODULES_DATA } from "../data/modulesData";
 import { LearningModule, UserLearningState } from "../types";
 import { NavTab } from "./Navbar";
 import { SimTab } from "./SimulationsView";
+import { useLanguage } from "../context/LanguageContext";
 import {
   CheckCircle2,
   Clock,
@@ -34,8 +34,10 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
   onOpenGuide,
   onNavigateTab,
 }) => {
+  const { isEnglish, getModules, t } = useLanguage();
+  const modules = getModules();
   const completedCount = userState.completedModules.length;
-  const progressPercent = Math.round((completedCount / MODULES_DATA.length) * 100);
+  const progressPercent = Math.round((completedCount / (modules.length || 1)) * 100);
 
   return (
     <motion.div
@@ -52,7 +54,7 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/80">
               <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-              Sıfırdan Profesyonel Ustalığa: 8 Adımlı Müfredat
+              {isEnglish ? "From Scratch to Institutional Mastery: 8-Step Curriculum" : "Sıfırdan Profesyonel Ustalığa: 8 Adımlı Müfredat"}
             </div>
 
             {onOpenGuide && (
@@ -63,41 +65,53 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 cursor-pointer transition-colors"
               >
                 <Compass className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                <span>Ustalık Yol Haritası Kılavuzu</span>
+                <span>{isEnglish ? "Mastery Roadmap Guide" : "Ustalık Yol Haritası Kılavuzu"}</span>
               </motion.button>
             )}
           </div>
 
           <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight">
-            Michael Mauboussin: Ekonomik Hendekleri Ölçmek & Bilanço Cerrahisi
+            {isEnglish
+              ? "Michael Mauboussin: Measuring Economic Moats & Forensic Accounting"
+              : "Michael Mauboussin: Ekonomik Hendekleri Ölçmek & Bilanço Cerrahisi"}
           </h1>
 
           <p className="mt-3 text-xs sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-            Hedefimiz sadece kavramları ezberlemek değil; Warren Buffett ve Morgan Stanley analistleri gibi <strong>ekonomik kaleleri (Moat)</strong>, <strong>ROIC &gt; WACC</strong> sermaye getirisini ve <strong>10-K bilanço röntgenini</strong> kurumsal düzeyde analiz edebilecek yetkinliğe ve sezgiye ulaşmanızdır.
+            {isEnglish
+              ? "Our goal is not just memorizing formulas, but developing the intuitive capability to analyze competitive moats, ROIC > WACC capital spreads, and 10-K financial statement forensics just like Morgan Stanley and Berkshire Hathaway analysts."
+              : "Hedefimiz sadece kavramları ezberlemek değil; Warren Buffett ve Morgan Stanley analistleri gibi ekonomik kaleleri (Moat), ROIC > WACC sermaye getirisini ve 10-K bilanço röntgenini kurumsal düzeyde analiz edebilecek yetkinliğe ve sezgiye ulaşmanızdır."}
           </p>
 
           {/* 4-Stage Mastery Architecture */}
           <div className="mt-5 p-4 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/70 dark:border-indigo-800/70 text-indigo-950 dark:text-indigo-200">
             <div className="flex items-center gap-2 text-xs font-bold text-indigo-900 dark:text-indigo-300 mb-2.5">
               <Milestone className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              <span>4 Aşamalı Ustalık & İnceleme Mimarisi:</span>
+              <span>{isEnglish ? "4-Stage Mastery Architecture:" : "4 Aşamalı Ustalık & İnceleme Mimarisi:"}</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-[11px] sm:text-xs">
               <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900/90 border border-indigo-100 dark:border-indigo-900/50 shadow-2xs">
-                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">1. Temel Sermaye (1-2)</strong>
-                ROIC vs WACC & Dickinson Nakit Akış Evreleri
+                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">
+                  {isEnglish ? "1. Core Capital (1-2)" : "1. Temel Sermaye (1-2)"}
+                </strong>
+                {isEnglish ? "ROIC vs WACC & Dickinson Cash Flow Life Cycles" : "ROIC vs WACC & Dickinson Nakit Akış Evreleri"}
               </div>
               <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900/90 border border-indigo-100 dark:border-indigo-900/50 shadow-2xs">
-                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">2. Mikro & Sektör (3-4)</strong>
-                Değer Çubuğu (WTP) & Kâr Havuzu Çarpıklığı
+                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">
+                  {isEnglish ? "2. Micro & Industry (3-4)" : "2. Mikro & Sektör (3-4)"}
+                </strong>
+                {isEnglish ? "Value Stick (WTP) & Profit Pool Distortion" : "Değer Çubuğu (WTP) & Kâr Havuzu Çarpıklığı"}
               </div>
               <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900/90 border border-indigo-100 dark:border-indigo-900/50 shadow-2xs">
-                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">3. Bariyer & Risk (5-6)</strong>
-                7 Giriş Engeli & Yıkıcı İnovasyon Savunması
+                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">
+                  {isEnglish ? "3. Barriers & Risk (5-6)" : "3. Bariyer & Risk (5-6)"}
+                </strong>
+                {isEnglish ? "7 Entry Barriers & Disruptive Defense" : "7 Giriş Engeli & Yıkıcı İnovasyon Savunması"}
               </div>
               <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900/90 border border-indigo-100 dark:border-indigo-900/50 shadow-2xs">
-                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">4. Bilanço & Test (7-8)</strong>
-                DuPont ROIC Röntgeni & 60 Maddelik Komite
+                <strong className="text-indigo-600 dark:text-indigo-400 block font-bold">
+                  {isEnglish ? "4. Audit & Tests (7-8)" : "4. Bilanço & Test (7-8)"}
+                </strong>
+                {isEnglish ? "DuPont Forensic Analysis & 60-Point Checklist" : "DuPont ROIC Röntgeni & 60 Maddelik Komite"}
               </div>
             </div>
           </div>
@@ -115,10 +129,12 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
               </div>
               <div className="text-xs">
                 <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1">
-                  10-K Dipnot Dedektifi
+                  {isEnglish ? "10-K Footnote Detective" : "10-K Dipnot Dedektifi"}
                   <ArrowRight className="w-3 h-3 text-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="text-slate-500 dark:text-slate-400 text-[11px]">Faaliyet Kira & Ar-Ge Düzeltmesi</div>
+                <div className="text-slate-500 dark:text-slate-400 text-[11px]">
+                  {isEnglish ? "Operating Lease & R&D Capitalization" : "Faaliyet Kira & Ar-Ge Düzeltmesi"}
+                </div>
               </div>
             </motion.button>
 
@@ -133,10 +149,12 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
               </div>
               <div className="text-xs">
                 <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1">
-                  Tersine DCF & CAP
+                  {isEnglish ? "Reverse DCF & CAP" : "Tersine DCF & CAP"}
                   <ArrowRight className="w-3 h-3 text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="text-slate-500 dark:text-slate-400 text-[11px]">Zımni Hendek Yılı (Mauboussin)</div>
+                <div className="text-slate-500 dark:text-slate-400 text-[11px]">
+                  {isEnglish ? "Market-Implied Moat Period" : "Zımni Hendek Yılı (Mauboussin)"}
+                </div>
               </div>
             </motion.button>
 
@@ -151,10 +169,12 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
               </div>
               <div className="text-xs">
                 <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1">
-                  Hendek Düellosu
+                  {isEnglish ? "Moat Duel" : "Hendek Düellosu"}
                   <ArrowRight className="w-3 h-3 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="text-slate-500 dark:text-slate-400 text-[11px]">DuPont & Spread Kıyaslama</div>
+                <div className="text-slate-500 dark:text-slate-400 text-[11px]">
+                  {isEnglish ? "Head-to-head DuPont & Spread" : "DuPont & Spread Kıyaslama"}
+                </div>
               </div>
             </motion.button>
 
@@ -169,10 +189,12 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
               </div>
               <div className="text-xs">
                 <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1">
-                  Aralıklı Tekrar (SM-2)
+                  {isEnglish ? "Spaced Repetition (SM-2)" : "Aralıklı Tekrar (SM-2)"}
                   <ArrowRight className="w-3 h-3 text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="text-slate-500 dark:text-slate-400 text-[11px]">Bilişsel Hafıza Pekiştirme</div>
+                <div className="text-slate-500 dark:text-slate-400 text-[11px]">
+                  {isEnglish ? "Cognitive Recall Flashcards" : "Bilişsel Hafıza Pekiştirme"}
+                </div>
               </div>
             </motion.button>
           </div>
@@ -182,9 +204,13 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
       {/* Progress Bar & Roadmap Overview */}
       <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
         <div className="w-full sm:w-auto">
-          <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">Genel İlerleme Durumunuz</div>
+          <div className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+            {isEnglish ? "Your Curriculum Progress" : "Genel İlerleme Durumunuz"}
+          </div>
           <div className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 mt-0.5">
-            {completedCount} / {MODULES_DATA.length} Adım Tamamlandı (%{progressPercent})
+            {isEnglish
+              ? `${completedCount} / ${modules.length} Steps Completed (${progressPercent}%)`
+              : `${completedCount} / ${modules.length} Adım Tamamlandı (%${progressPercent})`}
           </div>
         </div>
 
@@ -205,13 +231,17 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">8 Adımlı Ustalık Müfredatı</h2>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+              {isEnglish ? "8-Step Mastery Curriculum" : "8 Adımlı Ustalık Müfredatı"}
+            </h2>
           </div>
-          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Toplam ~115 Dakika</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            {isEnglish ? "Total ~115 Minutes" : "Toplam ~115 Dakika"}
+          </span>
         </div>
 
         <div className="grid grid-cols-1 gap-4">
-          {MODULES_DATA.map((module, idx) => {
+          {modules.map((module, idx) => {
             const isCompleted = userState.completedModules.includes(module.id);
             const quizScore = userState.quizScores[module.id];
 
@@ -249,11 +279,11 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
                         {module.subtitle}
                       </span>
                       <span className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
-                        <Clock className="w-3 h-3" /> {module.estimatedMinutes} Dk
+                        <Clock className="w-3 h-3" /> {module.estimatedMinutes} {isEnglish ? "Min" : "Dk"}
                       </span>
                       {quizScore !== undefined && (
                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
-                          Ustalık Testi: %{quizScore}
+                          {isEnglish ? `Mastery Test: ${quizScore}%` : `Ustalık Testi: %${quizScore}`}
                         </span>
                       )}
                     </div>
@@ -285,7 +315,11 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
                         : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs"
                     }`}
                   >
-                    <span>{isCompleted ? "Modülü İncele" : "Adıma Başla"}</span>
+                    <span>
+                      {isCompleted
+                        ? isEnglish ? "Review Step" : "Modülü İncele"
+                        : isEnglish ? "Start Step" : "Adıma Başla"}
+                    </span>
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </motion.button>
                 </div>
@@ -297,3 +331,4 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
     </motion.div>
   );
 };
+

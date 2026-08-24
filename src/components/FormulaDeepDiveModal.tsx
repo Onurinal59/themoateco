@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { FORMULA_GUIDES_DATA } from "../data/formulaGuidesData";
 import { FormulaGuide } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 import {
   Calculator,
   X,
@@ -36,18 +36,21 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
   onSelectFormula,
   onOpenFullPage,
 }) => {
+  const { getFormulaGuides, isEnglish } = useLanguage();
+  const formulaGuides = getFormulaGuides();
   const [activeId, setActiveId] = useState<string>("wacc");
 
   const effectiveFormulaId = formulaId || initialFormulaId;
 
   useEffect(() => {
-    if (effectiveFormulaId && FORMULA_GUIDES_DATA[effectiveFormulaId]) {
+    if (effectiveFormulaId && formulaGuides[effectiveFormulaId]) {
       setActiveId(effectiveFormulaId);
     }
-  }, [effectiveFormulaId]);
+  }, [effectiveFormulaId, formulaGuides]);
 
   const currentGuide: FormulaGuide =
-    FORMULA_GUIDES_DATA[activeId] || FORMULA_GUIDES_DATA["wacc"];
+    formulaGuides[activeId] || formulaGuides["wacc"] || Object.values(formulaGuides)[0];
+
 
   // Interactive Live Calculator States
   // 1. WACC State
@@ -243,17 +246,17 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
               <span className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider shrink-0 mr-1 hidden sm:inline">
                 Formüller:
               </span>
-              {Object.values(FORMULA_GUIDES_DATA).map((g, idx) => {
+              {Object.values(formulaGuides).map((g: any, idx) => {
                 const isSelected = g.id === activeId;
                 const shortNames: Record<string, string> = {
                   "wacc": "1. WACC",
                   "roic": "2. ROIC",
-                  "value-stick": "3. Değer Çubuğu",
-                  "dickinson": "4. Dickinson Nakit",
-                  "profit-pool": "5. Sektör Kârı",
-                  "footnote": "6. 10-K Dipnotları",
+                  "value-stick": isEnglish ? "3. Value Stick" : "3. Değer Çubuğu",
+                  "dickinson": isEnglish ? "4. Dickinson Cash Flow" : "4. Dickinson Nakit",
+                  "profit-pool": isEnglish ? "5. Profit Pool" : "5. Sektör Kârı",
+                  "footnote": isEnglish ? "6. 10-K Footnotes" : "6. 10-K Dipnotları",
                   "dupont-ccc": "7. DuPont & CCC",
-                  "reverse-dcf": "8. Tersine DCF",
+                  "reverse-dcf": isEnglish ? "8. Reverse DCF" : "8. Tersine DCF",
                 };
                 const label = shortNames[g.id] || `${idx + 1}. ${g.title.split("(")[0].trim()}`;
                 return (

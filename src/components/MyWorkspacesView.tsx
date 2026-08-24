@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useLanguage } from "../context/LanguageContext";
 import {
   FolderKanban,
   Plus,
@@ -51,6 +52,9 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
   onResetToPresets,
   onOpenAuditStudio,
 }) => {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
+
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<"all" | "custom" | "presets" | "template" | "wide" | "valueCreating">("all");
   const [sortBy, setSortBy] = useState<"updated" | "roic" | "moatScore" | "name">("updated");

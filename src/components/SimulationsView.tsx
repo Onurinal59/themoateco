@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useLanguage } from "../context/LanguageContext";
 import { RoicWaccSim } from "./simulators/RoicWaccSim";
 import { DickinsonLifecycleSim } from "./simulators/DickinsonLifecycleSim";
 import { ValueStickSim } from "./simulators/ValueStickSim";
@@ -49,6 +50,7 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
   onSelectSim,
   onOpenAICoachWithPrompt,
 }) => {
+  const { isEnglish, t } = useLanguage();
   const [internalSim, setInternalSim] = useState<SimTab>("roic-wacc");
   const activeSim = controlledActiveSim || internalSim;
 
@@ -59,7 +61,7 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
     }
   };
 
-  const SIMS = [
+  const SIMS_TR = [
     { id: "roic-wacc", label: "1. ROIC vs WACC (Şato)", icon: Shield, badge: "Sermaye", step: "Adım 1" },
     { id: "dickinson", label: "2. Yaşam Döngüsü Röntgeni", icon: Activity, badge: "Nakit Tablosu", step: "Adım 2" },
     { id: "value-stick", label: "3. Değer Çubuğu (WTP)", icon: DollarSign, badge: "Mikroekonomi", step: "Adım 3" },
@@ -72,6 +74,22 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
     { id: "reverse-dcf", label: "8. Tersine DCF & CAP", icon: Target, badge: "İleri Değerleme", step: "Adım 8" },
     { id: "checklist", label: "60 Maddelik Hendek Listesi", icon: CheckSquare, badge: "Morgan Stanley", step: "Final" },
   ];
+
+  const SIMS_EN = [
+    { id: "roic-wacc", label: "1. ROIC vs WACC (Castle)", icon: Shield, badge: "Capital", step: "Step 1" },
+    { id: "dickinson", label: "2. Lifecycle Diagnostic", icon: Activity, badge: "Cash Flow", step: "Step 2" },
+    { id: "value-stick", label: "3. Value Stick (WTP)", icon: DollarSign, badge: "Microecon", step: "Step 3" },
+    { id: "profit-pool", label: "4. Aviation Profit Pool", icon: FlaskConical, badge: "Industry Map", step: "Step 4" },
+    { id: "footnote-detective", label: "5. 10-K Footnote Detective", icon: Search, badge: "Balance Sheet", step: "Step 5" },
+    { id: "game-theory", label: "6. Prisoner's Dilemma", icon: Swords, badge: "Price Wars", step: "Step 6" },
+    { id: "blotto", label: "Colonel Blotto Allocation", icon: Shield, badge: "Niche Focus", step: "Step 6+" },
+    { id: "dupont", label: "7. DuPont ROIC X-Ray", icon: TrendingUp, badge: "Margin vs Turn", step: "Step 7" },
+    { id: "ccc", label: "Cash Conversion (CCC)", icon: Clock, badge: "Amazon vs B&N", step: "Step 7+" },
+    { id: "reverse-dcf", label: "8. Reverse DCF & CAP", icon: Target, badge: "Valuation", step: "Step 8" },
+    { id: "checklist", label: "60-Item Moat Checklist", icon: CheckSquare, badge: "Morgan Stanley", step: "Final" },
+  ];
+
+  const SIMS = isEnglish ? SIMS_EN : SIMS_TR;
 
   return (
     <motion.div
@@ -87,19 +105,21 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
         <div className="flex flex-wrap items-center gap-2 mb-2">
           <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-            Adım Adım İnteraktif Laboratuvarlar
+            {isEnglish ? "Step-by-Step Interactive Labs" : "Adım Adım İnteraktif Laboratuvarlar"}
           </span>
           <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-            Müfredat Adımlarına Göre Entegre
+            {isEnglish ? "Directly Integrated with Curriculum" : "Müfredat Adımlarına Göre Entegre"}
           </span>
         </div>
 
         <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-          Stratejik Simülatörler & Bilanço Deney Alanı
+          {isEnglish ? "Strategic Simulators & Financial Laboratory" : "Stratejik Simülatörler & Bilanço Deney Alanı"}
         </h1>
 
         <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-          1. Adımdaki ROIC & Şato Hendeği hesaplamasından 8. Adımdaki Tersine DCF (Zımni CAP süresi) ve 60 Maddelik Morgan Stanley Hendek Denetimine kadar tüm modelleri dinamik parametrelerle deneyimleyin.
+          {isEnglish
+            ? "From Step 1 ROIC & Moat Castle calculations to Step 8 Reverse DCF (Implied CAP duration) and the 60-Point Morgan Stanley Moat Audit: test real scenarios with interactive parameters."
+            : "1. Adımdaki ROIC & Şato Hendeği hesaplamasından 8. Adımdaki Tersine DCF (Zımni CAP süresi) ve 60 Maddelik Morgan Stanley Hendek Denetimine kadar tüm modelleri dinamik parametrelerle deneyimleyin."}
         </p>
       </div>
 

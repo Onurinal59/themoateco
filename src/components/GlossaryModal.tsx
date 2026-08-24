@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { GLOSSARY_TERMS } from "../data/glossaryData";
 import { Search, X, BookOpen, Sparkles, Tag, HelpCircle } from "lucide-react";
 import { GlossaryTerm } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 
 interface GlossaryModalProps {
   isOpen: boolean;
@@ -15,32 +15,53 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
   onClose,
   selectedTermId,
 }) => {
+  const { isEnglish, getGlossaryTerms, t } = useLanguage();
+  const glossaryTerms = getGlossaryTerms();
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("Tümü");
-  const [activeTerm, setActiveTerm] = useState<GlossaryTerm | null>(
-    selectedTermId
-      ? GLOSSARY_TERMS.find((t) => t.id === selectedTermId) || GLOSSARY_TERMS[0]
-      : GLOSSARY_TERMS[0]
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [activeTerm, setActiveTerm] = useState<GlossaryTerm | null>(() => {
+    if (selectedTermId) {
+      return glossaryTerms.find((t) => t.id === selectedTermId) || glossaryTerms[0];
+    }
+    return glossaryTerms[0];
+  });
 
-  const categories = [
-    "Tümü",
-    "Temel Finans",
-    "Strateji",
-    "Mikroekonomi",
-    "Sektör Analizi",
-    "İnovasyon & Oyun Teorisi",
-  ];
+  const categories = isEnglish
+    ? [
+        { id: "all", label: "All" },
+        { id: "Core Finance", label: "Core Finance" },
+        { id: "Strategy", label: "Strategy" },
+        { id: "Microeconomics", label: "Microeconomics" },
+        { id: "Industry Analysis", label: "Industry Analysis" },
+        { id: "Innovation & Game Theory", label: "Innovation & Game Theory" },
+      ]
+    : [
+        { id: "all", label: "Tümü" },
+        { id: "Temel Finans", label: "Temel Finans" },
+        { id: "Strateji", label: "Strateji" },
+        { id: "Mikroekonomi", label: "Mikroekonomi" },
+        { id: "Sektör Analizi", label: "Sektör Analizi" },
+        { id: "İnovasyon & Oyun Teorisi", label: "İnovasyon & Oyun Teorisi" },
+      ];
 
-  const filteredTerms = GLOSSARY_TERMS.filter((item) => {
+  const filteredTerms = glossaryTerms.filter((item) => {
     const matchesSearch =
       item.term.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.shortDefinition.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.realWorldAnalogy.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory =
-      selectedCategory === "Tümü" || item.category === selectedCategory;
+      selectedCategory === "all" ||
+      item.category === selectedCategory ||
+      (selectedCategory === "Core Finance" && item.category === "Temel Finans") ||
+      (selectedCategory === "Strategy" && item.category === "Strateji") ||
+      (selectedCategory === "Microeconomics" && item.category === "Mikroekonomi") ||
+      (selectedCategory === "Industry Analysis" && item.category === "Sektör Analizi") ||
+      (selectedCategory === "Innovation & Game Theory" && item.category === "İnovasyon & Oyun Teorisi");
     return matchesSearch && matchesCategory;
   });
+
+  const currentActiveTerm = activeTerm || filteredTerms[0] || glossaryTerms[0];
 
   return (
     <AnimatePresence>
@@ -71,9 +92,11 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
               <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">Sıfırdan Başlayanlar İçin Terimler Sözlüğü & Can Simidi</h2>
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
+                {isEnglish ? "Finance & Moat Terminology Glossary" : "Sıfırdan Başlayanlar İçin Terimler Sözlüğü & Can Simidi"}
+              </h2>
               <p className="text-xs text-slate-600 dark:text-slate-400 hidden sm:block">
-                Makaledeki tüm teknik terimlerin günlük hayat analojileriyle sade açıklamaları
+                {isEnglish ? "Plain-language definitions with intuitive everyday real-world analogies" : "Makaledeki tüm teknik terimlerin günlük hayat analojileriyle sade açıklamaları"}
               </p>
             </div>
           </div>
@@ -91,7 +114,7 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
             <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Terim, kavram veya analoji ara (Örn: ROIC, WTP, Hendek, Limonata)..."
+              placeholder={isEnglish ? "Search terms, concepts or analogies (e.g. ROIC, WTP, Moat, Lemonade)..." : "Terim, kavram veya analoji ara (Örn: ROIC, WTP, Hendek, Limonata)..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-500 dark:focus:border-indigo-500 shadow-xs"
@@ -102,15 +125,15 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
           <div className="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-thin">
             {categories.map((cat) => (
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-                  selectedCategory === cat
+                  selectedCategory === cat.id
                     ? "bg-indigo-600 text-white shadow-xs"
                     : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 }`}
               >
-                {cat}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -122,11 +145,11 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
           <div className="md:col-span-5 border-r border-slate-200 dark:border-slate-800 overflow-y-auto p-3 space-y-1.5 max-h-[300px] md:max-h-[500px] bg-slate-50/30 dark:bg-slate-950/40">
             {filteredTerms.length === 0 ? (
               <div className="text-center py-12 text-xs text-slate-500 dark:text-slate-400">
-                Aradığınız kriterlere uygun terim bulunamadı.
+                {isEnglish ? "No matching terms found." : "Aradığınız kriterlere uygun terim bulunamadı."}
               </div>
             ) : (
               filteredTerms.map((term) => {
-                const isSelected = activeTerm?.id === term.id;
+                const isSelected = currentActiveTerm?.id === term.id;
                 return (
                   <button
                     key={term.id}
@@ -152,42 +175,42 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
 
           {/* Right: Active Term Deep-Dive */}
           <div className="md:col-span-7 p-4 sm:p-6 overflow-y-auto max-h-[350px] md:max-h-[500px] bg-white dark:bg-slate-900 space-y-4 sm:space-y-5">
-            {activeTerm ? (
+            {currentActiveTerm ? (
               <>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50 uppercase">
-                      {activeTerm.category}
+                      {currentActiveTerm.category}
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1.5">{activeTerm.term}</h3>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1.5">{currentActiveTerm.term}</h3>
                   <p className="text-xs text-indigo-700 dark:text-indigo-300 font-medium mt-1">
-                    {activeTerm.shortDefinition}
+                    {currentActiveTerm.shortDefinition}
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <div className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    Detaylı Açıklama
+                    {isEnglish ? "Detailed Explanation" : "Detaylı Açıklama"}
                   </div>
                   <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800">
-                    {activeTerm.detailedExplanation}
+                    {currentActiveTerm.detailedExplanation}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 text-amber-900 dark:text-amber-200">
                   <div className="flex items-center gap-2 text-xs font-bold text-amber-800 dark:text-amber-300 mb-1.5">
                     <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                    Sıfır Bilgi Günlük Hayat Analojisi
+                    {isEnglish ? "Zero-Knowledge Everyday Analogy" : "Sıfır Bilgi Günlük Hayat Analojisi"}
                   </div>
                   <p className="text-xs text-amber-950 dark:text-amber-100 leading-relaxed">
-                    {activeTerm.realWorldAnalogy}
+                    {currentActiveTerm.realWorldAnalogy}
                   </p>
                 </div>
               </>
             ) : (
               <div className="text-center py-16 text-slate-500 dark:text-slate-400 text-xs">
-                İncelemek istediğiniz bir terimi soldaki listeden seçin.
+                {isEnglish ? "Select a term from the list on the left to examine." : "İncelemek istediğiniz bir terimi soldaki listeden seçin."}
               </div>
             )}
           </div>
@@ -195,12 +218,14 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
 
         {/* Footer */}
         <div className="p-4 bg-slate-50 dark:bg-slate-900/90 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-600 dark:text-slate-400">
-          <span>Toplam {GLOSSARY_TERMS.length} Stratejik & Finansal Kavram</span>
+          <span>
+            {isEnglish ? `Total ${glossaryTerms.length} Strategic & Financial Terms` : `Toplam ${glossaryTerms.length} Stratejik & Finansal Kavram`}
+          </span>
           <button
             onClick={onClose}
             className="px-4 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 font-semibold rounded-xl transition-colors cursor-pointer"
           >
-            Kapat
+            {isEnglish ? "Close" : "Kapat"}
           </button>
         </div>
       </motion.div>
@@ -209,3 +234,4 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
 </AnimatePresence>
   );
 };
+

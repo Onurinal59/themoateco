@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useLanguage } from "../context/LanguageContext";
 import { Sparkles, Send, X, Bot, User, Loader2, MessageSquare, Lightbulb, BookOpen } from "lucide-react";
 
 interface Message {
@@ -14,12 +15,20 @@ interface AICoachDrawerProps {
   initialPrompt?: string;
 }
 
-const PRESET_QUESTIONS = [
+const PRESET_QUESTIONS_TR = [
   "Bunu 10 yaşındaki birine anlatır gibi sade açıkla.",
   "Mahalle bakkalı veya fırın örneğiyle somutlaştır.",
   "İncelediğim hissenin hendeğini nasıl test edebilirim?",
   "BIM vs Migros veya Apple vs Samsung hendek farkı nedir?",
   "ROIC yüksek ama WACC da yüksekse ne olur?",
+];
+
+const PRESET_QUESTIONS_EN = [
+  "Explain this simply as if to a 10-year-old.",
+  "Give a concrete bakery or corner-store analogy.",
+  "How can I test the moat durability of a stock I'm researching?",
+  "What is the moat difference between Apple and Samsung?",
+  "What happens if ROIC is high but WACC is also high?",
 ];
 
 export const AICoachDrawer: React.FC<AICoachDrawerProps> = ({
@@ -28,17 +37,31 @@ export const AICoachDrawer: React.FC<AICoachDrawerProps> = ({
   currentTopic,
   initialPrompt,
 }) => {
+  const { isEnglish, t } = useLanguage();
+
+  const welcomeMessage = isEnglish
+    ? `Hello! I am your Socratic Analysis AI Coach, here to guide you through Michael Mauboussin's "Measuring the Moat" framework step by step and apply it to real-world equities.
+Feel free to ask about any unclear concepts or test your company's moat evidence together!`
+    : `Merhaba! Ben Michael Mauboussin'in "Measuring the Moat" (Ekonomik Hendeği Ölçmek) araştırmasını adım adım öğrenmende ve gerçek piyasadaki hisselere uygulamanda sana rehberlik edecek Sokratik Analiz Koçunum.
+Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kanıtlarını birlikte test edebiliriz!`;
+
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: "coach",
-      text: `Merhaba! Ben Michael Mauboussin'in "Measuring the Moat" (Ekonomik Hendeği Ölçmek) araştırmasını adım adım öğrenmende ve gerçek piyasadaki hisselere uygulamanda sana rehberlik edecek Sokratik Analiz Koçunum.
-Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kanıtlarını birlikte test edebiliriz!`,
+      text: welcomeMessage,
     },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const lastInitialPromptRef = useRef<string | undefined>(undefined);
+
+  // Update initial message when language changes if only 1 message exists
+  useEffect(() => {
+    if (messages.length === 1 && messages[0].sender === "coach") {
+      setMessages([{ sender: "coach", text: welcomeMessage }]);
+    }
+  }, [isEnglish]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -71,7 +94,8 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           question: textToSend,
-          currentTopic: currentTopic || "Ekonomik Hendek ve Sürdürülebilir Değer Yaratma",
+          currentTopic: currentTopic || (isEnglish ? "Economic Moat and Sustainable Value Creation" : "Ekonomik Hendek ve Sürdürülebilir Değer Yaratma"),
+          language: isEnglish ? "en" : "tr",
         }),
       });
 
@@ -83,7 +107,9 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
           ...prev,
           {
             sender: "coach",
-            text: "Yanıt alırken geçici bir aksaklık oldu. Lütfen tekrar dener misiniz?",
+            text: isEnglish
+              ? "There was a temporary issue getting a response. Please try again."
+              : "Yanıt alırken geçici bir aksaklık oldu. Lütfen tekrar dener misiniz?",
           },
         ]);
       }
@@ -93,13 +119,17 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
         ...prev,
         {
           sender: "coach",
-          text: "Sunucuya bağlanırken bir sorun oluştu. Lütfen bağlantınızı kontrol edin.",
+          text: isEnglish
+            ? "Could not connect to the server. Please check your network connection."
+            : "Sunucuya bağlanırken bir sorun oluştu. Lütfen bağlantınızı kontrol edin.",
         },
       ]);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const presetQuestions = isEnglish ? PRESET_QUESTIONS_EN : PRESET_QUESTIONS_TR;
 
   return (
     <AnimatePresence>
@@ -131,13 +161,15 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">Sokratik AI Öğrenme Koçu</h3>
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100">
+                      {isEnglish ? "Socratic AI Learning Coach" : "Sokratik AI Öğrenme Koçu"}
+                    </h3>
                     <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
                       Mauboussin AI
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                    Konu: {currentTopic || "Genel Strateji & Hendek"}
+                    {isEnglish ? "Topic:" : "Konu:"} {currentTopic || (isEnglish ? "General Strategy & Moat" : "Genel Strateji & Hendek")}
                   </p>
                 </div>
               </div>
@@ -152,7 +184,7 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
 
             {/* Preset Fast Prompt Chips */}
             <div className="p-3 bg-slate-50/50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 flex gap-2 overflow-x-auto scrollbar-thin">
-              {PRESET_QUESTIONS.map((q, idx) => (
+              {presetQuestions.map((q, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSend(q)}
@@ -208,7 +240,7 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
                   </div>
                   <div className="p-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 flex items-center gap-2 shadow-xs">
                     <Loader2 className="w-4 h-4 animate-spin text-indigo-600 dark:text-indigo-400" />
-                    <span>Sade ve anlaşılır bir analoji hazırlanıyor...</span>
+                    <span>{isEnglish ? "Preparing a clear analogy..." : "Sade ve anlaşılır bir analoji hazırlanıyor..."}</span>
                   </div>
                 </motion.div>
               )}
@@ -226,7 +258,7 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
               >
                 <input
                   type="text"
-                  placeholder="Anlamadığın bir kelime veya konsepti sor..."
+                  placeholder={isEnglish ? "Ask about any term or concept..." : "Anlamadığın bir kelime veya konsepti sor..."}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading}
@@ -247,3 +279,4 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
     </AnimatePresence>
   );
 };
+

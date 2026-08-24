@@ -14,6 +14,7 @@ import {
   GraduationCap
 } from "lucide-react";
 import { NavTab } from "./Navbar";
+import { useLanguage } from "../context/LanguageContext";
 
 interface FooterProps {
   onNavigateTab: (tab: NavTab) => void;
@@ -28,6 +29,8 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenAICoach,
   onOpenGuide
 }) => {
+  const { isEnglish, t } = useLanguage();
+
   return (
     <footer className="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 transition-colors">
       {/* Top Banner / Value Proposition */}
@@ -41,7 +44,7 @@ export const Footer: React.FC<FooterProps> = ({
               </span>
               <span className="hidden md:inline text-slate-400 dark:text-slate-500">•</span>
               <span className="hidden md:inline text-slate-500 dark:text-slate-400">
-                Sürdürülebilir Rekabet Avantajı & Kurumsal Değerleme Rehberi
+                {t("footer.tagline", "Sürdürülebilir Rekabet Avantajı & Kurumsal Değerleme Rehberi")}
               </span>
             </div>
 
@@ -51,14 +54,14 @@ export const Footer: React.FC<FooterProps> = ({
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition-colors cursor-pointer"
               >
                 <HelpCircle className="w-3.5 h-3.5" />
-                <span>Akademi Rehberi</span>
+                <span>{isEnglish ? "Academy Guide" : "Akademi Rehberi"}</span>
               </button>
               <button
                 onClick={onOpenAICoach}
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/60 border border-purple-200/80 dark:border-purple-800/60 hover:bg-purple-100 dark:hover:bg-purple-900/60 transition-colors cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5 text-purple-500" />
-                <span>Sokratik AI Koçu</span>
+                <span>{isEnglish ? "Socratic AI Coach" : "Sokratik AI Koçu"}</span>
               </button>
             </div>
           </div>
@@ -76,18 +79,19 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
               <div>
                 <span className="font-extrabold text-base text-slate-900 dark:text-slate-100 tracking-tight block">
-                  Ekonomik Hendek Akademisi
+                  {isEnglish ? "Economic Moat Academy" : "Ekonomik Hendek Akademisi"}
                 </span>
                 <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium block">
-                  Bilanço Röntgeni & Değerleme Stüdyosu
+                  {isEnglish ? "Balance Sheet X-Ray & Valuation Studio" : "Bilanço Röntgeni & Değerleme Stüdyosu"}
                 </span>
               </div>
             </div>
 
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-md">
-              Michael J. Mauboussin ve Dan Callahan'ın dünyaca ünlü araştırmalarını temel alan,
-              hissedarlar ve finansal analistler için tasarlanmış interaktif strateji, ROIC röntgeni
-              ve rekabet avantajı simülasyon platformu.
+              {t(
+                "footer.description",
+                "Michael J. Mauboussin ve Dan Callahan'ın dünyaca ünlü araştırmalarını temel alan, hissedarlar ve finansal analistler için tasarlanmış interaktif strateji, ROIC röntgeni ve rekabet avantajı simülasyon platformu."
+              )}
             </p>
 
             {/* Creator Profile Card */}
@@ -102,7 +106,7 @@ export const Footer: React.FC<FooterProps> = ({
                       Onur İnal
                     </span>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400 block">
-                      Platform Yapımcısı & Geliştirici
+                      {t("footer.creator", "Platform Yapımcısı & Geliştirici")}
                     </span>
                   </div>
                 </div>
@@ -111,7 +115,7 @@ export const Footer: React.FC<FooterProps> = ({
                   href="https://www.linkedin.com/in/onurınal"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Onur İnal LinkedIn Profili"
+                  aria-label="Onur İnal LinkedIn Profile"
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#0A66C2] hover:bg-[#004182] text-white shadow-xs hover:shadow-md transition-all cursor-pointer group"
                 >
                   <Linkedin className="w-3.5 h-3.5 fill-current" />
@@ -121,7 +125,7 @@ export const Footer: React.FC<FooterProps> = ({
               </div>
 
               <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-normal">
-                Soru, geri bildirim veya iş birliği önerileriniz için LinkedIn üzerinden doğrudan iletişime geçebilirsiniz.
+                {t("footer.contact", "Soru, geri bildirim veya iş birliği önerileriniz için LinkedIn üzerinden doğrudan iletişime geçebilirsiniz.")}
               </p>
             </div>
           </div>
@@ -130,7 +134,7 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="lg:col-span-3 space-y-3">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-200 flex items-center gap-1.5">
               <GraduationCap className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              Eğitim & Modüller
+              {t("footer.education", "Eğitim & Modüller")}
             </span>
             <ul className="space-y-2 text-xs">
               <li>
@@ -139,7 +143,7 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-2 text-left cursor-pointer"
                 >
                   <BookOpen className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>8 Aşamalı Öğrenim Yol Haritası</span>
+                  <span>{isEnglish ? "8-Step Learning Roadmap" : "8 Aşamalı Öğrenim Yol Haritası"}</span>
                 </button>
               </li>
               <li>
@@ -148,7 +152,7 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-2 text-left cursor-pointer"
                 >
                   <Calculator className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>Formül & Röntgen Atölyesi</span>
+                  <span>{isEnglish ? "Formula & X-Ray Workshop" : "Formül & Röntgen Atölyesi"}</span>
                 </button>
               </li>
               <li>
@@ -157,7 +161,7 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-2 text-left cursor-pointer"
                 >
                   <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>Şirket Analiz Stüdyosu (10-K & KAP)</span>
+                  <span>{isEnglish ? "Company Audit Studio (10-K & SEC)" : "Şirket Analiz Stüdyosu (10-K & KAP)"}</span>
                 </button>
               </li>
               <li>
@@ -166,7 +170,7 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-2 text-left cursor-pointer"
                 >
                   <ShieldCheck className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>Şirket Hendek Düellosu</span>
+                  <span>{isEnglish ? "Company Moat Duel" : "Şirket Hendek Düellosu"}</span>
                 </button>
               </li>
             </ul>
@@ -176,14 +180,14 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="lg:col-span-4 space-y-3">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-slate-200 flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              Laboratuvar & Araçlar
+              {t("footer.tools", "Laboratuvar & Araçlar")}
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
               <button
                 onClick={() => onNavigateTab("simulators")}
                 className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-indigo-50/60 dark:hover:bg-indigo-950/40 border border-slate-200 dark:border-slate-700/60 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all text-left cursor-pointer flex flex-col gap-0.5"
               >
-                <span className="font-bold text-slate-800 dark:text-slate-200">11 İnteraktif Simülatör</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">{isEnglish ? "11 Interactive Simulators" : "11 İnteraktif Simülatör"}</span>
                 <span className="text-[11px] text-slate-500 dark:text-slate-400">ROIC, DuPont, CCC, DCF</span>
               </button>
 
@@ -191,16 +195,16 @@ export const Footer: React.FC<FooterProps> = ({
                 onClick={() => onNavigateTab("spaced-repetition")}
                 className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-indigo-50/60 dark:hover:bg-indigo-950/40 border border-slate-200 dark:border-slate-700/60 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all text-left cursor-pointer flex flex-col gap-0.5"
               >
-                <span className="font-bold text-slate-800 dark:text-slate-200">Aralıklı Tekrarlama</span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400">SuperMemo-2 Algoritması</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">{isEnglish ? "Spaced Repetition" : "Aralıklı Tekrarlama"}</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">SuperMemo-2</span>
               </button>
 
               <button
                 onClick={onOpenGlossary}
                 className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 hover:bg-indigo-50/60 dark:hover:bg-indigo-950/40 border border-slate-200 dark:border-slate-700/60 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all text-left cursor-pointer flex flex-col gap-0.5"
               >
-                <span className="font-bold text-slate-800 dark:text-slate-200">Kapsamlı Sözlük</span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400">Finans & Strateji Terimleri</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">{isEnglish ? "Glossary" : "Kapsamlı Sözlük"}</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">{isEnglish ? "Finance & Strategy Terms" : "Finans & Strateji Terimleri"}</span>
               </button>
 
               <button
@@ -209,9 +213,9 @@ export const Footer: React.FC<FooterProps> = ({
               >
                 <span className="font-bold text-purple-900 dark:text-purple-200 flex items-center gap-1">
                   <Sparkles className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                  Sokratik AI Koçu
+                  {isEnglish ? "Socratic AI Coach" : "Sokratik AI Koçu"}
                 </span>
-                <span className="text-[11px] text-purple-700 dark:text-purple-300">Özelleştirilmiş Mentorluk</span>
+                <span className="text-[11px] text-purple-700 dark:text-purple-300">{isEnglish ? "Tailored Mentorship" : "Özelleştirilmiş Mentorluk"}</span>
               </button>
             </div>
           </div>
@@ -220,10 +224,10 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Bottom Credits & Legal Disclaimer */}
         <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 text-center md:text-left">
-            <span>© 2026 Ekonomik Hendek Akademisi</span>
+            <span>{t("footer.copyright", "© 2026 Ekonomik Hendek Akademisi")}</span>
             <span>•</span>
             <span>
-              Yapımcı:{" "}
+              {isEnglish ? "Author: " : "Yapımcı: "}
               <a
                 href="https://www.linkedin.com/in/onurınal"
                 target="_blank"
@@ -235,14 +239,15 @@ export const Footer: React.FC<FooterProps> = ({
               </a>
             </span>
             <span>•</span>
-            <span className="text-[11px]">Açık Kaynaklı Eğitsel Finans Platformu</span>
+            <span className="text-[11px]">{isEnglish ? "Open Educational Finance Platform" : "Açık Kaynaklı Eğitsel Finans Platformu"}</span>
           </div>
 
           <div className="text-[11px] text-center md:text-right text-slate-400 dark:text-slate-500 max-w-lg">
-            Bu platform yalnızca finansal analiz, eğitim ve metodolojik öğrenim amaçlıdır; herhangi bir yatırım tavsiyesi (YTD) niteliği taşımaz.
+            {t("footer.disclaimer", "Bu platform yalnızca finansal analiz, eğitim ve metodolojik öğrenim amaçlıdır; herhangi bir yatırım tavsiyesi (YTD) niteliği taşımaz.")}
           </div>
         </div>
       </div>
     </footer>
   );
 };
+

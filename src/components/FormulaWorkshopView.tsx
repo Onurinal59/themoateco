@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { FORMULA_GUIDES_DATA } from "../data/formulaGuidesData";
 import { FormulaGuide } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 import {
   Calculator,
   Sparkles,
@@ -35,13 +35,15 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
   onNavigateToModule,
   onNavigateToSim,
 }) => {
+  const { getFormulaGuides, isEnglish } = useLanguage();
+  const formulaGuides = getFormulaGuides();
   const [activeId, setActiveId] = useState<string>(selectedFormulaId || "wacc");
 
   useEffect(() => {
-    if (selectedFormulaId && FORMULA_GUIDES_DATA[selectedFormulaId]) {
+    if (selectedFormulaId && formulaGuides[selectedFormulaId]) {
       setActiveId(selectedFormulaId);
     }
-  }, [selectedFormulaId]);
+  }, [selectedFormulaId, formulaGuides]);
 
   const handleFormulaChange = (id: string) => {
     setActiveId(id);
@@ -49,7 +51,8 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
   };
 
   const currentGuide: FormulaGuide =
-    FORMULA_GUIDES_DATA[activeId] || FORMULA_GUIDES_DATA["wacc"];
+    formulaGuides[activeId] || formulaGuides["wacc"] || Object.values(formulaGuides)[0];
+
 
   // ==========================================
   // Interactive Live Calculator States
@@ -195,7 +198,7 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
     Math.round((futureGrowthVal / steadyStateVal) * 12 + 2)
   );
 
-  const ALL_FORMULA_KEYS = Object.keys(FORMULA_GUIDES_DATA);
+  const ALL_FORMULA_KEYS = Object.keys(formulaGuides);
 
   // Mapping formula ID to relevant module ID
   const FORMULA_TO_MODULE_MAP: Record<string, { moduleId: number; name: string }> = {
@@ -261,7 +264,7 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
             {ALL_FORMULA_KEYS.map((key, idx) => {
-              const guide = FORMULA_GUIDES_DATA[key];
+              const guide = formulaGuides[key];
               const isSelected = activeId === key;
               return (
                 <motion.button
