@@ -24,6 +24,42 @@ import {
 import { UserLearningState } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 
+// High-definition SVG flag icons for language selection
+const TurkishFlag: React.FC<{ className?: string }> = ({ className = "w-5 h-3.5" }) => (
+  <svg
+    viewBox="0 0 1200 800"
+    className={`${className} rounded-xs shadow-2xs shrink-0 overflow-hidden select-none`}
+    aria-hidden="true"
+  >
+    <rect width="1200" height="800" fill="#E30A17" />
+    <circle cx="425" cy="400" r="200" fill="#ffffff" />
+    <circle cx="475" cy="400" r="160" fill="#E30A17" />
+    <polygon
+      fill="#ffffff"
+      points="583.33,400 706.07,439.88 630.21,335.53 630.21,464.47 706.07,360.12"
+    />
+  </svg>
+);
+
+const BritishFlag: React.FC<{ className?: string }> = ({ className = "w-5 h-3.5" }) => (
+  <svg
+    viewBox="0 0 60 30"
+    className={`${className} rounded-xs shadow-2xs shrink-0 overflow-hidden select-none`}
+    aria-hidden="true"
+  >
+    <clipPath id="uk-flag-clip-nav">
+      <rect width="60" height="30" rx="1" />
+    </clipPath>
+    <g clipPath="url(#uk-flag-clip-nav)">
+      <rect width="60" height="30" fill="#012169" />
+      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6" />
+      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" strokeWidth="2" />
+      <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10" />
+      <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6" />
+    </g>
+  </svg>
+);
+
 export type NavTab =
   | "roadmap"
   | "formulas"
@@ -316,31 +352,33 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="hidden xl:inline font-medium text-[10px] opacity-80">{isEnglish ? "d" : "gün"}</span>
               </motion.div>
 
-              {/* Compact Modern One-Click Language Switcher [ TR | EN ] */}
-              <div className="flex items-center p-0.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-[11px] font-bold select-none shadow-2xs">
+              {/* Flag-Only Language Switcher (No TR/EN text, only crisp country flags) */}
+              <div className="flex items-center p-0.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-2xs gap-0.5 select-none">
                 <button
+                  type="button"
                   onClick={() => setLanguage("tr")}
-                  className={`px-1.5 sm:px-2 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-0.5 sm:gap-1 ${
+                  className={`p-1.5 rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center ${
                     language === "tr"
-                      ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-2xs font-extrabold"
-                      : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                      ? "bg-white dark:bg-slate-800 shadow-xs ring-1.5 ring-indigo-500/70 dark:ring-indigo-400/80 scale-105"
+                      : "opacity-45 hover:opacity-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
                   }`}
                   title="Türkçe"
+                  aria-label="Türkçe"
                 >
-                  <span className="text-[11px]">🇹🇷</span>
-                  <span className="text-[10px] sm:text-[11px]">TR</span>
+                  <TurkishFlag className="w-4.5 h-3 sm:w-5 sm:h-3.5" />
                 </button>
                 <button
+                  type="button"
                   onClick={() => setLanguage("en")}
-                  className={`px-1.5 sm:px-2 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-0.5 sm:gap-1 ${
+                  className={`p-1.5 rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center ${
                     language === "en"
-                      ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-2xs font-extrabold"
-                      : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                      ? "bg-white dark:bg-slate-800 shadow-xs ring-1.5 ring-indigo-500/70 dark:ring-indigo-400/80 scale-105"
+                      : "opacity-45 hover:opacity-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
                   }`}
                   title="English"
+                  aria-label="English"
                 >
-                  <span className="text-[11px]">🇬🇧</span>
-                  <span className="text-[10px] sm:text-[11px]">EN</span>
+                  <BritishFlag className="w-4.5 h-3 sm:w-5 sm:h-3.5" />
                 </button>
               </div>
 
@@ -472,32 +510,38 @@ export const Navbar: React.FC<NavbarProps> = ({
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="lg:hidden border-t border-slate-200/80 dark:border-slate-800 bg-white/98 dark:bg-slate-950/98 backdrop-blur-xl px-4 py-4 space-y-4 shadow-2xl overflow-y-auto max-h-[85vh]"
             >
-              {/* Mobile Language Switcher */}
-              <div className="flex items-center justify-between p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+              {/* Mobile Language Switcher (Only Flag Icons) */}
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
                 <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                   <Globe className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                   {isEnglish ? "Language" : "Dil Seçimi"}
                 </span>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 p-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
                   <button
+                    type="button"
                     onClick={() => setLanguage("tr")}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                       language === "tr"
-                        ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                        : "text-slate-500"
+                        ? "bg-indigo-50 dark:bg-indigo-950/80 ring-1.5 ring-indigo-500 shadow-xs scale-105"
+                        : "opacity-45 hover:opacity-100"
                     }`}
+                    title="Türkçe"
+                    aria-label="Türkçe"
                   >
-                    🇹🇷 TR
+                    <TurkishFlag className="w-6 h-4" />
                   </button>
                   <button
+                    type="button"
                     onClick={() => setLanguage("en")}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center ${
                       language === "en"
-                        ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs"
-                        : "text-slate-500"
+                        ? "bg-indigo-50 dark:bg-indigo-950/80 ring-1.5 ring-indigo-500 shadow-xs scale-105"
+                        : "opacity-45 hover:opacity-100"
                     }`}
+                    title="English"
+                    aria-label="English"
                   >
-                    🇬🇧 EN
+                    <BritishFlag className="w-6 h-4" />
                   </button>
                 </div>
               </div>

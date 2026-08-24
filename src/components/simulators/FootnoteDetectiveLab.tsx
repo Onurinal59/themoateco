@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 import {
   FileText,
   Search,
@@ -275,6 +276,7 @@ export const DETECTIVE_CASES: DetectiveCase[] = [
 ];
 
 export const FootnoteDetectiveLab: React.FC = () => {
+  const { isEnglish, t } = useLanguage();
   const [activeCaseId, setActiveCaseId] = useState<string>(DETECTIVE_CASES[0].id);
   const [selectedFootnoteId, setSelectedFootnoteId] = useState<string | null>(null);
   const [appliedAdjustments, setAppliedAdjustments] = useState<Record<string, boolean>>({});
@@ -366,14 +368,14 @@ export const FootnoteDetectiveLab: React.FC = () => {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
-              Modül 5 Laboratuvarı
+              {isEnglish ? "Module 5 Lab" : "Modül 5 Laboratuvarı"}
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 flex items-center gap-1.5">
               <Search className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
-              10-K & KAP Dipnot Dedektifi
+              {isEnglish ? "10-K & Financial Footnotes Detective" : "10-K & KAP Dipnot Dedektifi"}
             </span>
             <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-              Uygulamalı Bilanço ve Gelir Tablosu Çözümlemesi
+              {isEnglish ? "Applied Balance Sheet & Income Statement Audit" : "Uygulamalı Bilanço ve Gelir Tablosu Çözümlemesi"}
             </span>
           </div>
 
@@ -386,14 +388,14 @@ export const FootnoteDetectiveLab: React.FC = () => {
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             >
-              <RotateCcw className="w-3.5 h-3.5" /> Sıfırla
+              <RotateCcw className="w-3.5 h-3.5" /> {isEnglish ? "Reset" : "Sıfırla"}
             </button>
           </div>
         </div>
 
         {/* Quick Case Switcher */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-          <span className="text-xs text-slate-400 font-semibold shrink-0">Vaka Seçin:</span>
+          <span className="text-xs text-slate-400 font-semibold shrink-0">{isEnglish ? "Select Case:" : "Vaka Seçin:"}</span>
           {DETECTIVE_CASES.map((c) => (
             <button
               key={c.id}
@@ -430,7 +432,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-md">
         {/* Metric 1: NOPAT */}
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400">Net Faaliyet Kârı (NOPAT)</span>
+          <span className="text-[10px] uppercase font-bold text-slate-400">{isEnglish ? "Net Operating Profit (NOPAT)" : "Net Faaliyet Kârı (NOPAT)"}</span>
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-extrabold text-white">
               {Math.round(adjNopat).toLocaleString()} {currentCase.currency}
@@ -441,12 +443,12 @@ export const FootnoteDetectiveLab: React.FC = () => {
               </span>
             )}
           </div>
-          <span className="text-[11px] text-slate-400 block">Ham Muhasebe: {Math.round(rawNopat).toLocaleString()}</span>
+          <span className="text-[11px] text-slate-400 block">{isEnglish ? "Raw Accounting: " : "Ham Muhasebe: "}{Math.round(rawNopat).toLocaleString()}</span>
         </div>
 
         {/* Metric 2: Invested Capital */}
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400">Yatırılan Sermaye (IC)</span>
+          <span className="text-[10px] uppercase font-bold text-slate-400">{isEnglish ? "Invested Capital (IC)" : "Yatırılan Sermaye (IC)"}</span>
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-extrabold text-white">
               {Math.round(adjInvestedCapital).toLocaleString()} {currentCase.currency}
@@ -457,12 +459,12 @@ export const FootnoteDetectiveLab: React.FC = () => {
               </span>
             )}
           </div>
-          <span className="text-[11px] text-slate-400 block">Ham Bilanço: {Math.round(rawInvestedCapital).toLocaleString()}</span>
+          <span className="text-[11px] text-slate-400 block">{isEnglish ? "Raw Balance Sheet: " : "Ham Bilanço: "}{Math.round(rawInvestedCapital).toLocaleString()}</span>
         </div>
 
         {/* Metric 3: ROIC & WACC */}
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400">Düzeltilmiş ROIC vs WACC</span>
+          <span className="text-[10px] uppercase font-bold text-slate-400">{isEnglish ? "Adjusted ROIC vs WACC" : "Düzeltilmiş ROIC vs WACC"}</span>
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-black text-amber-300">
               %{adjRoic.toFixed(1)}
@@ -471,21 +473,21 @@ export const FootnoteDetectiveLab: React.FC = () => {
               / WACC %{adjWacc.toFixed(1)}
             </span>
           </div>
-          <span className="text-[11px] text-slate-400 block">Ham ROIC: %{rawRoic.toFixed(1)}</span>
+          <span className="text-[11px] text-slate-400 block">{isEnglish ? "Raw ROIC: %" : "Ham ROIC: %"}{rawRoic.toFixed(1)}</span>
         </div>
 
         {/* Metric 4: Economic Moat Spread */}
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400">Hendek Yayılımı (ROIC - WACC)</span>
+          <span className="text-[10px] uppercase font-bold text-slate-400">{isEnglish ? "Moat Spread (ROIC - WACC)" : "Hendek Yayılımı (ROIC - WACC)"}</span>
           <div className="flex items-baseline gap-2">
             <span className={`text-2xl font-black ${adjSpread >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
               {adjSpread >= 0 ? `+%{${adjSpread.toFixed(1)}}` : `%{${adjSpread.toFixed(1)}}`}
             </span>
             <span className="text-[11px] text-slate-400">
-              {adjSpread > 5 ? "Geniş Hendek" : adjSpread > 0 ? "Dar Hendek" : "Değer Yıkımı"}
+              {adjSpread > 5 ? isEnglish ? "Wide Moat" : "Geniş Hendek" : adjSpread > 0 ? isEnglish ? "Narrow Moat" : "Dar Hendek" : isEnglish ? "Value Destroyer" : "Değer Yıkımı"}
             </span>
           </div>
-          <span className="text-[11px] text-slate-400 block">Ham Yayılım: %{rawSpread.toFixed(1)}</span>
+          <span className="text-[11px] text-slate-400 block">{isEnglish ? "Raw Spread: %" : "Ham Yayılım: %"}{rawSpread.toFixed(1)}</span>
         </div>
       </div>
 
@@ -500,7 +502,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
           }`}
         >
           <Layers className="w-3.5 h-3.5" />
-          Bilanço & Yatırılan Sermaye Analizi
+          {isEnglish ? "Balance Sheet & Invested Capital" : "Bilanço & Yatırılan Sermaye Analizi"}
         </button>
 
         <button
@@ -512,7 +514,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
           }`}
         >
           <FileText className="w-3.5 h-3.5" />
-          Gelir Tablosu & NOPAT Düzeltmesi
+          {isEnglish ? "Income Statement & NOPAT Adjustments" : "Gelir Tablosu & NOPAT Düzeltmesi"}
         </button>
 
         <button
@@ -524,7 +526,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
           }`}
         >
           <Percent className="w-3.5 h-3.5" />
-          WACC Sermaye Maliyeti Röntgeni
+          {isEnglish ? "WACC Cost of Capital Breakdown" : "WACC Sermaye Maliyeti Röntgeni"}
         </button>
 
         <button
@@ -536,7 +538,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
           }`}
         >
           <Calculator className="w-3.5 h-3.5" />
-          Kendini Test Et (ROIC / WACC Tahmini)
+          {isEnglish ? "Quiz Yourself (ROIC / WACC Guess)" : "Kendini Test Et (ROIC / WACC Tahmini)"}
         </button>
       </div>
 

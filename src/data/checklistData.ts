@@ -1,6 +1,6 @@
 import { ChecklistItem } from "../types";
 
-export const CHECKLIST_ITEMS: ChecklistItem[] = [
+export const CHECKLIST_ITEMS_TR: ChecklistItem[] = [
   // 1. Giriş ve Temel Getiri
   {
     id: "chk-1",
@@ -191,3 +191,201 @@ export const CHECKLIST_ITEMS: ChecklistItem[] = [
     lowScoreIndicator: "Marka sadece bir logo, hiçbir fiyat esnekliği sağlamıyor",
   }
 ];
+
+export const CHECKLIST_ITEMS_EN: ChecklistItem[] = [
+  // 1. Introduction & Return
+  {
+    id: "chk-1",
+    category: "1. Intro & Returns (Introduction)",
+    question: "Does the company earn a ROIC (Return on Invested Capital) well above its WACC (Cost of Capital)?",
+    explanation: "The return earned on deployed capital must sustainably exceed capital financing cost (ROIC > WACC).",
+    highScoreIndicator: "ROIC substantially above WACC (15%+ vs 8% WACC)",
+    lowScoreIndicator: "ROIC below or parity with WACC",
+  },
+  {
+    id: "chk-2",
+    category: "1. Intro & Returns (Introduction)",
+    question: "Is the ROIC spread expanding, stable, or rapidly decaying toward market mean?",
+    explanation: "Preserving superior ROIC over 10+ years signals an authentic durable moat.",
+    highScoreIndicator: "10+ years of high, stable or rising ROIC",
+    lowScoreIndicator: "Rapidly decaying or erratic ROIC swings",
+  },
+  {
+    id: "chk-3",
+    category: "1. Intro & Returns (Introduction)",
+    question: "How much of current stock valuation reflects future value creation vs steady-state value?",
+    explanation: "Measuring whether market expectations demand hyper-aggressive future growth (Reverse DCF).",
+    highScoreIndicator: "Prudent valuation (Future growth <40% of market cap)",
+    lowScoreIndicator: "Hyper-speculative (Future expectations >80% of price)",
+  },
+
+  // 2. Lay of the Land (Industry Map)
+  {
+    id: "chk-4",
+    category: "2. Industry Map (Lay of the Land)",
+    question: "How is total economic profit distributed across the industry's profit pool, and where is the firm?",
+    explanation: "Is the firm positioned in the high-spread segment or in a capital-draining bottleneck?",
+    highScoreIndicator: "Dominates the highest-spread segment of the value chain",
+    lowScoreIndicator: "Stuck in capital-intensive, commoditized segment (e.g. Airline operator)",
+  },
+  {
+    id: "chk-5",
+    category: "2. Industry Map (Lay of the Land)",
+    question: "How stable has market share been across the last 5 years (Greenwald Metric)?",
+    explanation: "Greenwald rule: An average 5-year market share fluctuation ≤2% indicates stable moat dynamics.",
+    highScoreIndicator: "Very stable market shares (Average annual shift <2%)",
+    lowScoreIndicator: "Volatile, constantly shifting market shares (Shift >5%)",
+  },
+  {
+    id: "chk-6",
+    category: "2. Industry Map (Lay of the Land)",
+    question: "What is the industry concentration level (HHI / C4 ratio) and competitor rationality?",
+    explanation: "High concentration among rational players limits destructive price wars.",
+    highScoreIndicator: "Disciplined oligopoly with rational leaders",
+    lowScoreIndicator: "Hyper-fragmented with thousands of desperate price-cutting rivals",
+  },
+
+  // 3. Porter's Five Forces
+  {
+    id: "chk-7",
+    category: "3. Porter 5 Forces (Suppliers, Buyers, Subs)",
+    question: "What is the degree of supplier bargaining power over the firm?",
+    explanation: "Does a supplier monopoly exist, or can the firm dictate procurement terms and pass on costs?",
+    highScoreIndicator: "Fragmented suppliers; firm holds monopsony purchasing scale",
+    lowScoreIndicator: "Duopoly suppliers or powerful unions (e.g. Boeing/Airbus & Pilot unions in aviation)",
+  },
+  {
+    id: "chk-8",
+    category: "3. Porter 5 Forces (Suppliers, Buyers, Subs)",
+    question: "What is buyer price sensitivity and bargaining leverage?",
+    explanation: "Can customers easily compare prices and defect to alternatives with zero penalty?",
+    highScoreIndicator: "Inelastic demand; captive, loyal customer base",
+    lowScoreIndicator: "Extreme price sensitivity; zero switching loyalty",
+  },
+  {
+    id: "chk-9",
+    category: "3. Porter 5 Forces (Suppliers, Buyers, Subs)",
+    question: "How severe is the threat of direct and indirect substitute products?",
+    explanation: "Can alternative technologies from other sectors fulfill the same job-to-be-done?",
+    highScoreIndicator: "No viable direct or indirect technological substitutes exist",
+    lowScoreIndicator: "Strong emerging substitutes (e.g. High-speed rail or video conferencing for regional flights)",
+  },
+
+  // 4. Barriers to Entry
+  {
+    id: "chk-10",
+    category: "4. Barriers to Entry",
+    question: "Does Minimum Efficient Scale (MES) constitute a substantial share of total market demand?",
+    explanation: "Must a new entrant capture huge market share immediately to avoid crushing unit-cost penalties?",
+    highScoreIndicator: "MES is very high; sub-scale entrants suffer fatal cost disadvantages",
+    lowScoreIndicator: "MES is minimal; anyone can enter with negligible capital",
+  },
+  {
+    id: "chk-11",
+    category: "4. Barriers to Entry",
+    question: "Does the company benefit from direct or two-sided Network Effects?",
+    explanation: "Does each new user non-linearly increase platform value for all other users?",
+    highScoreIndicator: "Self-reinforcing network lock-in (Visa, Apple iOS, Uber)",
+    lowScoreIndicator: "No network effects; standalone commodity product",
+  },
+  {
+    id: "chk-12",
+    category: "4. Barriers to Entry",
+    question: "Are customer Switching Costs and procedural lock-in substantial?",
+    explanation: "Do data migration, retraining, contract fees, or operational risk deter switching?",
+    highScoreIndicator: "Mission-critical enterprise software / deep workflow entanglement",
+    lowScoreIndicator: "Zero friction switching; customer can defect in one click",
+  },
+  {
+    id: "chk-13",
+    category: "4. Barriers to Entry",
+    question: "Does the firm hold an insurmountable cost advantage from Wright's Law (Learning Curve)?",
+    explanation: "Has cumulative production volume driven down unit costs below any rival's reach?",
+    highScoreIndicator: "Decades of cumulative scale and proprietary yield advantages",
+    lowScoreIndicator: "Standard generic manufacturing with no proprietary learning curves",
+  },
+  {
+    id: "chk-14",
+    category: "4. Barriers to Entry",
+    question: "Are government regulations, patents, and exclusive concessions protecting the incumbent?",
+    explanation: "'Regulation is the incumbent's best friend' (Bill Gurley).",
+    highScoreIndicator: "20-year unexpired patents, strict regulatory licenses and concessions",
+    lowScoreIndicator: "No legal, regulatory, or intellectual property protections",
+  },
+
+  // 5. Disruption & Unbundling
+  {
+    id: "chk-15",
+    category: "5. Disruption & Unbundling",
+    question: "Is the industry vulnerable to low-end or new-market Christensen Disruption?",
+    explanation: "Have incumbents overshot mainstream needs with complex, expensive products?",
+    highScoreIndicator: "Firm actively controls low-end modular models with extreme cost agility",
+    lowScoreIndicator: "Overshot high-end product, highly vulnerable to agile low-cost entrants",
+  },
+  {
+    id: "chk-16",
+    category: "5. Disruption & Unbundling",
+    question: "Has the industry architecture shifted from proprietary vertical integration to horizontal modularity?",
+    explanation: "Does performance still require tight proprietary integration, or is it commoditized?",
+    highScoreIndicator: "Firm commands the critical integration interface capturing all economic rents",
+    lowScoreIndicator: "Trapped in commoditized layer with margins extracted by module standards",
+  },
+
+  // 6. Firm-Level Value Creation (Value Stick & DuPont)
+  {
+    id: "chk-17",
+    category: "6. Value Stick & Firm Analysis",
+    question: "Has the company successfully elevated customer Willingness-to-Pay (WTP)?",
+    explanation: "Creating perceived differentiation through prestige, reliability, or time savings beyond price hikes.",
+    highScoreIndicator: "Customers eagerly pay a significant premium for authentic differentiation",
+    lowScoreIndicator: "Immediate customer defection on any price increase",
+  },
+  {
+    id: "chk-18",
+    category: "6. Value Stick & Firm Analysis",
+    question: "Does the firm lower supplier Willingness-to-Sell (WTS) via operational culture and trust?",
+    explanation: "Symbiotic data sharing (Walmart-P&G) or high employee efficiency lowering true cost base.",
+    highScoreIndicator: "Suppliers & staff achieve superior productivity partnering with the firm",
+    lowScoreIndicator: "High employee turnover and adversarial, zero-sum supplier disputes",
+  },
+  {
+    id: "chk-19",
+    category: "6. Value Stick & Firm Analysis",
+    question: "Which clear strategic vector dominates the DuPont ROIC decomposition?",
+    explanation: "Differentiation (High NOPAT Margin) vs Cost Leadership (High Capital Turnover)?",
+    highScoreIndicator: "Focused, coherent strategy (e.g. Apple luxury margins or Costco asset velocity)",
+    lowScoreIndicator: "Stuck in the middle (neither cost leader nor premium differentiator)",
+  },
+  {
+    id: "chk-20",
+    category: "6. Value Stick & Firm Analysis",
+    question: "Is the Cash Conversion Cycle (CCC) and working capital engine optimized?",
+    explanation: "Does the company fund growth with supplier credit via negative CCC (like Amazon)?",
+    highScoreIndicator: "Negative or minimal CCC (collects cash upfront, pays vendors on term)",
+    lowScoreIndicator: "Working capital tied up in slow-moving inventory and overdue receivables",
+  },
+
+  // 7. Game Theory & Brand Equity
+  {
+    id: "chk-21",
+    category: "7. Game Theory & Brand Moat",
+    question: "Can the firm execute 'Linking & Leveraging' into adjacent markets at near-zero marginal cost?",
+    explanation: "Leveraging core infrastructure to dominate secondary verticals (like Amazon AWS)?",
+    highScoreIndicator: "Mastery of platform infrastructure scaling effortlessly into huge adjacencies",
+    lowScoreIndicator: "Trapped in single stagnant vertical with zero cross-leverage",
+  },
+  {
+    id: "chk-22",
+    category: "7. Game Theory & Brand Moat",
+    question: "Does brand equity tangibly reduce customer search costs or perceived risk to generate WTP premium?",
+    explanation: "Tiffany vs Costco diamond test: Do customers pay a verifiable premium for brand trust?",
+    highScoreIndicator: "Brand generates indisputable pricing power and ingrained consumer habit (Coca-Cola, Tiffany)",
+    lowScoreIndicator: "Brand is merely a logo with zero pricing flexibility",
+  }
+];
+
+export const CHECKLIST_ITEMS = CHECKLIST_ITEMS_TR;
+
+export function getChecklistItems(isEnglish: boolean): ChecklistItem[] {
+  return isEnglish ? CHECKLIST_ITEMS_EN : CHECKLIST_ITEMS_TR;
+}

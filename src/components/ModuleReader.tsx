@@ -587,7 +587,7 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
                             0{num}
                           </span>
                           <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">
-                            {nameTr.trim()} ({nameEn.trim()})
+                            {isEnglish ? nameTr.trim() : `${nameTr.trim()} (${nameEn.trim()})`}
                           </span>
                           {isMaturity && (
                             <span className="px-2 py-0.5 rounded-md bg-amber-400/30 text-amber-900 dark:text-amber-200 text-[10px] font-black border border-amber-400/50">

@@ -1,46 +1,58 @@
 import React, { useState } from "react";
-import { Clock, CheckCircle2, AlertCircle, RotateCcw, Zap } from "lucide-react";
+import { Clock, CheckCircle2, AlertCircle, RotateCcw, Zap, HelpCircle } from "lucide-react";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface CCCPreset {
-  name: string;
+  nameTr: string;
+  nameEn: string;
   dio: number; // days inventory
   dso: number; // days sales
   dpo: number; // days payables
-  desc: string;
+  descTr: string;
+  descEn: string;
 }
 
 const PRESETS: CCCPreset[] = [
   {
-    name: "1999 Amazon.com (Yıkıcı E-Ticaret)",
+    nameTr: "1999 Amazon.com (Yıkıcı E-Ticaret)",
+    nameEn: "1999 Amazon.com (Disruptive E-Commerce)",
     dio: 29,
     dso: 2,
     dpo: 60,
-    desc: "Müşteriden 2 günde parayı aldı, yayıncıya 60 günde ödedi. 58 gün boyunca müşterinin parasıyla büyüdü!",
+    descTr: "Müşteriden 2 günde parayı aldı, yayıncıya 60 günde ödedi. 58 gün boyunca müşterinin parasıyla büyüdü!",
+    descEn: "Collected cash in 2 days from customers, paid book suppliers in 60 days. Grew entirely on supplier float for 58 days!",
   },
   {
-    name: "1999 Barnes & Noble (Geleneksel Kitapçı)",
+    nameTr: "1999 Barnes & Noble (Geleneksel Kitapçı)",
+    nameEn: "1999 Barnes & Noble (Traditional Bookseller)",
     dio: 149,
     dso: 6,
     dpo: 75,
-    desc: "Kitap 149 gün rafta tozlandı. Parası 80 gün boyunca kilitli kaldı ve devasa kredi faizi ödedi.",
+    descTr: "Kitap 149 gün rafta tozlandı. Parası 80 gün boyunca kilitli kaldı ve devasa kredi faizi ödedi.",
+    descEn: "Books sat on shelves for 149 days. Working capital trapped for 80 days, incurring massive debt interest.",
   },
   {
-    name: "Costco Wholesale",
+    nameTr: "Costco Wholesale",
+    nameEn: "Costco Wholesale",
     dio: 30,
     dso: 3,
     dpo: 35,
-    desc: "Paletleri hemen satar, üyelerden nakit alır, tedarikçiyi 35 günde öder.",
+    descTr: "Paletleri hemen satar, üyelerden nakit alır, tedarikçiyi 35 günde öder.",
+    descEn: "Rapid pallet inventory turnover, collects instant cash/membership, pays vendors in 35 days.",
   },
   {
-    name: "Ağır Makine Üreticisi",
+    nameTr: "Ağır Makine Üreticisi",
+    nameEn: "Heavy Machinery Manufacturer",
     dio: 90,
     dso: 60,
     dpo: 30,
-    desc: "Hammadde ve üretim aylarca sürer, müşteriler 60 günde öder. Nakit döngüsü +120 gündür!",
+    descTr: "Hammadde ve üretim aylarca sürer, müşteriler 60 günde öder. Nakit döngüsü +120 gündür!",
+    descEn: "Long manufacturing cycle, customers pay on 60-day terms. Cash cycle is +120 days of trapped liquidity!",
   },
 ];
 
 export const CashConversionSim: React.FC = () => {
+  const { isEnglish, t } = useLanguage();
   const [dio, setDio] = useState<number>(29);
   const [dso, setDso] = useState<number>(2);
   const [dpo, setDpo] = useState<number>(60);
@@ -48,7 +60,7 @@ export const CashConversionSim: React.FC = () => {
   const ccc = dio + dso - dpo;
   const isNegative = ccc < 0;
 
-  const loadPreset = (p: CCCPreset) => {
+  const handleApplyPreset = (p: CCCPreset) => {
     setDio(p.dio);
     setDso(p.dso);
     setDpo(p.dpo);
@@ -61,17 +73,19 @@ export const CashConversionSim: React.FC = () => {
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-              Modül 7 Laboratuvarı
+              {isEnglish ? "Module 7: Working Capital & Liquidity" : "Modül 7: İşletme Sermayesi & Likidite"}
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-              Bilanço Verimliliği & Negatif İşletme Sermayesi
+              {isEnglish ? "Cash Conversion Cycle (CCC)" : "Nakit Dönüşüm Süresi (CCC)"}
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-            Nakit Dönüşüm Süresi (CCC) Simülatörü
+            {isEnglish ? "Negative Working Capital & Cash Conversion Cycle" : "Negatif İşletme Sermayesi & Nakit Dönüşüm Simülatörü"}
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed max-w-4xl">
-            CCC = Stok Bekleme Süresi (DIO) + Alacak Tahsilat Süresi (DSO) - Borç Ödeme Süresi (DPO). Şirketin nakdi ne kadar sürede geri kazandığını test edin.
+            {isEnglish
+              ? "CCC = DIO (Days Inventory) + DSO (Days Sales) - DPO (Days Payables). Discover how negative CCC creates a self-funding growth moat."
+              : "CCC = Stok Bekleme (DIO) + Alacak Tahsil (DSO) - Borç Ödeme Süresi (DPO). Şirketin tedarikçi parasıyla bedava nasıl büyüdüğünü canlı test edin."}
           </p>
         </div>
 
@@ -83,132 +97,140 @@ export const CashConversionSim: React.FC = () => {
           }}
           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer shrink-0 self-start md:self-center"
         >
-          <RotateCcw className="w-3.5 h-3.5" /> Sıfırla
+          <RotateCcw className="w-3.5 h-3.5" /> {isEnglish ? "Reset" : "Sıfırla"}
         </button>
       </div>
 
-      {/* Real-World Presets */}
-      <div>
-        <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2.5">
-          Tarihsel Şirket Modelleri (Amazon vs Geleneksel):
-        </label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-          {PRESETS.map((p, idx) => (
-            <button
-              key={idx}
-              onClick={() => loadPreset(p)}
-              className="text-left p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/70 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500 transition-all text-xs cursor-pointer group"
-            >
-              <div className="font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">{p.name}</div>
-              <div className="text-slate-500 dark:text-slate-400 text-[11px] mt-1 leading-tight line-clamp-2">{p.desc}</div>
-            </button>
-          ))}
+      {/* Preset Profiles */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+          {isEnglish ? "Real Benchmark Profiles:" : "Gerçek Şirket Örnekleri:"}
+        </span>
+        {PRESETS.map((p, idx) => (
+          <button
+            key={idx}
+            onClick={() => handleApplyPreset(p)}
+            className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-slate-700 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-300 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+          >
+            {isEnglish ? p.nameEn : p.nameTr}
+          </button>
+        ))}
+      </div>
+
+      {/* Sliders Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* DIO */}
+        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3">
+          <div className="flex items-center justify-between text-xs">
+            <span className="font-bold text-slate-700 dark:text-slate-300">
+              {isEnglish ? "DIO (Days Inventory)" : "DIO (Stokta Kalma Süresi)"}
+            </span>
+            <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400 text-sm">
+              {dio} {isEnglish ? "days" : "gün"}
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={180}
+            value={dio}
+            onChange={(e) => setDio(Number(e.target.value))}
+            className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+          />
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            {isEnglish
+              ? "Average days products sit in warehouse before sale."
+              : "Ürünün depoda/rafta satılmayı beklediği ortalama gün sayısı."}
+          </p>
+        </div>
+
+        {/* DSO */}
+        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3">
+          <div className="flex items-center justify-between text-xs">
+            <span className="font-bold text-slate-700 dark:text-slate-300">
+              {isEnglish ? "DSO (Days Sales Outstanding)" : "DSO (Alacak Tahsil Süresi)"}
+            </span>
+            <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400 text-sm">
+              {dso} {isEnglish ? "days" : "gün"}
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={120}
+            value={dso}
+            onChange={(e) => setDso(Number(e.target.value))}
+            className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+          />
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            {isEnglish
+              ? "Days required to collect cash from customers after sale."
+              : "Müşteriye satış yapıldıktan sonra paranın tahsil edilme süresi."}
+          </p>
+        </div>
+
+        {/* DPO */}
+        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3">
+          <div className="flex items-center justify-between text-xs">
+            <span className="font-bold text-slate-700 dark:text-slate-300">
+              {isEnglish ? "DPO (Days Payables Outstanding)" : "DPO (Borç Ödeme Vadesi)"}
+            </span>
+            <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400 text-sm">
+              {dpo} {isEnglish ? "days" : "gün"}
+            </span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={180}
+            value={dpo}
+            onChange={(e) => setDpo(Number(e.target.value))}
+            className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+          />
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            {isEnglish
+              ? "Days company delays paying its suppliers."
+              : "Tedarikçilere hammadde/ürün faturasının kaç günde ödendiği."}
+          </p>
         </div>
       </div>
 
-      {/* Sliders & Formula */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Sliders */}
-        <div className="lg:col-span-7 space-y-4 bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60">
-          <div>
-            <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">1. DIO (Stok Bekleme Gün Sayısı)</span>
-              <span className="text-sm font-mono font-bold text-indigo-600 dark:text-indigo-400">{dio} Gün</span>
-            </div>
-            <input
-              type="range"
-              min={5}
-              max={180}
-              value={dio}
-              onChange={(e) => setDio(Number(e.target.value))}
-              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-            />
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Ürünün rafta müşteriye satılana kadar geçirdiği süre.</p>
+      {/* Result Hero Card */}
+      <div
+        className={`p-6 rounded-3xl border flex flex-col sm:flex-row items-center justify-between gap-5 ${
+          isNegative
+            ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200"
+            : "bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-950 dark:text-amber-200"
+        }`}
+      >
+        <div className="flex items-center gap-4 text-center sm:text-left">
+          <div
+            className={`w-14 h-14 rounded-2xl flex items-center justify-center font-mono font-black text-2xl shrink-0 ${
+              isNegative ? "bg-emerald-600 text-white" : "bg-amber-600 text-white"
+            }`}
+          >
+            {ccc > 0 ? `+${ccc}` : ccc}
           </div>
-
           <div>
-            <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">2. DSO (Alacak Tahsilat Gün Sayısı)</span>
-              <span className="text-sm font-mono font-bold text-indigo-600 dark:text-indigo-400">{dso} Gün</span>
+            <div className="text-xs font-black uppercase tracking-wider opacity-80">
+              {isEnglish ? "Cash Conversion Cycle (CCC)" : "Net Nakit Dönüşüm Süresi (CCC)"}
             </div>
-            <input
-              type="range"
-              min={1}
-              max={90}
-              value={dso}
-              onChange={(e) => setDso(Number(e.target.value))}
-              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-            />
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Satış yapıldıktan sonra müşteriden paranın fiilen tahsil süresi.</p>
-          </div>
-
-          <div>
-            <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">3. DPO (Tedarikçiye Ödeme Gün Sayısı)</span>
-              <span className="text-sm font-mono font-bold text-indigo-600 dark:text-indigo-400">{dpo} Gün</span>
-            </div>
-            <input
-              type="range"
-              min={10}
-              max={120}
-              value={dpo}
-              onChange={(e) => setDpo(Number(e.target.value))}
-              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-            />
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Malı getiren toptancıya kaç gün sonra ödeme yaptığınız.</p>
+            <h3 className="text-lg sm:text-xl font-extrabold">
+              {isNegative
+                ? isEnglish ? "Negative CCC: Self-Financing Float Superpower!" : "Negatif CCC: Tedarikçi Finansmanlı Büyüme Süper Gücü!"
+                : isEnglish ? "Positive CCC: Trapped Capital & Interest Drain" : "Pozitif CCC: Sermaye Stokta Kilitli"}
+            </h3>
           </div>
         </div>
 
-        {/* Output Verdict */}
-        <div className="lg:col-span-5 flex flex-col justify-between p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-          <div>
-            <div className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
-              Nakit Dönüşüm Süresi Sonucu:
-            </div>
-
-            <div className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-center font-mono shadow-2xs">
-              <div className="flex items-center justify-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-                <span>{dio}d (Stok)</span> + <span>{dso}d (Tahsilat)</span> - <span>{dpo}d (Ödeme)</span>
-              </div>
-              <div
-                className={`text-3xl font-extrabold mt-2 ${
-                  isNegative ? "text-emerald-600 dark:text-emerald-400" : "text-indigo-600 dark:text-indigo-400"
-                }`}
-              >
-                {ccc} Gün
-              </div>
-              <div className="text-[11px] font-sans font-medium text-slate-500 dark:text-slate-400 mt-1">
-                {isNegative ? "⚡ Negatif Döngü (Nakit Üreten Model)" : "⏳ Pozitif Döngü (Nakit Bağlayan Model)"}
-              </div>
-            </div>
-
-            <div className="mt-4 p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed shadow-2xs">
-              {isNegative ? (
-                <div className="flex items-start gap-2 text-emerald-800 dark:text-emerald-300">
-                  <Zap className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400" />
-                  <span>
-                    <strong>Süper Güç:</strong> Şirketiniz müşteriden parayı cebine koyduktan {Math.abs(ccc)} gün sonra tedarikçisine ödeme yapıyor! Yani büyümesini sıfır faizle tedarikçi sermayesiyle finanse ediyor.
-                  </span>
-                </div>
-              ) : (
-                <div className="flex items-start gap-2 text-slate-700 dark:text-slate-300">
-                  <Clock className="w-4 h-4 shrink-0 mt-0.5 text-indigo-600 dark:text-indigo-400" />
-                  <span>
-                    Şirketinizin parası {ccc} gün boyunca depolardaki stoklarda kilitli kalıyor. Bu süreyi finanse etmek için banka kredisine veya ek işletme sermayesine ihtiyaç duyar.
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Standardized Pedagogical Lesson Callout */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 flex items-start gap-3">
-        <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
-        <div className="space-y-1 text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
-          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">Nakit Döngüsü ve Sermaye Verimliliği İlkesi:</strong>
-          Amazon 1999 yılında <strong>-29 günlük CCC</strong> sayesinde banka kredisi çekmeden veya hissedar sermayesini seyreltmeden yıldırım hızında büyümesini doğrudan tedarikçilerinin sermayesiyle finanse etmiştir.
+        <div className="text-xs max-w-md text-center sm:text-right leading-relaxed font-medium">
+          {isNegative
+            ? isEnglish
+              ? `🔥 Amazon Effect: You collect cash ${Math.abs(ccc)} days before paying your suppliers. Every $1 of growth injects free cash instead of requiring bank loans!`
+              : `🔥 Amazon Etkisi: Müşteriden parayı tedarikçiye ödemeden tam ${Math.abs(ccc)} gün önce kasaya koyuyorsunuz. Şirket banka kredisi çekmeden, tedarikçinin parasıyla bedava büyüyor!`
+            : isEnglish
+            ? `⚠️ Capital Trap: Your cash remains locked in inventory and receivables for ${ccc} days, draining returns and forcing external financing.`
+            : `⚠️ Sermaye Kilidi: Paranız ${ccc} gün boyunca depolardaki stoklarda kilitli kalıyor ve şirketi banka faizi ödemeye mecbur bırakıyor.`}
         </div>
       </div>
     </div>

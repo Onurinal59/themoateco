@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { CHECKLIST_ITEMS } from "../../data/checklistData";
-import { CheckSquare, ShieldCheck, ShieldAlert, ShieldX, Sparkles, RotateCcw, CheckCircle2 } from "lucide-react";
+import { getChecklistItems } from "../../data/checklistData";
+import { CheckSquare, ShieldCheck, ShieldAlert, ShieldX, Sparkles, RotateCcw, CheckCircle2, Trophy, HelpCircle } from "lucide-react";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface CompanyProfile {
-  name: string;
+  nameTr: string;
+  nameEn: string;
   answers: Record<string, boolean>;
 }
 
 const PRESET_COMPANIES: CompanyProfile[] = [
   {
-    name: "Apple Inc. (Geniş Hendek)",
+    nameTr: "Apple Inc. (Geniş Hendek)",
+    nameEn: "Apple Inc. (Wide Moat)",
     answers: {
       "chk-1": true, "chk-2": true, "chk-3": true, "chk-4": true, "chk-5": true, "chk-6": true,
       "chk-7": true, "chk-8": true, "chk-9": true, "chk-10": true, "chk-11": true, "chk-12": true,
@@ -18,7 +21,8 @@ const PRESET_COMPANIES: CompanyProfile[] = [
     },
   },
   {
-    name: "Costco Wholesale (Geniş Hendek)",
+    nameTr: "Costco Wholesale (Geniş Hendek)",
+    nameEn: "Costco Wholesale (Wide Moat)",
     answers: {
       "chk-1": true, "chk-2": true, "chk-3": true, "chk-4": true, "chk-5": true, "chk-6": true,
       "chk-7": true, "chk-8": true, "chk-9": true, "chk-10": true, "chk-11": false, "chk-12": true,
@@ -27,7 +31,8 @@ const PRESET_COMPANIES: CompanyProfile[] = [
     },
   },
   {
-    name: "Ortalama Havayolu (Hendek Yok)",
+    nameTr: "Ortalama Havayolu (Hendek Yok)",
+    nameEn: "Average Airline (No Moat)",
     answers: {
       "chk-1": false, "chk-2": false, "chk-3": false, "chk-4": false, "chk-5": true, "chk-6": true,
       "chk-7": false, "chk-8": false, "chk-9": false, "chk-10": true, "chk-11": false, "chk-12": false,
@@ -38,188 +43,204 @@ const PRESET_COMPANIES: CompanyProfile[] = [
 ];
 
 export const MoatChecklistSim: React.FC = () => {
+  const { isEnglish, t } = useLanguage();
+  const checklistItems = getChecklistItems(isEnglish);
+
   const [checkedState, setCheckedState] = useState<Record<string, boolean>>({});
-  const [selectedCategory, setSelectedCategory] = useState<string>("Tümü");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  const categories = ["Tümü", ...Array.from(new Set(CHECKLIST_ITEMS.map((item) => item.category)))];
+  const categories = [
+    { id: "all", label: isEnglish ? "All 22 Items" : "Tüm Maddeler (22)" },
+    ...Array.from(new Set(checklistItems.map((item) => item.category))).map((cat) => ({
+      id: cat,
+      label: cat,
+    })),
+  ];
 
-  const totalItems = CHECKLIST_ITEMS.length;
+  const totalItems = checklistItems.length;
   const checkedCount = Object.values(checkedState).filter(Boolean).length;
   const scorePercent = Math.round((checkedCount / totalItems) * 100);
 
-  let moatVerdict = "Hendek Yok (No Moat)";
+  let moatVerdict = isEnglish ? "No Moat (Capital Destroyer)" : "Hendek Yok (Değer Yok Eden)";
   let verdictColor = "text-rose-600";
   let verdictIcon = ShieldX;
-  let verdictBadge = "bg-rose-50 text-rose-700 border-rose-200";
+  let verdictBadge = "bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800";
 
   if (scorePercent >= 75) {
-    moatVerdict = "Geniş Hendek (Wide Moat - 20+ Yıl Korumalı)";
+    moatVerdict = isEnglish ? "Wide Moat (20+ Years Durable Advantage)" : "Geniş Hendek (Wide Moat - 20+ Yıl Korumalı)";
     verdictColor = "text-emerald-700 dark:text-emerald-400";
     verdictIcon = ShieldCheck;
     verdictBadge = "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
   } else if (scorePercent >= 45) {
-    moatVerdict = "Dar Hendek (Narrow Moat - 10-20 Yıl Korumalı)";
-    verdictColor = "text-amber-700 dark:text-amber-400";
+    moatVerdict = isEnglish ? "Narrow Moat (5-10 Years Decaying Advantage)" : "Dar Hendek (Narrow Moat - 5-10 Yıl Korumalı)";
+    verdictColor = "text-amber-600 dark:text-amber-400";
     verdictIcon = ShieldAlert;
-    verdictBadge = "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800";
+    verdictBadge = "bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800";
   }
 
-  const toggleItem = (id: string) => {
+  const handleToggle = (id: string) => {
     setCheckedState((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
   };
 
-  const loadCompany = (comp: CompanyProfile) => {
-    setCheckedState(comp.answers);
+  const handleApplyPreset = (profile: CompanyProfile) => {
+    setCheckedState(profile.answers);
+  };
+
+  const handleReset = () => {
+    setCheckedState({});
   };
 
   const filteredItems =
-    selectedCategory === "Tümü"
-      ? CHECKLIST_ITEMS
-      : CHECKLIST_ITEMS.filter((item) => item.category === selectedCategory);
+    selectedCategory === "all"
+      ? checklistItems
+      : checklistItems.filter((item) => item.category === selectedCategory);
 
-  const VerdictIconComponent = verdictIcon;
+  const VerdictIcon = verdictIcon;
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs animate-in fade-in duration-200" id="checklist-sim">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs animate-in fade-in duration-200" id="moat-checklist-sim">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50">
-              Modül 6 Laboratuvarı
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
+              {isEnglish ? "Module 8: Practical Audit" : "Modül 8: Uygulamalı Denetim"}
             </span>
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-              Morgan Stanley Kontrol Listesi
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+              {isEnglish ? "22-Question Mauboussin Diagnostic" : "22 Maddelik Mauboussin Hendek Testi"}
             </span>
           </div>
-          <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">60 Maddelik Ekonomik Hendek Değerlendirme Aracı</h3>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1">
-            Michael Mauboussin'in makalesinde sunduğu kriterlerle bir şirketin rekabet kalesini puanlayın.
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+            {isEnglish ? "22-Question Economic Moat Checklist" : "22 Maddelik Ekonomik Hendek Kontrol Listesi"}
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed max-w-4xl">
+            {isEnglish
+              ? "Assess your target company against Michael Mauboussin's 22 moat criteria spanning industry structure, Porter's 5 forces, and unit economics."
+              : "Hedef şirketinizi Michael Mauboussin'in 22 hendek kriterine göre test edin; şirketin dar, geniş veya sıfır hendekli olduğunu anında tespit edin."}
           </p>
         </div>
 
         <button
-          onClick={() => setCheckedState({})}
-          className="self-start md:self-auto flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
+          onClick={handleReset}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer shrink-0 self-start md:self-center"
         >
-          <RotateCcw className="w-3.5 h-3.5" /> Sıfırla
+          <RotateCcw className="w-3.5 h-3.5" /> {isEnglish ? "Clear All" : "Temizle"}
         </button>
       </div>
 
       {/* Preset Profiles */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 mr-1">Örnek Şirket Yükle:</span>
-        {PRESET_COMPANIES.map((comp, idx) => (
+        <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+          {isEnglish ? "Load Benchmark Preset:" : "Örnek Şirketi Yükle:"}
+        </span>
+        {PRESET_COMPANIES.map((preset, idx) => (
           <button
             key={idx}
-            onClick={() => loadCompany(comp)}
-            className="px-3 py-1.5 bg-slate-50 dark:bg-slate-800/80 hover:bg-indigo-50/50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500 text-xs font-medium text-slate-700 dark:text-slate-200 rounded-lg transition-all cursor-pointer"
+            onClick={() => handleApplyPreset(preset)}
+            className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-slate-700 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-300 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors cursor-pointer"
           >
-            {comp.name}
+            {isEnglish ? preset.nameEn : preset.nameTr}
           </button>
         ))}
       </div>
 
-      {/* Score Header Card */}
-      <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <div className={`p-3 rounded-2xl ${verdictBadge} border`}>
-            <VerdictIconComponent className="w-8 h-8" />
-          </div>
+      {/* Score and Moat Verdict Hero Card */}
+      <div className={`p-5 rounded-2xl border flex flex-col sm:flex-row items-center justify-between gap-4 ${verdictBadge}`}>
+        <div className="flex items-center gap-3 text-center sm:text-left">
+          <VerdictIcon className={`w-10 h-10 ${verdictColor} shrink-0`} />
           <div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">Hendek Değerlendirmesi ({checkedCount} / {totalItems} Kriter)</div>
-            <div className={`text-lg font-bold ${verdictColor}`}>{moatVerdict}</div>
+            <div className="text-xs font-black uppercase tracking-wider opacity-80">
+              {isEnglish ? "Diagnostic Moat Verdict" : "Teşhis & Hendek Sonucu"}
+            </div>
+            <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-100">
+              {moatVerdict}
+            </h3>
           </div>
         </div>
 
-        <div className="w-full md:w-64">
-          <div className="flex justify-between text-xs font-mono font-bold mb-1.5">
-            <span className="text-slate-500 dark:text-slate-400">Hendek Güç Skoru</span>
-            <span className={verdictColor}>%{scorePercent}</span>
-          </div>
-          <div className="w-full h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-            <div
-              style={{ width: `${scorePercent}%` }}
-              className={`h-full transition-all duration-500 ${
-                scorePercent >= 75
-                  ? "bg-emerald-600 dark:bg-emerald-500"
-                  : scorePercent >= 45
-                  ? "bg-amber-500 dark:bg-amber-400"
-                  : "bg-rose-500 dark:bg-rose-400"
-              }`}
-            />
+        <div className="flex items-center gap-4 text-right">
+          <div>
+            <div className="text-2xl sm:text-3xl font-black font-mono text-slate-900 dark:text-slate-100">
+              {checkedCount} / {totalItems}
+            </div>
+            <div className="text-xs font-semibold opacity-80">
+              {isEnglish ? `${scorePercent}% Moat Confidence` : `%${scorePercent} Hendek Güven Skoru`}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Category Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-200 dark:border-slate-800 scrollbar-thin">
+      {/* Category Filter Tabs */}
+      <div className="flex flex-wrap gap-1.5">
         {categories.map((cat) => (
           <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-              selectedCategory === cat
-                ? "bg-indigo-600 dark:bg-indigo-500 text-white shadow-xs"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800"
+            key={cat.id}
+            onClick={() => setSelectedCategory(cat.id)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              selectedCategory === cat.id
+                ? "bg-indigo-600 text-white shadow-2xs font-bold"
+                : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
             }`}
           >
-            {cat}
+            {cat.label}
           </button>
         ))}
       </div>
 
-      {/* Checklist Grid */}
-      <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
-        {filteredItems.map((item) => {
+      {/* Checklist Items List */}
+      <div className="space-y-3">
+        {filteredItems.map((item, idx) => {
           const isChecked = !!checkedState[item.id];
           return (
             <div
               key={item.id}
-              onClick={() => toggleItem(item.id)}
-              className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-3.5 ${
+              onClick={() => handleToggle(item.id)}
+              className={`p-4 rounded-2xl border transition-all cursor-pointer select-none flex items-start gap-3.5 ${
                 isChecked
-                  ? "bg-indigo-50/50 dark:bg-indigo-950/30 border-indigo-300 dark:border-indigo-700/70 text-slate-900 dark:text-slate-100 shadow-xs"
-                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:border-slate-700"
+                  ? "bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800/80 shadow-2xs"
+                  : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-800/80"
               }`}
             >
               <input
                 type="checkbox"
                 checked={isChecked}
-                onChange={() => {}} // handled by parent div click
-                className="mt-1 w-4 h-4 rounded text-indigo-600 focus:ring-0 focus:ring-offset-0 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 cursor-pointer accent-indigo-600"
+                onChange={() => {}} // handled by parent div
+                className="w-5 h-5 rounded text-emerald-600 focus:ring-emerald-500 mt-0.5 cursor-pointer shrink-0 accent-emerald-600"
               />
-              <div className="flex-1 space-y-1">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{item.question}</div>
-                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                    {item.category.split(".")[1] || item.category}
+
+              <div className="space-y-1.5 flex-1 min-w-0">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-xs font-black text-indigo-700 dark:text-indigo-400 uppercase tracking-wider">
+                    {item.category}
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">
+                    #{item.id}
                   </span>
                 </div>
-                <div className="text-xs text-slate-600 dark:text-slate-300">{item.explanation}</div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
-                  <div className="text-emerald-800 dark:text-emerald-400 font-medium">
-                    ✓ <strong>Geniş Hendek:</strong> {item.highScoreIndicator}
-                  </div>
-                  <div className="text-rose-800 dark:text-rose-400 font-medium">
-                    ✗ <strong>Zayıf / Yok:</strong> {item.lowScoreIndicator}
-                  </div>
+
+                <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+                  {item.question}
+                </div>
+
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {item.explanation}
+                </p>
+
+                <div className="pt-1.5 flex flex-wrap gap-2 text-[11px]">
+                  <span className="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 font-medium">
+                    ✅ {item.highScoreIndicator}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 font-medium">
+                    ❌ {item.lowScoreIndicator}
+                  </span>
                 </div>
               </div>
             </div>
           );
         })}
-      </div>
-
-      {/* Standardized Pedagogical Lesson Callout */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 flex items-start gap-3">
-        <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
-        <div className="space-y-1 text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
-          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">Michael Mauboussin Hendek Kontrol Listesi İlkesi:</strong>
-          Ekonomik hendek tek bir faktörle açıklanamaz; arz tarafı avantajları (maliyet liderliği), talep tarafı kilitlenmeleri (ağ etkisi, yüksek geçiş maliyeti) ve ölçek ekonomilerinin sinerjisiyle sürdürülebilir hale gelir.
-        </div>
       </div>
     </div>
   );

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Sparkles, HelpCircle, ArrowUpRight, CheckCircle2, RotateCcw } from "lucide-react";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface Scenario {
-  name: string;
-  desc: string;
+  nameTr: string;
+  nameEn: string;
+  descTr: string;
+  descEn: string;
   wtp: number;
   price: number;
   cost: number;
@@ -12,32 +15,40 @@ interface Scenario {
 
 const PRESET_SCENARIOS: Scenario[] = [
   {
-    name: "Lüks & Farklılaşma (Apple iPhone)",
-    desc: "Yüksek WTP sayesinde devasa fiyatlama gücü ve yüksek tüketici rantı.",
+    nameTr: "Lüks & Farklılaşma (Apple iPhone)",
+    nameEn: "Luxury & Differentiation (Apple iPhone)",
+    descTr: "Yüksek WTP sayesinde devasa fiyatlama gücü ve yüksek tüketici rantı.",
+    descEn: "Elevated WTP unlocks massive pricing power and robust consumer surplus.",
     wtp: 1200,
     price: 999,
     cost: 450,
     wts: 350,
   },
   {
-    name: "Maliyet Liderliği (Costco Toptan)",
-    desc: "Düşük WTS ve düşük maliyet ile yüksek sermaye devir hızı ve devasa tüketici rantı.",
+    nameTr: "Maliyet Liderliği (Costco Toptan)",
+    nameEn: "Cost Leadership (Costco Wholesale)",
+    descTr: "Düşük WTS ve düşük maliyet ile yüksek sermaye devir hızı ve devasa tüketici rantı.",
+    descEn: "Depressed WTS and lean operating costs maximize consumer surplus and inventory velocity.",
     wtp: 100,
     price: 75,
     cost: 70,
     wts: 50,
   },
   {
-    name: "Standart Havayolu (Yoğun Rekabet)",
-    desc: "WTP düşük, tedarikçi ve havalimanı maliyetleri yüksek; şirket kârı çok ince.",
+    nameTr: "Standart Havayolu (Yoğun Rekabet)",
+    nameEn: "Commodity Airline (Severe Competition)",
+    descTr: "WTP düşük, tedarikçi ve havalimanı maliyetleri yüksek; şirket kârı çok ince.",
+    descEn: "Low WTP, high supplier airport fees; company captures paper-thin margins.",
     wtp: 200,
     price: 180,
     cost: 175,
     wts: 160,
   },
   {
-    name: "Tiffany & Co (Statü Markası)",
-    desc: "Mavi kutu ve marka prestiji ile müşterinin ödeme isteği (WTP) tavan yapmıştır.",
+    nameTr: "Tiffany & Co (Statü Markası)",
+    nameEn: "Tiffany & Co (Prestige Brand)",
+    descTr: "Mavi kutu ve marka prestiji ile müşterinin ödeme isteği (WTP) tavan yapmıştır.",
+    descEn: "Iconic blue box and prestige status skyrocket customer willingness-to-pay.",
     wtp: 16600,
     price: 15000,
     cost: 5000,
@@ -46,65 +57,45 @@ const PRESET_SCENARIOS: Scenario[] = [
 ];
 
 export const ValueStickSim: React.FC = () => {
+  const { isEnglish, t } = useLanguage();
   const [wtp, setWtp] = useState<number>(1000);
   const [price, setPrice] = useState<number>(750);
   const [cost, setCost] = useState<number>(400);
-  const [wts, setWts] = useState<number>(250);
+  const [wts, setWts] = useState<number>(300);
 
-  // Safe constraints
-  const handleWtpChange = (val: number) => {
-    setWtp(val);
-    if (val < price) setPrice(val);
-  };
-  const handlePriceChange = (val: number) => {
-    const safeVal = Math.min(Math.max(val, cost), wtp);
-    setPrice(safeVal);
-  };
-  const handleCostChange = (val: number) => {
-    const safeVal = Math.min(Math.max(val, wts), price);
-    setCost(safeVal);
-  };
-  const handleWtsChange = (val: number) => {
-    setWts(val);
-    if (val > cost) setCost(val);
-  };
+  // Economic calculations
+  const totalValueCreated = Math.max(0, wtp - wts);
+  const customerDelight = Math.max(0, wtp - price); // Consumer surplus
+  const firmProfit = Math.max(0, price - cost); // Economic margin
+  const supplierSurplus = Math.max(0, cost - wts); // Supplier surplus
 
-  const consumerSurplus = wtp - price;
-  const firmProfit = price - cost;
-  const supplierSurplus = cost - wts;
-  const totalValue = wtp - wts;
-
-  const loadScenario = (s: Scenario) => {
-    setWtp(s.wtp);
-    setPrice(s.price);
-    setCost(s.cost);
-    setWts(s.wts);
+  const handleApplyPreset = (sc: Scenario) => {
+    setWtp(sc.wtp);
+    setPrice(sc.price);
+    setCost(sc.cost);
+    setWts(sc.wts);
   };
-
-  // Percent heights for visualization relative to total span
-  const span = Math.max(wtp - wts, 1);
-  const csPercent = Math.max(5, (consumerSurplus / span) * 100);
-  const fpPercent = Math.max(5, (firmProfit / span) * 100);
-  const ssPercent = Math.max(5, (supplierSurplus / span) * 100);
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs animate-in fade-in duration-200" id="value-stick-sim">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs animate-in fade-in duration-200" id="valuestick-sim">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-1.5">
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-              Modül 3 Laboratuvarı
+              {isEnglish ? "Module 3: Strategic Value Creation" : "Modül 3: Stratejik Değer Yaratma"}
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-              Felix Oberholzer-Gee & Brandenburger Modeli
+              {isEnglish ? "Harvard / Oberholzer-Gee Value Stick" : "Harvard / Oberholzer-Gee Değer Çubuğu"}
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-            Değer Çubuğu (The Value Stick) Simülatörü
+            {isEnglish ? "Interactive Value Stick (WTP, Price, Cost, WTS)" : "Etkileşimli Değer Çubuğu (Value Stick) Simülatörü"}
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed max-w-4xl">
-            Müşterinin Ödemeye İstekliliği (WTP), Fiyat, Maliyet ve Tedarikçinin Satma İstekliliği (WTS) arasındaki değer yaratım ve bölüşüm dinamiklerini test edin.
+            {isEnglish
+              ? "Total Value Created = (WTP - WTS). Discover how elite compounders capture value without squeezing customers."
+              : "Toplam Yaratılan Değer = (WTP - WTS). Dört noktayı hareket ettirerek şirketin, müşterinin ve tedarikçinin payını canlı izleyin."}
           </p>
         </div>
 
@@ -113,206 +104,137 @@ export const ValueStickSim: React.FC = () => {
             setWtp(1000);
             setPrice(750);
             setCost(400);
-            setWts(250);
+            setWts(300);
           }}
           className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer shrink-0 self-start md:self-center"
         >
-          <RotateCcw className="w-3.5 h-3.5" /> Sıfırla
+          <RotateCcw className="w-3.5 h-3.5" /> {isEnglish ? "Reset" : "Sıfırla"}
         </button>
       </div>
 
-      {/* Preset Scenarios */}
-      <div>
-        <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2.5">
-          Örnek Şirket ve Strateji Senaryoları:
-        </label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
-          {PRESET_SCENARIOS.map((s, idx) => (
-            <button
-              key={idx}
-              onClick={() => loadScenario(s)}
-              className="text-left p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-indigo-50/50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700/80 hover:border-indigo-300 dark:hover:border-indigo-500 transition-all text-xs cursor-pointer group"
-            >
-              <div className="font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                {s.name}
-              </div>
-              <div className="text-slate-500 dark:text-slate-400 text-[11px] mt-1 leading-tight line-clamp-2">
-                {s.desc}
-              </div>
-            </button>
-          ))}
-        </div>
+      {/* Preset Profiles */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+          {isEnglish ? "Benchmark Presets:" : "Örnek Senaryolar:"}
+        </span>
+        {PRESET_SCENARIOS.map((sc, idx) => (
+          <button
+            key={idx}
+            onClick={() => handleApplyPreset(sc)}
+            className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-slate-700 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-300 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+          >
+            {isEnglish ? sc.nameEn : sc.nameTr}
+          </button>
+        ))}
       </div>
 
       {/* Main Interactive Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-2">
-        {/* Sliders Control Panel */}
-        <div className="lg:col-span-7 space-y-4">
-          {/* WTP Slider */}
-          <div className="p-4 rounded-xl bg-sky-50/60 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900/50">
-            <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs font-bold text-sky-800 dark:text-sky-300 flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-sky-500 inline-block"></span>
-                WTP (Müşterinin Ödemeye İstekliliği)
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Sliders (7 cols) */}
+        <div className="lg:col-span-7 space-y-4 p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+          {/* WTP */}
+          <div>
+            <div className="flex justify-between text-xs mb-1">
+              <span className="font-bold text-indigo-700 dark:text-indigo-400">
+                {isEnglish ? "1. Willingness-to-Pay (WTP - Max Customer Value):" : "1. Ödemeye İsteklilik (WTP - Müşterinin Tavanı):"}
               </span>
-              <span className="text-sm font-mono font-bold text-sky-900 dark:text-sky-200">{wtp.toLocaleString()} ₺</span>
+              <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">${wtp}</span>
             </div>
             <input
               type="range"
               min={price}
-              max={20000}
-              step={10}
+              max={wtp * 1.5 + 200}
               value={wtp}
-              onChange={(e) => handleWtpChange(Number(e.target.value))}
-              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-600"
+              onChange={(e) => setWtp(Number(e.target.value))}
+              className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
             />
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Müşterinin zihnindeki maksimum değer tavanı.</p>
           </div>
 
-          {/* Price Slider */}
-          <div className="p-4 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/50">
-            <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs font-bold text-indigo-800 dark:text-indigo-300 flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 inline-block"></span>
-                Fiyat (Satış Fiyatı)
+          {/* Price */}
+          <div>
+            <div className="flex justify-between text-xs mb-1">
+              <span className="font-bold text-emerald-700 dark:text-emerald-400">
+                {isEnglish ? "2. Actual Retail Price (P):" : "2. Satış Fiyatı (Price):"}
               </span>
-              <span className="text-sm font-mono font-bold text-indigo-900 dark:text-indigo-200">{price.toLocaleString()} ₺</span>
+              <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">${price}</span>
             </div>
             <input
               type="range"
               min={cost}
               max={wtp}
-              step={10}
               value={price}
-              onChange={(e) => handlePriceChange(Number(e.target.value))}
-              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+              onChange={(e) => setPrice(Number(e.target.value))}
+              className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-600"
             />
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Şirketin kasada tahsil ettiği fiili tutar.</p>
           </div>
 
-          {/* Cost Slider */}
-          <div className="p-4 rounded-xl bg-amber-50/60 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50">
-            <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span>
-                Maliyet (Üretim & Hizmet Gideri)
+          {/* Cost */}
+          <div>
+            <div className="flex justify-between text-xs mb-1">
+              <span className="font-bold text-amber-700 dark:text-amber-400">
+                {isEnglish ? "3. Firm Unit Cost (C):" : "3. Şirketin Katlandığı Maliyet (Cost):"}
               </span>
-              <span className="text-sm font-mono font-bold text-amber-900 dark:text-amber-200">{cost.toLocaleString()} ₺</span>
+              <span className="font-mono font-bold text-amber-600 dark:text-amber-400">${cost}</span>
             </div>
             <input
               type="range"
               min={wts}
               max={price}
-              step={10}
               value={cost}
-              onChange={(e) => handleCostChange(Number(e.target.value))}
-              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-600"
+              onChange={(e) => setCost(Number(e.target.value))}
+              className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-600"
             />
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Şirketin girdi ve tedarik için harcadığı para.</p>
           </div>
 
-          {/* WTS Slider */}
-          <div className="p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50">
-            <div className="flex justify-between items-center mb-1.5">
-              <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
-                WTS (Tedarikçi/Çalışan Asgari Tabanı)
+          {/* WTS */}
+          <div>
+            <div className="flex justify-between text-xs mb-1">
+              <span className="font-bold text-purple-700 dark:text-purple-400">
+                {isEnglish ? "4. Willingness-to-Sell (WTS - Supplier Floor):" : "4. Satmaya İsteklilik (WTS - Tedarikçi Tabanı):"}
               </span>
-              <span className="text-sm font-mono font-bold text-emerald-900 dark:text-emerald-200">{wts.toLocaleString()} ₺</span>
+              <span className="font-mono font-bold text-purple-600 dark:text-purple-400">${wts}</span>
             </div>
             <input
               type="range"
-              min={10}
+              min={0}
               max={cost}
-              step={10}
               value={wts}
-              onChange={(e) => handleWtsChange(Number(e.target.value))}
-              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+              onChange={(e) => setWts(Number(e.target.value))}
+              className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-purple-600"
             />
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Tedarikçi veya çalışanın kabul edeceği dip taban bedel.</p>
           </div>
         </div>
 
-        {/* Visual Value Stick & Rants */}
-        <div className="lg:col-span-5 flex flex-col items-center justify-center p-5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 rounded-2xl">
-          <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
-            Değer Bölüşüm Çubuğu
+        {/* Visual Stick Diagram (5 cols) */}
+        <div className="lg:col-span-5 p-5 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/60 flex flex-col justify-between space-y-4">
+          <div className="text-xs font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-300">
+            {isEnglish ? "Economic Surplus Distribution" : "Ekonomik Artık Dağılımı"}
           </div>
 
-          <div className="w-full max-w-[260px] flex flex-col gap-1.5 py-2">
-            {/* Top Label WTP */}
-            <div className="text-right text-xs font-mono text-sky-700 dark:text-sky-300 font-bold pr-2">
-              ▲ WTP: {wtp.toLocaleString()} ₺
+          <div className="space-y-3 font-mono text-xs">
+            {/* Customer Delight */}
+            <div className="p-3 rounded-xl bg-indigo-100 dark:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 text-indigo-900 dark:text-indigo-200 flex justify-between items-center">
+              <span>{isEnglish ? "Customer Surplus (WTP - Price):" : "Müşteri Rantı (WTP - Fiyat):"}</span>
+              <strong className="text-sm font-black">${customerDelight}</strong>
             </div>
 
-            {/* Consumer Surplus Box */}
-            <div
-              style={{ minHeight: "45px" }}
-              className="w-full rounded-xl bg-sky-100 dark:bg-sky-950/60 border border-sky-300 dark:border-sky-800 p-3 flex flex-col justify-center transition-all duration-300 shadow-xs"
-            >
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-sky-900 dark:text-sky-200">Tüketici Rantı</span>
-                <span className="font-mono font-bold text-sky-800 dark:text-sky-300">+{consumerSurplus.toLocaleString()} ₺</span>
-              </div>
-              <div className="text-[10px] text-sky-700 dark:text-sky-400 mt-0.5">Müşteri Memnuniyeti & Sadakat</div>
+            {/* Firm Profit */}
+            <div className="p-3.5 rounded-xl bg-emerald-100 dark:bg-emerald-900/60 border border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 flex justify-between items-center shadow-xs">
+              <span className="font-bold">{isEnglish ? "⭐️ Company Profit (Price - Cost):" : "⭐️ Şirket Kâr Payı (Fiyat - Maliyet):"}</span>
+              <strong className="text-base font-black text-emerald-700 dark:text-emerald-300">${firmProfit}</strong>
             </div>
 
-            {/* Middle Price Line */}
-            <div className="border-t border-dashed border-indigo-400 dark:border-indigo-500 my-0.5 text-xs text-indigo-700 dark:text-indigo-300 font-mono font-bold text-right pr-2">
-              ── Fiyat: {price.toLocaleString()} ₺
-            </div>
-
-            {/* Firm Profit Box */}
-            <div
-              style={{ minHeight: "55px" }}
-              className="w-full rounded-xl bg-indigo-100 dark:bg-indigo-950/60 border border-indigo-300 dark:border-indigo-800 p-3 flex flex-col justify-center shadow-xs transition-all duration-300"
-            >
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-extrabold text-indigo-950 dark:text-indigo-100">Şirket Değeri (Kâr)</span>
-                <span className="font-mono font-extrabold text-indigo-800 dark:text-indigo-300 text-sm">+{firmProfit.toLocaleString()} ₺</span>
-              </div>
-              <div className="text-[10px] text-indigo-700 dark:text-indigo-400 mt-0.5">Fiyat - Maliyet = Net Faaliyet Katkısı</div>
-            </div>
-
-            {/* Cost Line */}
-            <div className="border-t border-dashed border-amber-400 dark:border-amber-500 my-0.5 text-xs text-amber-700 dark:text-amber-300 font-mono font-bold text-right pr-2">
-              ── Maliyet: {cost.toLocaleString()} ₺
-            </div>
-
-            {/* Supplier Surplus Box */}
-            <div
-              style={{ minHeight: "45px" }}
-              className="w-full rounded-xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 p-3 flex flex-col justify-center transition-all duration-300 shadow-xs"
-            >
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-emerald-900 dark:text-emerald-200">Tedarikçi/Çalışan Rantı</span>
-                <span className="font-mono font-bold text-emerald-800 dark:text-emerald-300">+{supplierSurplus.toLocaleString()} ₺</span>
-              </div>
-              <div className="text-[10px] text-emerald-700 dark:text-emerald-400 mt-0.5">Maliyet - WTS = Ekosistem Refahı</div>
-            </div>
-
-            {/* Bottom Label WTS */}
-            <div className="text-right text-xs font-mono text-emerald-700 dark:text-emerald-300 font-bold pr-2">
-              ▼ WTS: {wts.toLocaleString()} ₺
+            {/* Supplier Surplus */}
+            <div className="p-3 rounded-xl bg-purple-100 dark:bg-purple-900/60 border border-purple-200 dark:border-purple-800 text-purple-900 dark:text-purple-200 flex justify-between items-center">
+              <span>{isEnglish ? "Supplier Surplus (Cost - WTS):" : "Tedarikçi Artığı (Maliyet - WTS):"}</span>
+              <strong className="text-sm font-black">${supplierSurplus}</strong>
             </div>
           </div>
 
-          {/* Summary Box */}
-          <div className="w-full mt-4 pt-3 border-t border-slate-200 dark:border-slate-700 text-center">
-            <div className="text-xs text-slate-500 dark:text-slate-400">Toplam Yaratılan Toplumsal Değer (WTP - WTS):</div>
-            <div className="text-lg font-mono font-extrabold text-slate-900 dark:text-slate-100 mt-0.5">
-              {totalValue.toLocaleString()} ₺
-            </div>
+          <div className="pt-3 border-t border-indigo-200 dark:border-indigo-900/60 flex justify-between items-center text-xs font-bold text-slate-800 dark:text-slate-200">
+            <span>{isEnglish ? "Total Economic Pie (WTP - WTS):" : "Toplam Yaratılan Değer Pastası:"}</span>
+            <span className="font-mono text-sm text-indigo-600 dark:text-indigo-400 font-black">${totalValueCreated}</span>
           </div>
-        </div>
-      </div>
-
-      {/* Standardized Key Pedagogical Takeaway */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 flex items-start gap-3">
-        <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
-        <div className="space-y-1 text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
-          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">Stratejik Değer İlkesi:</strong>
-          Sürdürülebilir ekonomik kâr için ya <strong>WTP'yi yükseltip</strong> tüketiciye devasa bir memnuniyet rantı sunmalı (Apple) ya da <strong>WTS ve maliyeti düşürüp</strong> yüksek devir hızıyla ekosistemi beslemelisiniz (Costco).
         </div>
       </div>
     </div>
