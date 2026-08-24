@@ -119,35 +119,45 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
     switch (key) {
       case "--+":
         return {
-          stage: "1. Giriş Evresi (Introduction)",
+          stage: isEnglish ? "1. Introduction Stage" : "1. Giriş Evresi (Introduction)",
           color: "text-amber-500",
-          desc: "Nakit yakımı yüksek, dış sermayeye ve borca bağımlı başlangıç.",
+          desc: isEnglish
+            ? "High cash burn, dependent on external capital and debt financing."
+            : "Nakit yakımı yüksek, dış sermayeye ve borca bağımlı başlangıç.",
         };
       case "+-+":
         return {
-          stage: "2. Büyüme Evresi (Growth)",
+          stage: isEnglish ? "2. Growth Stage" : "2. Büyüme Evresi (Growth)",
           color: "text-indigo-500",
-          desc: "Operasyon kârda, yoğun yatırım ve borçlanma ile agresif genişleme.",
+          desc: isEnglish
+            ? "Operations are profitable, aggressive expansion via heavy investment and debt."
+            : "Operasyon kârda, yoğun yatırım ve borçlanma ile agresif genişleme.",
         };
       case "+--":
         return {
-          stage: "3. Olgunluk / Nakit İneği (Mature)",
+          stage: isEnglish ? "3. Mature / Cash Cow" : "3. Olgunluk / Nakit İneği (Mature)",
           color: "text-emerald-500",
-          desc: "En güçlü evre! Devasa operasyonel nakit, sıfır dış borç ihtiyacı ve temettü.",
+          desc: isEnglish
+            ? "The strongest stage! Huge operating cash flow, zero reliance on external debt, and solid dividends."
+            : "En güçlü evre! Devasa operasyonel nakit, sıfır dış borç ihtiyacı ve temettü.",
         };
       case "---":
       case "-+-":
       case "-++":
         return {
-          stage: "4. Düşüş & Varlık Satışı (Decline)",
+          stage: isEnglish ? "4. Decline & Asset Liquidation" : "4. Düşüş & Varlık Satışı (Decline)",
           color: "text-rose-500",
-          desc: "Operasyonlar nakit yakıyor, şirket fabrikalarını satarak ayakta kalıyor.",
+          desc: isEnglish
+            ? "Operations burn cash; the company survives by selling off assets and plants."
+            : "Operasyonlar nakit yakıyor, şirket fabrikalarını satarak ayakta kalıyor.",
         };
       default:
         return {
-          stage: "Sarsıntı / Yeniden Yapılanma (Shakeout)",
+          stage: isEnglish ? "Shakeout / Restructuring" : "Sarsıntı / Yeniden Yapılanma (Shakeout)",
           color: "text-purple-500",
-          desc: "Dengesiz nakit akışları, kriz yönetimi.",
+          desc: isEnglish
+            ? "Volatile cash flows, restructuring and crisis management."
+            : "Dengesiz nakit akışları, kriz yönetimi.",
         };
     }
   };
@@ -201,7 +211,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                       {currentGuide.badge}
                     </span>
                     <span className="text-xs text-indigo-300 font-medium">
-                      Adım Adım Formül & Hesaplama Atölyesi
+                      {isEnglish ? "Step-by-Step Formula & Calculation Workshop" : "Adım Adım Formül & Hesaplama Atölyesi"}
                     </span>
                   </div>
                   <h2 className="text-base sm:text-xl font-bold tracking-tight text-white mt-0.5">
@@ -218,10 +228,10 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                       onClose();
                     }}
                     className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
-                    title="Tam Sayfa Formül Atölyesi Olarak Aç"
+                    title={isEnglish ? "Open in Full Page Workshop" : "Tam Sayfa Formül Atölyesi Olarak Aç"}
                   >
                     <BookOpen className="w-3.5 h-3.5" />
-                    <span>Tam Sayfada Aç</span>
+                    <span>{isEnglish ? "Open in Full Page" : "Tam Sayfada Aç"}</span>
                   </button>
                 )}
                 <button
@@ -229,8 +239,8 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span className="hidden sm:inline">Modüle Geri Dön</span>
-                  <span className="sm:hidden">Geri</span>
+                  <span className="hidden sm:inline">{isEnglish ? "Return to Module" : "Modüle Geri Dön"}</span>
+                  <span className="sm:hidden">{isEnglish ? "Back" : "Geri"}</span>
                 </button>
                 <button
                   onClick={onClose}
@@ -244,7 +254,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
             {/* Quick Switch Formula Bar - Prominent & Sticky */}
             <div className="sticky top-0 z-20 px-3 sm:px-5 py-2.5 bg-slate-100/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center gap-2 overflow-x-auto scrollbar-thin shadow-2xs shrink-0">
               <span className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider shrink-0 mr-1 hidden sm:inline">
-                Formüller:
+                {isEnglish ? "Formulas:" : "Formüller:"}
               </span>
               {Object.values(formulaGuides).map((g: any, idx) => {
                 const isSelected = g.id === activeId;
@@ -285,7 +295,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
               <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-900/60 shadow-xs space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
-                    Temel Matematiksel Eşitlik
+                    {isEnglish ? "Core Mathematical Equation" : "Temel Matematiksel Eşitlik"}
                   </span>
                   <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                     {currentGuide.subtitle}
@@ -311,10 +321,12 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                   </div>
                   <div>
                     <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">
-                      Canlı İnteraktif Formül Laboratuvarı
+                      {isEnglish ? "Live Interactive Formula Lab" : "Canlı İnteraktif Formül Laboratuvarı"}
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Sayıları değiştirin, formülün nasıl tepki verdiğini ve sonucun neden değiştiğini anında görün.
+                      {isEnglish
+                        ? "Adjust numbers to see real-time impact and understand the underlying dynamics."
+                        : "Sayıları değiştirin, formülün nasıl tepki verdiğini ve sonucun neden değiştiğini anında görün."}
                     </p>
                   </div>
                 </div>
@@ -325,9 +337,9 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Özsermaye (E):</span>
+                          <span>{isEnglish ? "Equity (E):" : "Özsermaye (E):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                            {waccEquity}M TL ({Math.round(weightE * 100)}%)
+                            {waccEquity}M {isEnglish ? "$" : "TL"} ({Math.round(weightE * 100)}%)
                           </span>
                         </div>
                         <input
@@ -343,9 +355,9 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Toplam Borç (D):</span>
+                          <span>{isEnglish ? "Total Debt (D):" : "Toplam Borç (D):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                            {waccDebt}M TL ({Math.round(weightD * 100)}%)
+                            {waccDebt}M {isEnglish ? "$" : "TL"} ({Math.round(weightD * 100)}%)
                           </span>
                         </div>
                         <input
@@ -361,7 +373,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Hisse Betası (β):</span>
+                          <span>{isEnglish ? "Equity Beta (β):" : "Hisse Betası (β):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                             {waccBeta.toFixed(2)}x (Ke = %{calculatedKe.toFixed(1)})
                           </span>
@@ -379,7 +391,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Brüt Kredi Faizi (Kd):</span>
+                          <span>{isEnglish ? "Cost of Debt (Kd):" : "Brüt Kredi Faizi (Kd):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                             %{waccKd}
                           </span>
@@ -397,7 +409,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Vergi Oranı (t):</span>
+                          <span>{isEnglish ? "Tax Rate (t):" : "Vergi Oranı (t):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                             %{waccTax} (Net Kd: %{netKd.toFixed(1)})
                           </span>
@@ -415,7 +427,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Risksiz Faiz (Rf):</span>
+                          <span>{isEnglish ? "Risk-Free Rate (Rf):" : "Risksiz Faiz (Rf):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                             %{waccRf}
                           </span>
@@ -435,14 +447,18 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                     <div className="p-4 rounded-2xl bg-gradient-to-r from-indigo-900 to-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
                       <div>
                         <div className="text-xs text-indigo-300 font-bold uppercase tracking-wider">
-                          Hesaplanan Ağırlıklı Ortalama Sermaye Maliyeti (WACC)
+                          {isEnglish
+                            ? "Calculated Weighted Average Cost of Capital (WACC)"
+                            : "Hesaplanan Ağırlıklı Ortalama Sermaye Maliyeti (WACC)"}
                         </div>
                         <div className="text-2xl sm:text-3xl font-black text-white mt-0.5">
                           %{calculatedWacc.toFixed(2)}
                         </div>
                       </div>
                       <div className="text-xs text-indigo-200/90 max-w-sm leading-relaxed text-right sm:text-left">
-                        Özsermaye Katkısı: %{(weightE * calculatedKe).toFixed(1)} + Net Borç Katkısı: %{(weightD * netKd).toFixed(1)}. Şirket her 100 TL için yıllık %{calculatedWacc.toFixed(1)} getiri üretmek zorundadır.
+                        {isEnglish
+                          ? `Equity Contribution: %${(weightE * calculatedKe).toFixed(1)} + Net Debt Contribution: %${(weightD * netKd).toFixed(1)}. Firm must earn at least %${calculatedWacc.toFixed(1)} per $100 capital.`
+                          : `Özsermaye Katkısı: %${(weightE * calculatedKe).toFixed(1)} + Net Borç Katkısı: %${(weightD * netKd).toFixed(1)}. Şirket her 100 TL için yıllık %${calculatedWacc.toFixed(1)} getiri üretmek zorundadır.`}
                       </div>
                     </div>
                   </div>
@@ -454,9 +470,9 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Faaliyet Kârı (EBIT):</span>
+                          <span>{isEnglish ? "Operating Profit (EBIT):" : "Faaliyet Kârı (EBIT):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                            {roicEbit}M TL
+                            {roicEbit}M {isEnglish ? "$" : "TL"}
                           </span>
                         </div>
                         <input
@@ -472,7 +488,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Vergi Oranı:</span>
+                          <span>{isEnglish ? "Tax Rate:" : "Vergi Oranı:"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                             %{roicTax}
                           </span>
@@ -490,9 +506,9 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>İşletme Sermayesi (NWC):</span>
+                          <span>{isEnglish ? "Working Capital (NWC):" : "İşletme Sermayesi (NWC):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                            {roicNwc}M TL
+                            {roicNwc}M {isEnglish ? "$" : "TL"}
                           </span>
                         </div>
                         <input
@@ -508,9 +524,9 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Duran Varlıklar (PP&E):</span>
+                          <span>{isEnglish ? "Fixed Assets (PP&E):" : "Duran Varlıklar (PP&E):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                            {roicPpe}M TL
+                            {roicPpe}M {isEnglish ? "$" : "TL"}
                           </span>
                         </div>
                         <input
@@ -528,14 +544,16 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                     <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-900 to-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
                       <div>
                         <div className="text-xs text-emerald-300 font-bold uppercase tracking-wider">
-                          Net Faaliyet Kârı (NOPAT) / Yatırılan Sermaye = ROIC
+                          {isEnglish ? "Net Operating Profit After Tax (NOPAT) / Invested Capital = ROIC" : "Net Faaliyet Kârı (NOPAT) / Yatırılan Sermaye = ROIC"}
                         </div>
                         <div className="text-2xl sm:text-3xl font-black text-white mt-0.5">
                           %{calculatedRoic.toFixed(2)}
                         </div>
                       </div>
                       <div className="text-xs text-emerald-200/90 max-w-sm leading-relaxed text-right sm:text-left">
-                        NOPAT = {calculatedNopat.toFixed(0)}M TL | Yatırılan Sermaye = {totalInvestedCapital}M TL. Şirket bağladığı her 100 TL sermaye ile yılda {calculatedRoic.toFixed(1)} TL saf nakit getiri üretmektedir.
+                        {isEnglish
+                          ? `NOPAT = $${calculatedNopat.toFixed(0)}M | Invested Capital = $${totalInvestedCapital}M. The firm generates $${calculatedRoic.toFixed(1)} pure cash return per $100 capital deployed.`
+                          : `NOPAT = ${calculatedNopat.toFixed(0)}M TL | Yatırılan Sermaye = ${totalInvestedCapital}M TL. Şirket bağladığı her 100 TL sermaye ile yılda ${calculatedRoic.toFixed(1)} TL saf nakit getiri üretmektedir.`}
                       </div>
                     </div>
                   </div>
@@ -547,7 +565,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Ödeme İsteği (WTP):</span>
+                          <span>{isEnglish ? "Willingness to Pay (WTP):" : "Ödeme İsteği (WTP):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                             {vsWtp}$
                           </span>
@@ -565,7 +583,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Satış Fiyatı (P):</span>
+                          <span>{isEnglish ? "Price (P):" : "Satış Fiyatı (P):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                             {vsPrice}$
                           </span>
@@ -583,7 +601,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Birim Maliyet (C):</span>
+                          <span>{isEnglish ? "Cost (C):" : "Birim Maliyet (C):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                             {vsCost}$
                           </span>
@@ -601,7 +619,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Tedarikçi Tabanı (WTS):</span>
+                          <span>{isEnglish ? "Willingness to Sell (WTS):" : "Tedarikçi Tabanı (WTS):"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                             {vsWts}$
                           </span>
@@ -620,19 +638,19 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-center">
                       <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800">
-                        <div className="text-[10px] text-blue-700 dark:text-blue-300 font-bold uppercase">Tüketici Artığı (WTP - P)</div>
+                        <div className="text-[10px] text-blue-700 dark:text-blue-300 font-bold uppercase">{isEnglish ? "Consumer Surplus (WTP - P)" : "Tüketici Artığı (WTP - P)"}</div>
                         <div className="text-lg font-black text-blue-900 dark:text-blue-200">{consumerSurplus}$</div>
                       </div>
                       <div className="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800">
-                        <div className="text-[10px] text-indigo-700 dark:text-indigo-300 font-bold uppercase">Şirket Kâr Marjı (P - C)</div>
+                        <div className="text-[10px] text-indigo-700 dark:text-indigo-300 font-bold uppercase">{isEnglish ? "Firm Profit Margin (P - C)" : "Şirket Kâr Marjı (P - C)"}</div>
                         <div className="text-lg font-black text-indigo-900 dark:text-indigo-200">{firmMargin}$</div>
                       </div>
                       <div className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800">
-                        <div className="text-[10px] text-amber-700 dark:text-amber-300 font-bold uppercase">Tedarikçi Artığı (C - WTS)</div>
+                        <div className="text-[10px] text-amber-700 dark:text-amber-300 font-bold uppercase">{isEnglish ? "Supplier Surplus (C - WTS)" : "Tedarikçi Artığı (C - WTS)"}</div>
                         <div className="text-lg font-black text-amber-900 dark:text-amber-200">{supplierSurplus}$</div>
                       </div>
                       <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800">
-                        <div className="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold uppercase">Toplam Pasta (WTP - WTS)</div>
+                        <div className="text-[10px] text-emerald-700 dark:text-emerald-300 font-bold uppercase">{isEnglish ? "Total Value Created (WTP - WTS)" : "Toplam Pasta (WTP - WTS)"}</div>
                         <div className="text-lg font-black text-emerald-900 dark:text-emerald-200">{totalValueCreated}$</div>
                       </div>
                     </div>
@@ -644,7 +662,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
-                        <div className="text-xs font-semibold">1. Faaliyet Nakit Akışı (CFO)</div>
+                        <div className="text-xs font-semibold">{isEnglish ? "1. Operating Cash Flow (CFO)" : "1. Faaliyet Nakit Akışı (CFO)"}</div>
                         <div className="flex gap-2">
                           <button
                             onClick={() => setDickCfo("+")}
@@ -654,7 +672,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                                 : "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300"
                             }`}
                           >
-                            + Pozitif (Kârda)
+                            {isEnglish ? "+ Positive (Profitable)" : "+ Pozitif (Kârda)"}
                           </button>
                           <button
                             onClick={() => setDickCfo("-")}
@@ -664,13 +682,13 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                                 : "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300"
                             }`}
                           >
-                            - Negatif (Yakıyor)
+                            {isEnglish ? "- Negative (Burning)" : "- Negatif (Yakıyor)"}
                           </button>
                         </div>
                       </div>
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
-                        <div className="text-xs font-semibold">2. Yatırım Nakit Akışı (CFI)</div>
+                        <div className="text-xs font-semibold">{isEnglish ? "2. Investing Cash Flow (CFI)" : "2. Yatırım Nakit Akışı (CFI)"}</div>
                         <div className="flex gap-2">
                           <button
                             onClick={() => setDickCfi("-")}
@@ -680,7 +698,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                                 : "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300"
                             }`}
                           >
-                            - Yatırım Yapıyor
+                            {isEnglish ? "- Investing (Capex)" : "- Yatırım Yapıyor"}
                           </button>
                           <button
                             onClick={() => setDickCfi("+")}
@@ -690,13 +708,13 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                                 : "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300"
                             }`}
                           >
-                            + Varlık Satıyor
+                            {isEnglish ? "+ Selling Assets" : "+ Varlık Satıyor"}
                           </button>
                         </div>
                       </div>
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2">
-                        <div className="text-xs font-semibold">3. Finansman Nakit Akışı (CFF)</div>
+                        <div className="text-xs font-semibold">{isEnglish ? "3. Financing Cash Flow (CFF)" : "3. Finansman Nakit Akışı (CFF)"}</div>
                         <div className="flex gap-2">
                           <button
                             onClick={() => setDickCff("-")}
@@ -706,7 +724,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                                 : "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300"
                             }`}
                           >
-                            - Temettü / Borç Ödeme
+                            {isEnglish ? "- Dividend / Debt Payoff" : "- Temettü / Borç Ödeme"}
                           </button>
                           <button
                             onClick={() => setDickCff("+")}
@@ -716,7 +734,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                                 : "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300"
                             }`}
                           >
-                            + Yeni Borç / Sermaye
+                            {isEnglish ? "+ New Debt / Equity" : "+ Yeni Borç / Sermaye"}
                           </button>
                         </div>
                       </div>
@@ -728,7 +746,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                         <div className="p-4 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
                           <div>
                             <div className="text-xs text-indigo-300 font-bold uppercase tracking-wider">
-                              Teşhis Edilen Dickinson Evresi ({dickCfo} , {dickCfi} , {dickCff})
+                              {isEnglish ? `Diagnosed Dickinson Stage (${dickCfo} , ${dickCfi} , ${dickCff})` : `Teşhis Edilen Dickinson Evresi (${dickCfo} , ${dickCfi} , ${dickCff})`}
                             </div>
                             <div className={`text-xl sm:text-2xl font-black mt-0.5 ${diag.color}`}>
                               {diag.stage}
@@ -749,8 +767,8 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Stok Günü (DIO):</span>
-                          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{cccDio} Gün</span>
+                          <span>{isEnglish ? "Days Inventory (DIO):" : "Stok Günü (DIO):"}</span>
+                          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{cccDio} {isEnglish ? "Days" : "Gün"}</span>
                         </div>
                         <input
                           type="range"
@@ -765,8 +783,8 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Tahsilat Günü (DSO):</span>
-                          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{cccDso} Gün</span>
+                          <span>{isEnglish ? "Days Sales (DSO):" : "Tahsilat Günü (DSO):"}</span>
+                          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{cccDso} {isEnglish ? "Days" : "Gün"}</span>
                         </div>
                         <input
                           type="range"
@@ -781,8 +799,8 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Tedarikçi Ödeme (DPO):</span>
-                          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{cccDpo} Gün</span>
+                          <span>{isEnglish ? "Days Payable (DPO):" : "Tedarikçi Ödeme (DPO):"}</span>
+                          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{cccDpo} {isEnglish ? "Days" : "Gün"}</span>
                         </div>
                         <input
                           type="range"
@@ -799,16 +817,20 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                     <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-950 to-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
                       <div>
                         <div className="text-xs text-purple-300 font-bold uppercase tracking-wider">
-                          Nakit Dönüşüm Süresi (CCC = DIO + DSO - DPO)
+                          {isEnglish ? "Cash Conversion Cycle (CCC = DIO + DSO - DPO)" : "Nakit Dönüşüm Süresi (CCC = DIO + DSO - DPO)"}
                         </div>
                         <div className={`text-2xl sm:text-3xl font-black mt-0.5 ${calculatedCcc < 0 ? "text-emerald-400" : "text-amber-300"}`}>
-                          {calculatedCcc} Gün {calculatedCcc < 0 ? "(Negatif - Tedarikçi Finansmanı!)" : "(Pozitif)"}
+                          {calculatedCcc} {isEnglish ? "Days" : "Gün"} {calculatedCcc < 0 ? (isEnglish ? "(Negative - Supplier Financed!)" : "(Negatif - Tedarikçi Finansmanı!)") : (isEnglish ? "(Positive)" : "(Pozitif)")}
                         </div>
                       </div>
                       <p className="text-xs text-purple-200/90 max-w-sm leading-relaxed text-right sm:text-left">
                         {calculatedCcc < 0
-                          ? "Şirket müşteriden parayı peşin alıp tedarikçiye aylar sonra ödüyor. Tedarikçinin parasıyla faizsiz büyüyor!"
-                          : "Şirketin parası depolarda ve alacaklarda bağlı kalıyor; işletme sermayesi fonlaması gerektiriyor."}
+                          ? (isEnglish
+                              ? "The firm collects cash upfront from customers and pays suppliers months later. It expands using supplier capital interest-free!"
+                              : "Şirket müşteriden parayı peşin alıp tedarikçiye aylar sonra ödüyor. Tedarikçinin parasıyla faizsiz büyüyor!")
+                          : (isEnglish
+                              ? "Cash is locked in warehouses and receivables; requires working capital funding."
+                              : "Şirketin parası depolarda ve alacaklarda bağlı kalıyor; işletme sermayesi fonlaması gerektiriyor.")}
                       </p>
                     </div>
                   </div>
@@ -820,8 +842,8 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Hisse Fiyatı:</span>
-                          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{dcfPrice} TL</span>
+                          <span>{isEnglish ? "Share Price:" : "Hisse Fiyatı:"}</span>
+                          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{dcfPrice} {isEnglish ? "$" : "TL"}</span>
                         </div>
                         <input
                           type="range"
@@ -836,8 +858,8 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Hisse Başı NOPAT:</span>
-                          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{dcfNopat} TL</span>
+                          <span>{isEnglish ? "NOPAT per Share:" : "Hisse Başı NOPAT:"}</span>
+                          <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{dcfNopat} {isEnglish ? "$" : "TL"}</span>
                         </div>
                         <input
                           type="range"
@@ -852,7 +874,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>WACC Sermaye Maliyeti:</span>
+                          <span>{isEnglish ? "Cost of Capital (WACC):" : "WACC Sermaye Maliyeti:"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">%{dcfWacc}</span>
                         </div>
                         <input
@@ -868,7 +890,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
 
                       <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-1.5">
                         <div className="flex justify-between text-xs font-semibold">
-                          <span>Beklenen ROIC:</span>
+                          <span>{isEnglish ? "Expected ROIC:" : "Beklenen ROIC:"}</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">%{dcfRoic}</span>
                         </div>
                         <input
@@ -886,14 +908,16 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                     <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-950 to-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
                       <div>
                         <div className="text-xs text-blue-300 font-bold uppercase tracking-wider">
-                          Piyasa Fiyatının İma Ettiği Hendek Süresi (CAP)
+                          {isEnglish ? "Market-Implied Competitive Advantage Period (CAP)" : "Piyasa Fiyatının İma Ettiği Hendek Süresi (CAP)"}
                         </div>
                         <div className="text-2xl sm:text-3xl font-black text-white mt-0.5">
-                          ~{impliedCapYears} Yıl (Fiyatın %{futureSharePct}'si Geleceğe Bağlı)
+                          ~{impliedCapYears} {isEnglish ? "Years" : "Yıl"} ({isEnglish ? `${futureSharePct}% of price relies on future growth` : `Fiyatın %${futureSharePct}'si Geleceğe Bağlı`})
                         </div>
                       </div>
                       <p className="text-xs text-blue-200/90 max-w-sm leading-relaxed text-right sm:text-left">
-                        Sıfır Büyüme Değeri: {steadyStateVal.toFixed(1)} TL. Bu fiyatı haklı çıkarmak için şirketin tam {impliedCapYears} yıl boyunca rakiplere pazar kaptırmadan ROIC &gt; WACC farkını koruması şarttır!
+                        {isEnglish
+                          ? `Zero-Growth Value: $${steadyStateVal.toFixed(1)}. To justify this stock price, the firm must sustain ROIC > WACC without conceding market share for a full ${impliedCapYears} years!`
+                          : `Sıfır Büyüme Değeri: ${steadyStateVal.toFixed(1)} TL. Bu fiyatı haklı çıkarmak için şirketin tam ${impliedCapYears} yıl boyunca rakiplere pazar kaptırmadan ROIC > WACC farkını koruması şarttır!`}
                       </p>
                     </div>
                   </div>
@@ -904,7 +928,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
               <div className="p-5 sm:p-6 rounded-3xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-amber-950 dark:text-amber-200 space-y-2">
                 <div className="flex items-center gap-2 text-xs font-bold text-amber-900 dark:text-amber-300">
                   <HelpCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  <span>Sıfırdan Başlayanlar İçin: Bu Formül Neden Var ve Neyi Çözüyor?</span>
+                  <span>{isEnglish ? "For Beginners: Why This Formula Exists & What Problem It Solves" : "Sıfırdan Başlayanlar İçin: Bu Formül Neden Var ve Neyi Çözüyor?"}</span>
                 </div>
                 <p className="text-xs sm:text-sm leading-relaxed opacity-95">
                   {currentGuide.whyThisFormulaExists}
@@ -916,7 +940,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                   <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">
-                    Değişkenler Sözlüğü &amp; Bilançoda / Borsada Nerede Bulunur?
+                    {isEnglish ? "Variables Glossary & Where to Find on Balance Sheet / Market" : "Değişkenler Sözlüğü & Bilançoda / Borsada Nerede Bulunur?"}
                   </h3>
                 </div>
 
@@ -938,7 +962,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                         {v.description}
                       </p>
                       <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold pt-1">
-                        📍 Nasıl Bulunur: {v.howToFindIt}
+                        {isEnglish ? "📍 How to Find: " : "📍 Nasıl Bulunur: "}{v.howToFindIt}
                       </div>
                     </div>
                   ))}
@@ -950,7 +974,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                 <div className="flex items-center gap-2">
                   <Layers className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                   <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">
-                    Adım Adım Hesaplama Sırası ({currentGuide.steps.length} Adım)
+                    {isEnglish ? `Step-by-Step Calculation Order (${currentGuide.steps.length} Steps)` : `Adım Adım Hesaplama Sırası (${currentGuide.steps.length} Adım)`}
                   </h3>
                 </div>
 
@@ -976,7 +1000,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                           {s.explanation}
                         </p>
                         <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 inline-block">
-                          Örnek: {s.exampleValues}
+                          {isEnglish ? "Example: " : "Örnek: "}{s.exampleValues}
                         </div>
                       </div>
                     </div>
@@ -989,7 +1013,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                 <div className="flex items-center gap-2">
                   <Building2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">
-                    Gerçek Dünya Vaka Analizi: {currentGuide.realWorldExample.company}
+                    {isEnglish ? `Real-World Case Study: ${currentGuide.realWorldExample.company}` : `Gerçek Dünya Vaka Analizi: ${currentGuide.realWorldExample.company}`}
                   </h3>
                 </div>
 
@@ -1009,7 +1033,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                 <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/40 text-emerald-950 dark:text-emerald-200 text-xs sm:text-sm flex items-start gap-2.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                   <div>
-                    <strong>Stratejik Çıkarım:</strong> {currentGuide.realWorldExample.resultInterpretation}
+                    <strong>{isEnglish ? "Strategic Takeaway:" : "Stratejik Çıkarım:"}</strong> {currentGuide.realWorldExample.resultInterpretation}
                   </div>
                 </div>
               </div>
@@ -1018,7 +1042,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
               <div className="p-5 sm:p-6 rounded-3xl bg-rose-50/60 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 text-rose-950 dark:text-rose-200 space-y-3">
                 <div className="flex items-center gap-2 text-xs font-bold text-rose-900 dark:text-rose-300">
                   <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
-                  <span>Analistlerin En Sık Düştüğü Kritik Hesaplama Tuzakları:</span>
+                  <span>{isEnglish ? "Critical Calculation Pitfalls Analysts Frequently Fall Into:" : "Analistlerin En Sık Düştüğü Kritik Hesaplama Tuzakları:"}</span>
                 </div>
                 <ul className="space-y-1.5 text-xs sm:text-sm">
                   {currentGuide.commonPitfalls.map((pitfall, pIdx) => (
@@ -1034,14 +1058,16 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
             {/* Footer Return Button */}
             <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between gap-3 shrink-0">
               <div className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
-                Formülü ve mantığını kavradıysanız okumaya devam edebilirsiniz.
+                {isEnglish
+                  ? "Once you understand the formula and mechanics, you can resume reading the module."
+                  : "Formülü ve mantığını kavradıysanız okumaya devam edebilirsiniz."}
               </div>
               <button
                 onClick={onClose}
                 className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-xs hover:scale-102 cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span>Öğrendim, Modüldeki Kaldığım Yere Geri Dön</span>
+                <span>{isEnglish ? "Got It, Return to Where I Left Off" : "Öğrendim, Modüldeki Kaldığım Yere Geri Dön"}</span>
               </button>
             </div>
           </motion.div>
