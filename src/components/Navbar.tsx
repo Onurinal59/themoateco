@@ -19,6 +19,7 @@ import {
   Layers,
   ArrowUpRight,
   Globe,
+  CheckCircle2,
 } from "lucide-react";
 import { UserLearningState } from "../types";
 import { useLanguage } from "../context/LanguageContext";
@@ -50,88 +51,108 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAICoach,
   onOpenGlossary,
   onOpenGuide,
-  onOpenFormulas,
   isDarkMode,
   onToggleDarkMode,
 }) => {
-  const { language, setLanguage, toggleLanguage, isEnglish, t } = useLanguage();
+  const { language, setLanguage, isEnglish, t } = useLanguage();
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isResourcesOpen, setIsResourcesOpen] = useState(false);
-  const resourcesRef = useRef<HTMLDivElement>(null);
+  const [isToolsOpen, setIsToolsOpen] = useState(false);
 
-  // Close dropdown on outside click
+  const resourcesRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (resourcesRef.current && !resourcesRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (resourcesRef.current && !resourcesRef.current.contains(target)) {
         setIsResourcesOpen(false);
+      }
+      if (toolsRef.current && !toolsRef.current.contains(target)) {
+        setIsToolsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const NAV_ITEMS: {
+  // Primary Navigation Items (Visible on Desktop / Laptop)
+  const PRIMARY_NAV_ITEMS: {
     id: NavTab;
     label: string;
-    shortLabel: string;
     icon: React.ElementType;
   }[] = [
     {
       id: "roadmap",
       label: t("nav.academy", "Akademi"),
-      shortLabel: t("nav.academy", "Akademi"),
       icon: Compass,
     },
     {
       id: "formulas",
       label: t("nav.formulas", "Formüller"),
-      shortLabel: t("nav.formulas", "Formül"),
       icon: Calculator,
     },
     {
       id: "simulators",
       label: t("nav.lab", "Laboratuvar"),
-      shortLabel: t("nav.lab", "Lab"),
       icon: FlaskConical,
     },
+  ];
+
+  // Secondary Tools Sub-menu
+  const TOOLS_ITEMS: {
+    id: NavTab;
+    label: string;
+    desc: string;
+    badge?: string;
+    icon: React.ElementType;
+  }[] = [
     {
       id: "company-audit",
-      label: t("nav.companyAudit", "Şirket Röntgeni"),
-      shortLabel: t("nav.companyAudit", "Analiz"),
+      label: isEnglish ? "Company Balance Sheet Audit" : "Şirket Röntgeni & Bilanço",
+      desc: isEnglish ? "5-step Mauboussin financial diagnostic" : "5 adımlı Mauboussin bilanço & hendek teşhis masası",
+      badge: isEnglish ? "5-Step" : "5 Adım",
       icon: Building2,
     },
     {
       id: "moat-duel",
-      label: t("nav.moatDuel", "Hendek Düellosu"),
-      shortLabel: t("nav.moatDuel", "Düello"),
+      label: isEnglish ? "Moat Duel Arena" : "Hendek Düellosu",
+      desc: isEnglish ? "1v1 competitive moat matrix showdown" : "İki şirketi karşılaştırmalı hendek arenasında kapıştır",
+      badge: "1v1",
       icon: Swords,
     },
     {
       id: "spaced-repetition",
-      label: t("nav.spacedRepetition", "Aralıklı Tekrar"),
-      shortLabel: t("nav.spacedRepetition", "Tekrar"),
+      label: isEnglish ? "Spaced Repetition Flashcards" : "Aralıklı Tekrar & Hafıza",
+      desc: isEnglish ? "Leitner algorithm memory retention system" : "Leitner algoritmalı kalıcı bilgi pekiştirme kartları",
+      badge: "SM-2",
       icon: Repeat,
     },
   ];
+
+  const isToolsActive = ["company-audit", "moat-duel", "spaced-repetition"].includes(activeTab);
+  const activeToolItem = TOOLS_ITEMS.find((item) => item.id === activeTab);
 
   const handleTabClick = (tabId: NavTab) => {
     setActiveTab(tabId);
     setIsMobileDrawerOpen(false);
     setIsResourcesOpen(false);
+    setIsToolsOpen(false);
   };
 
   return (
     <>
       {/* Apple-style Translucent Sticky Navigation Header */}
-      <header className="sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-200">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-4">
+      <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800/70 transition-colors duration-200">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="flex items-center justify-between h-14 sm:h-16 gap-2 lg:gap-3">
             
             {/* Left: Brand Identity */}
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-2 sm:gap-2.5 cursor-pointer select-none shrink-0"
+              className="flex items-center gap-2 cursor-pointer select-none shrink-0"
               onClick={() => handleTabClick("roadmap")}
             >
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-indigo-700 via-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/20 ring-1 ring-white/20">
@@ -139,31 +160,29 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               <div className="flex flex-col min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-extrabold text-xs sm:text-sm md:text-base tracking-tight text-slate-900 dark:text-slate-100 font-display">
+                  <span className="font-extrabold text-xs sm:text-sm md:text-base tracking-tight text-slate-900 dark:text-slate-100 font-display whitespace-nowrap">
                     {isEnglish ? "Economic Moat" : "Ekonomik Hendek"}
                   </span>
                   <span className="hidden xl:inline-flex px-1.5 py-0.2 text-[9px] font-black uppercase tracking-wider rounded-md bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200/70 dark:border-indigo-800/70">
                     Mauboussin
                   </span>
                 </div>
-                <span className="text-[10px] text-slate-400 dark:text-slate-500 hidden sm:block -mt-0.5 font-medium truncate max-w-[180px] lg:max-w-none">
+                <span className="text-[10px] text-slate-400 dark:text-slate-500 hidden sm:block -mt-0.5 font-medium truncate max-w-[140px] xl:max-w-none">
                   Measuring the Moat & ROIC
                 </span>
               </div>
             </motion.div>
 
-            {/* Center: Apple-inspired Segmented Navigation Bar (Desktop lg+) */}
-            <nav className="hidden lg:flex items-center bg-slate-100/80 dark:bg-slate-900/80 p-1 rounded-2xl border border-slate-200/70 dark:border-slate-800 shadow-2xs backdrop-blur-md">
-              {NAV_ITEMS.map((item) => {
+            {/* Center: Apple-inspired Compact Segmented Navigation Bar (Desktop lg+) */}
+            <nav className="hidden lg:flex items-center bg-slate-100/90 dark:bg-slate-900/90 p-1 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs backdrop-blur-md shrink-0">
+              {PRIMARY_NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
                 return (
-                  <motion.button
+                  <button
                     key={item.id}
                     onClick={() => handleTabClick(item.id)}
-                    whileHover={{ scale: isActive ? 1 : 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer select-none z-10 ${
+                    className={`relative flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer select-none whitespace-nowrap z-10 ${
                       isActive
                         ? "text-indigo-950 dark:text-white font-bold"
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
@@ -184,73 +203,165 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }`}
                     />
                     <span>{item.label}</span>
-                  </motion.button>
+                  </button>
                 );
               })}
+
+              {/* Tools & Advanced Dropdown (Grouped to prevent horizontal overflow on all resolutions) */}
+              <div className="relative" ref={toolsRef}>
+                <button
+                  onClick={() => setIsToolsOpen(!isToolsOpen)}
+                  className={`relative flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer select-none whitespace-nowrap z-10 ${
+                    isToolsActive
+                      ? "text-indigo-950 dark:text-white font-bold"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                  }`}
+                >
+                  {isToolsActive && (
+                    <motion.div
+                      layoutId="activeNavIndicator"
+                      className="absolute inset-0 bg-white dark:bg-slate-800 rounded-xl shadow-xs border border-slate-200/90 dark:border-slate-700/80 -z-10"
+                      transition={{ type: "spring", stiffness: 450, damping: 35 }}
+                    />
+                  )}
+                  <Layers
+                    className={`w-3.5 h-3.5 ${
+                      isToolsActive
+                        ? "text-indigo-600 dark:text-indigo-400"
+                        : "text-slate-400 dark:text-slate-500"
+                    }`}
+                  />
+                  <span>
+                    {isToolsActive && activeToolItem
+                      ? activeToolItem.label.split("&")[0].trim()
+                      : isEnglish ? "Tools & Duel" : "Uygulama & Düello"}
+                  </span>
+                  <ChevronDown
+                    className={`w-3 h-3 transition-transform duration-200 ${
+                      isToolsOpen ? "rotate-180 text-indigo-600 dark:text-indigo-400" : "text-slate-400"
+                    }`}
+                  />
+                </button>
+
+                {/* Tools Dropdown Panel */}
+                <AnimatePresence>
+                  {isToolsOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ duration: 0.15, ease: "easeOut" }}
+                      className="absolute left-0 mt-2 w-76 p-2 rounded-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-xl z-50 space-y-1"
+                    >
+                      <div className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                        {isEnglish ? "Interactive Analysis & Practice" : "İleri Düzey Analiz & Pratik"}
+                      </div>
+                      {TOOLS_ITEMS.map((tool) => {
+                        const ToolIcon = tool.icon;
+                        const isSelected = activeTab === tool.id;
+                        return (
+                          <button
+                            key={tool.id}
+                            onClick={() => handleTabClick(tool.id)}
+                            className={`w-full flex items-start gap-3 p-2.5 rounded-xl text-left transition-all cursor-pointer group ${
+                              isSelected
+                                ? "bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-200/80 dark:border-indigo-800/80"
+                                : "hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent"
+                            }`}
+                          >
+                            <div
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform ${
+                                isSelected
+                                  ? "bg-indigo-600 text-white"
+                                  : "bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400"
+                              }`}
+                            >
+                              <ToolIcon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-1">
+                                <span className={`text-xs font-bold block truncate ${isSelected ? "text-indigo-900 dark:text-indigo-200" : "text-slate-900 dark:text-slate-100"}`}>
+                                  {tool.label}
+                                </span>
+                                {tool.badge && (
+                                  <span className="px-1.5 py-0.2 text-[9px] font-bold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                                    {tool.badge}
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight mt-0.5 line-clamp-2">
+                                {tool.desc}
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </nav>
 
             {/* Right Action Hub: Unified & Non-Overflowing */}
-            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               
               {/* Daily Learning Streak Capsule */}
               <motion.div
                 whileHover={{ scale: 1.04 }}
-                className="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300 text-xs font-black shadow-2xs select-none"
+                className="flex items-center gap-1 px-2 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300 text-xs font-black shadow-2xs select-none"
                 title={isEnglish ? `${userState.currentStreak} day learning streak` : `${userState.currentStreak} günlük aktif öğrenme serisi`}
               >
                 <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0 animate-pulse" />
                 <span>{userState.currentStreak}</span>
-                <span className="hidden md:inline font-medium text-[11px] opacity-80">{isEnglish ? "d" : "gün"}</span>
+                <span className="hidden xl:inline font-medium text-[10px] opacity-80">{isEnglish ? "d" : "gün"}</span>
               </motion.div>
 
-              {/* Modern One-Click Language Switcher [ TR | EN ] */}
+              {/* Compact Modern One-Click Language Switcher [ TR | EN ] */}
               <div className="flex items-center p-0.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-[11px] font-bold select-none shadow-2xs">
                 <button
                   onClick={() => setLanguage("tr")}
-                  className={`px-2 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
+                  className={`px-1.5 sm:px-2 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-0.5 sm:gap-1 ${
                     language === "tr"
                       ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-2xs font-extrabold"
                       : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                   }`}
-                  title="Türkçe diline geç"
+                  title="Türkçe"
                 >
-                  <span>🇹🇷</span>
-                  <span>TR</span>
+                  <span className="text-[11px]">🇹🇷</span>
+                  <span className="text-[10px] sm:text-[11px]">TR</span>
                 </button>
                 <button
                   onClick={() => setLanguage("en")}
-                  className={`px-2 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
+                  className={`px-1.5 sm:px-2 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-0.5 sm:gap-1 ${
                     language === "en"
                       ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-2xs font-extrabold"
                       : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                   }`}
-                  title="Switch to English"
+                  title="English"
                 >
-                  <span>🇬🇧</span>
-                  <span>EN</span>
+                  <span className="text-[11px]">🇬🇧</span>
+                  <span className="text-[10px] sm:text-[11px]">EN</span>
                 </button>
               </div>
 
-              {/* Grouped Resources & Tools Dropdown (Desktop & Tablet) */}
+              {/* Grouped Resources & Reference Dropdown */}
               <div className="relative hidden md:block" ref={resourcesRef}>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <button
                   onClick={() => setIsResourcesOpen(!isResourcesOpen)}
-                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer whitespace-nowrap ${
                     isResourcesOpen
                       ? "bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-800 shadow-2xs"
                       : "bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-slate-800"
                   }`}
                 >
-                  <Layers className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                  <span>{isEnglish ? "Resources" : "Kaynaklar"}</span>
+                  <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                  <span className="hidden xl:inline">{isEnglish ? "Resources" : "Kaynaklar"}</span>
                   <ChevronDown
                     className={`w-3 h-3 transition-transform duration-200 ${
                       isResourcesOpen ? "rotate-180 text-indigo-600 dark:text-indigo-400" : "text-slate-400"
                     }`}
                   />
-                </motion.button>
+                </button>
 
                 {/* Dropdown Menu Panel */}
                 <AnimatePresence>
@@ -311,9 +422,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
 
               {/* Dark / Light Theme Toggle */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 onClick={onToggleDarkMode}
                 className="p-2 rounded-xl bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 text-xs font-semibold transition-colors cursor-pointer"
                 title={isDarkMode ? (isEnglish ? "Switch to Light Mode" : "Aydınlık Moda Geç") : (isEnglish ? "Switch to Dark Mode" : "Karanlık Moda Geç")}
@@ -324,25 +433,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ) : (
                   <Moon className="w-3.5 h-3.5 text-slate-600" />
                 )}
-              </motion.button>
+              </button>
 
               {/* Socratic AI Coach Button */}
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
+              <button
                 onClick={onOpenAICoach}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold shadow-sm shadow-indigo-500/25 transition-all cursor-pointer ring-1 ring-white/20"
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold shadow-sm shadow-indigo-500/25 transition-all cursor-pointer ring-1 ring-white/20 whitespace-nowrap"
                 title={isEnglish ? "Ask Socratic AI Coach" : "Sokratik AI Koçuna Soru Sor"}
               >
-                <Sparkles className="w-3.5 h-3.5 text-indigo-200 animate-spin-slow" />
+                <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
                 <span className="hidden sm:inline">{isEnglish ? "AI Coach" : "AI Koçu"}</span>
-                <span className="sm:hidden">{isEnglish ? "Coach" : "Koç"}</span>
-              </motion.button>
+                <span className="sm:hidden">{isEnglish ? "AI" : "AI"}</span>
+              </button>
 
               {/* Mobile Menu Drawer Toggle (Visible on < lg) */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 onClick={() => setIsMobileDrawerOpen(!isMobileDrawerOpen)}
                 className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 text-xs font-semibold transition-colors cursor-pointer"
                 aria-label="Open Menu"
@@ -352,7 +457,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ) : (
                   <Menu className="w-4 h-4" />
                 )}
-              </motion.button>
+              </button>
             </div>
           </div>
         </div>
@@ -365,7 +470,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="lg:hidden border-t border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl px-4 py-4 space-y-3 shadow-2xl"
+              className="lg:hidden border-t border-slate-200/80 dark:border-slate-800 bg-white/98 dark:bg-slate-950/98 backdrop-blur-xl px-4 py-4 space-y-4 shadow-2xl overflow-y-auto max-h-[85vh]"
             >
               {/* Mobile Language Switcher */}
               <div className="flex items-center justify-between p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
@@ -397,35 +502,69 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               </div>
 
-              <div className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">
-                {isEnglish ? "Pages & Modules" : "Sayfalar & Modüller"}
-              </div>
-              <div className="grid grid-cols-1 gap-1.5">
-                {NAV_ITEMS.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeTab === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => handleTabClick(item.id)}
-                      className={`flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                        isActive
-                          ? "bg-indigo-600 text-white shadow-xs"
-                          : "bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/60 dark:border-slate-800"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-500 dark:text-slate-400"}`} />
-                        <span>{item.label}</span>
-                      </div>
-                      <ArrowUpRight className={`w-3.5 h-3.5 ${isActive ? "text-white/80" : "text-slate-400"}`} />
-                    </button>
-                  );
-                })}
+              {/* Group 1: Core Learning Modules */}
+              <div className="space-y-1.5">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">
+                  {isEnglish ? "Core Curriculum" : "Ana Eğitim & Teori"}
+                </div>
+                <div className="grid grid-cols-1 gap-1.5">
+                  {PRIMARY_NAV_ITEMS.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activeTab === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => handleTabClick(item.id)}
+                        className={`flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          isActive
+                            ? "bg-indigo-600 text-white shadow-xs"
+                            : "bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/60 dark:border-slate-800"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-500 dark:text-slate-400"}`} />
+                          <span>{item.label}</span>
+                        </div>
+                        <ArrowUpRight className={`w-3.5 h-3.5 ${isActive ? "text-white/80" : "text-slate-400"}`} />
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800">
-                <div className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1 mb-2">
+              {/* Group 2: Advanced Interactive Tools */}
+              <div className="space-y-1.5">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">
+                  {isEnglish ? "Interactive Analysis & Duel" : "Uygulama, Teşhis & Düello"}
+                </div>
+                <div className="grid grid-cols-1 gap-1.5">
+                  {TOOLS_ITEMS.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = activeTab === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => handleTabClick(item.id)}
+                        className={`flex items-center justify-between p-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          isActive
+                            ? "bg-indigo-600 text-white shadow-xs"
+                            : "bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/60 dark:border-slate-800"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-slate-500 dark:text-slate-400"}`} />
+                          <span>{item.label}</span>
+                        </div>
+                        <span className="text-[10px] opacity-75">{item.badge}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Group 3: Reference & Resources */}
+              <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800 space-y-1.5">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">
                   {isEnglish ? "Reference & Tools" : "Yardımcı & Başvuru Araçları"}
                 </div>
                 <div className="grid grid-cols-1 gap-1.5">
@@ -461,4 +600,3 @@ export const Navbar: React.FC<NavbarProps> = ({
     </>
   );
 };
-

@@ -344,11 +344,11 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
             </div>
 
             {/* Core Equation Box */}
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 text-white border border-slate-800 shadow-inner text-center">
-              <div className="text-[10px] font-black uppercase text-amber-400 tracking-wider mb-1">
+            <div className="p-5 rounded-2xl bg-indigo-50/70 dark:bg-slate-950 border border-indigo-200/80 dark:border-slate-800 shadow-xs text-center">
+              <div className="text-[10px] font-black uppercase text-indigo-700 dark:text-amber-400 tracking-wider mb-1">
                 MATEMATİKSEL TEMEL EŞİTLİK
               </div>
-              <div className="font-mono text-base sm:text-xl md:text-2xl font-black text-amber-300 tracking-wide select-all py-1">
+              <div className="font-mono text-base sm:text-xl md:text-2xl font-black text-indigo-950 dark:text-amber-300 tracking-wide select-all py-1">
                 {currentGuide.coreEquation}
               </div>
             </div>
@@ -489,16 +489,16 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
                   </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-gradient-to-r from-indigo-900 to-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-indigo-800 shadow-md">
+                <div className="p-5 rounded-2xl bg-indigo-50 dark:bg-slate-800/90 text-slate-900 dark:text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-indigo-200 dark:border-indigo-800/80 shadow-xs">
                   <div>
-                    <div className="text-xs text-indigo-300 font-bold uppercase tracking-wider">
+                    <div className="text-xs text-indigo-700 dark:text-indigo-300 font-bold uppercase tracking-wider">
                       Hesaplanan Sermaye Maliyeti (WACC)
                     </div>
-                    <div className="text-3xl sm:text-4xl font-black text-amber-300 font-mono mt-0.5">
+                    <div className="text-3xl sm:text-4xl font-black text-indigo-600 dark:text-amber-300 font-mono mt-0.5">
                       %{calculatedWacc.toFixed(2)}
                     </div>
                   </div>
-                  <div className="text-xs text-indigo-200 leading-relaxed max-w-md text-right sm:text-left">
+                  <div className="text-xs text-slate-600 dark:text-indigo-200 leading-relaxed max-w-md text-right sm:text-left">
                     Özsermaye Katkısı: %{(weightE * calculatedKe).toFixed(1)} + Net Borç Katkısı: %{(weightD * netKd).toFixed(1)}. Şirket her 100 TL için yıllık en az %{calculatedWacc.toFixed(1)} NOPAT üretmelidir.
                   </div>
                 </div>
@@ -582,16 +582,16 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
                   </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-950 via-slate-900 to-indigo-950 text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-emerald-800 shadow-md">
+                <div className="p-5 rounded-2xl bg-emerald-50 dark:bg-slate-800/90 text-slate-900 dark:text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-emerald-200 dark:border-emerald-800/80 shadow-xs">
                   <div>
-                    <div className="text-xs text-emerald-300 font-bold uppercase tracking-wider">
+                    <div className="text-xs text-emerald-700 dark:text-emerald-300 font-bold uppercase tracking-wider">
                       Hesaplanan ROIC Getirisi
                     </div>
-                    <div className="text-3xl sm:text-4xl font-black text-emerald-400 font-mono mt-0.5">
+                    <div className="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400 font-mono mt-0.5">
                       %{calculatedRoic.toFixed(2)}
                     </div>
                   </div>
-                  <div className="text-xs text-slate-300 leading-relaxed max-w-md text-right sm:text-left">
+                  <div className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-md text-right sm:text-left">
                     Net Faaliyet Kârı (NOPAT): <strong>{calculatedNopat.toFixed(1)}M TL</strong> | Bağlanan Sermaye: <strong>{totalInvestedCapital}M TL</strong>. Şirket bağladığı her 100 TL ile net {calculatedRoic.toFixed(1)} TL kâr üretmektedir.
                   </div>
                 </div>
@@ -871,16 +871,16 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
                   </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-indigo-800 shadow-md">
+                <div className="p-5 rounded-2xl bg-indigo-50 dark:bg-slate-800/90 text-slate-900 dark:text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-indigo-200 dark:border-indigo-800/80 shadow-xs">
                   <div>
-                    <div className="text-xs text-indigo-300 font-bold uppercase tracking-wider">
+                    <div className="text-xs text-indigo-700 dark:text-indigo-300 font-bold uppercase tracking-wider">
                       Segment Ekonomik Kârı (Kutu Alanı)
                     </div>
-                    <div className="text-3xl sm:text-4xl font-black text-amber-300 font-mono mt-0.5">
+                    <div className="text-3xl sm:text-4xl font-black text-indigo-600 dark:text-amber-300 font-mono mt-0.5">
                       {calculatedEconomicProfit > 0 ? "+" : ""}{calculatedEconomicProfit.toFixed(1)}M TL
                     </div>
                   </div>
-                  <div className="text-xs text-slate-300 leading-relaxed max-w-md text-right sm:text-left">
+                  <div className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-md text-right sm:text-left">
                     Ekonomik Yayılım: %{(ppRoic - ppWacc).toFixed(1)}. {calculatedEconomicProfit >= 0 ? "Şirket sektörel refah yaratıyor!" : "Şirket değer yakıyor (Value destruction)!"}
                   </div>
                 </div>
@@ -964,16 +964,16 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
                   </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-purple-800 shadow-md">
+                <div className="p-5 rounded-2xl bg-purple-50 dark:bg-slate-800/90 text-slate-900 dark:text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-purple-200 dark:border-purple-800/80 shadow-xs">
                   <div>
-                    <div className="text-xs text-purple-300 font-bold uppercase tracking-wider">
+                    <div className="text-xs text-purple-700 dark:text-purple-300 font-bold uppercase tracking-wider">
                       Düzeltilmiş Faaliyet Kârı (Adjusted NOPAT)
                     </div>
-                    <div className="text-3xl sm:text-4xl font-black text-purple-300 font-mono mt-0.5">
+                    <div className="text-3xl sm:text-4xl font-black text-purple-600 dark:text-purple-300 font-mono mt-0.5">
                       {adjustedNopat.toFixed(1)}M TL
                     </div>
                   </div>
-                  <div className="text-xs text-slate-300 leading-relaxed max-w-md text-right sm:text-left">
+                  <div className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-md text-right sm:text-left">
                     Raporlanan EBIT: {fnReportedEbit}M TL $\rightarrow$ Düzeltilmiş EBIT: {adjustedEbit}M TL (+{fnRdExpense - fnRdAmort}M TL net Ar-Ge aktifleştirme katkısı).
                   </div>
                 </div>
@@ -1158,16 +1158,16 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
                   </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950 via-slate-900 to-indigo-950 text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-amber-800 shadow-md">
+                <div className="p-5 rounded-2xl bg-amber-50 dark:bg-slate-800/90 text-slate-900 dark:text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-amber-200 dark:border-amber-800/80 shadow-xs">
                   <div>
-                    <div className="text-xs text-amber-300 font-bold uppercase tracking-wider">
+                    <div className="text-xs text-amber-700 dark:text-amber-300 font-bold uppercase tracking-wider">
                       Piyasanın Fiyatladığı Hendek Süresi (İma Edilen CAP)
                     </div>
-                    <div className="text-3xl sm:text-4xl font-black text-amber-400 font-mono mt-0.5">
+                    <div className="text-3xl sm:text-4xl font-black text-amber-600 dark:text-amber-400 font-mono mt-0.5">
                       ~{impliedCapYears} Yıl
                     </div>
                   </div>
-                  <div className="text-xs text-slate-300 leading-relaxed max-w-md text-right sm:text-left">
+                  <div className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-w-md text-right sm:text-left">
                     Sıfır Büyüme Değeri: <strong>{steadyStateVal.toFixed(0)} TL (%{100 - futureSharePct})</strong> | Gelecek Büyüme Beklentisi: <strong>{futureGrowthVal.toFixed(0)} TL (%{futureSharePct})</strong>.
                   </div>
                 </div>
@@ -1208,29 +1208,29 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
           </div>
 
           {/* Step by Step Numerical Case Math */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-slate-950 text-slate-100 border border-slate-800 shadow-xl space-y-5">
-            <div className="flex items-center justify-between gap-3 border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2 font-sans font-bold text-amber-400 text-xs uppercase tracking-wider">
-                <Calculator className="w-4 h-4 text-amber-400" />
+          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+            <div className="flex items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2 font-sans font-bold text-amber-600 dark:text-amber-400 text-xs uppercase tracking-wider">
+                <Calculator className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                 <span>Adım Adım Hesaplama Prosedürü & Gerçek Şirket Örneği</span>
               </div>
-              <span className="text-xs text-slate-400 font-mono">
+              <span className="text-xs text-slate-600 dark:text-slate-400 font-mono px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                 {currentGuide.realWorldExample.company}
               </span>
             </div>
 
             {/* Real World Scenario */}
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-              <div className="text-xs font-semibold text-slate-300 leading-relaxed">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-3">
+              <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 leading-relaxed">
                 {currentGuide.realWorldExample.scenario}
               </div>
 
               {/* Step pills */}
-              <div className="space-y-2 pt-2 border-t border-slate-800/80">
+              <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-700/80">
                 {currentGuide.realWorldExample.calculationSteps.map((stepStr, sIdx) => (
                   <div
                     key={sIdx}
-                    className="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-amber-300 font-mono text-xs leading-relaxed"
+                    className="p-3 rounded-xl bg-white dark:bg-slate-950/80 border border-slate-200/90 dark:border-slate-800 text-slate-800 dark:text-amber-300 font-mono text-xs leading-relaxed shadow-2xs"
                   >
                     {stepStr}
                   </div>
@@ -1238,7 +1238,7 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
               </div>
 
               {/* Result Interpretation */}
-              <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-900/60 text-emerald-300 text-xs leading-relaxed font-sans font-medium">
+              <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 text-emerald-900 dark:text-emerald-300 text-xs leading-relaxed font-sans font-medium">
                 💡 <strong>Analiz Sonucu:</strong> {currentGuide.realWorldExample.resultInterpretation}
               </div>
             </div>
