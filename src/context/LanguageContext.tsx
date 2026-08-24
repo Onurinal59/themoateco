@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { LearningModule, GlossaryTerm, FormulaGuide, ChecklistItem, Flashcard } from "../types";
+import { LearningModule, GlossaryTerm, FormulaGuide, ChecklistItem, Flashcard, CompanyAuditDossier, StepMethodologyGuide } from "../types";
 import { MODULES_DATA } from "../data/modulesData";
 import { MODULES_DATA_EN } from "../data/modulesDataEn";
 import { GLOSSARY_TERMS } from "../data/glossaryData";
@@ -10,6 +10,18 @@ import { CHECKLIST_ITEMS } from "../data/checklistData";
 import { CHECKLIST_ITEMS_EN } from "../data/checklistDataEn";
 import { INITIAL_FLASHCARDS } from "../data/flashcardsData";
 import { INITIAL_FLASHCARDS_EN } from "../data/flashcardsDataEn";
+import {
+  INITIAL_PRESET_DOSSIERS,
+  MAUBOUSSIN_GUIDED_TEMPLATE,
+  STEP_METHODOLOGY_GUIDES,
+  BALANCE_SHEET_GUIDE,
+} from "../data/companyAuditData";
+import {
+  INITIAL_PRESET_DOSSIERS_EN,
+  MAUBOUSSIN_GUIDED_TEMPLATE_EN,
+  STEP_METHODOLOGY_GUIDES_EN,
+  BALANCE_SHEET_GUIDE_EN,
+} from "../data/companyAuditDataEn";
 
 export type Language = "tr" | "en";
 
@@ -24,6 +36,10 @@ interface LanguageContextType {
   getFormulaGuides: () => Record<string, FormulaGuide>;
   getChecklistItems: () => ChecklistItem[];
   getFlashcards: () => Flashcard[];
+  getStepMethodologyGuides: () => Record<number, StepMethodologyGuide>;
+  getInitialDossiers: () => CompanyAuditDossier[];
+  getBalanceSheetGuide: () => any[];
+  getMasterTemplate: () => CompanyAuditDossier;
 }
 
 const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
@@ -42,6 +58,53 @@ const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     "nav.toggleTheme": "Tema Değiştir",
     "nav.switchLanguage": "Dili Değiştir (Language)",
     "nav.quickStats": "Hızlı İlerleme",
+
+    // Workspaces / Portföy
+    "workspaces.badge": "Çalışmalarım & Portföyüm",
+    "workspaces.localStorageSafe": "Tarayıcıda Güvende (LocalStorage)",
+    "workspaces.title": "Kayıtlı Şirket Hendek Analizlerim",
+    "workspaces.subtitle": "Borsa İstanbul ve dünya piyasalarında incelediğiniz tüm hisselerin bilanço röntgenlerini, WTP/WTS hendek motorlarını ve notlarını burada saklayın; kaldığınız adımdan anında devam edin!",
+    "workspaces.uploadBackup": "Yedekten Yükle (.json)",
+    "workspaces.backupAll": "Tümünü Yedekle",
+    "workspaces.startNew": "Yeni Şirket Analizi Başlat",
+    "workspaces.totalFiles": "Toplam Dosya",
+    "workspaces.companies": "şirket",
+    "workspaces.myStudies": "Kendi Çalışmalarım",
+    "workspaces.customAnalyses": "özgün analiz",
+    "workspaces.positiveValue": "Pozitif Değer Yaratan",
+    "workspaces.wideMoatCount": "Geniş Hendekli",
+    "workspaces.highProtected": "yüksek korumalı",
+    "workspaces.masterBannerBadge": "Michael J. Mauboussin Metodolojisi",
+    "workspaces.masterTemplateBadge": "Rehberli Örnek Vaka Taslağı",
+    "workspaces.masterBannerTitle": "\"Measuring the Moat\" Ustalık Taslağı ile Gerçek Vaka Analizi Yapın",
+    "workspaces.masterBannerDesc": "Costco & BİM perakende modelleri üzerinden ROIC & DuPont ayrıştırması, negatif işletme sermayesi, WTP/WTS değer çubuğu ve 20 yıllık CAP ömrü analizini adım adım inceleyin; ister şablonu inceleyin, ister anında kendi şirketiniz için kopyalayın!",
+    "workspaces.openGuidedTemplate": "Rehberli Şablonu Aç",
+    "workspaces.startFromTemplate": "Bu Şablondan Yeni Başlat",
+    "workspaces.searchPlaceholder": "Şirket adı, hisse kodu veya sektör ara...",
+    "workspaces.clear": "Temizle",
+    "workspaces.filterAll": "Tümü",
+    "workspaces.filterTemplate": "Rehber Taslak",
+    "workspaces.filterCustom": "Özgün Çalışmalarım",
+    "workspaces.filterPresets": "Hazır Vakalar",
+    "workspaces.filterWide": "Geniş Hendek",
+    "workspaces.filterValueCreating": "Değer Yaratan",
+    "workspaces.sortBy": "Sırala:",
+    "workspaces.sortUpdated": "Son Düzenlenen",
+    "workspaces.sortRoic": "En Yüksek ROIC (%)",
+    "workspaces.sortMoatScore": "En Yüksek Hendek Skoru",
+    "workspaces.sortName": "Şirket Adı (A-Z)",
+    "workspaces.noResultsTitle": "Aramanızla Eşleşen Çalışma Bulunamadı",
+    "workspaces.noResultsDesc": "Filtreleri sıfırlayabilir veya hemen yeni bir şirket analizi başlatabilirsiniz.",
+    "workspaces.clearFilters": "Filtreleri Temizle",
+    "workspaces.addNew": "Yeni Şirket Ekle",
+    "workspaces.caseStudy": "Vaka Örneği",
+    "workspaces.customAnalysisBadge": "Özgün Analiz",
+    "workspaces.moat": "Hendek",
+    "workspaces.spread": "Yayılım",
+    "workspaces.moatDrivers": "Hendek Motorları:",
+    "workspaces.currentStep": "Kaldığın Adım:",
+    "workspaces.resumeButton": "Kaldığın Yerden Devam Et",
+    "workspaces.resetPresets": "Örnek Vakaları Sıfırla",
 
     // Hero / Header
     "hero.badge": "Michael J. Mauboussin Metodolojisi",
@@ -161,6 +224,53 @@ const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     "nav.switchLanguage": "Dil / Language",
     "nav.quickStats": "Quick Progress",
 
+    // Workspaces / Portföy
+    "workspaces.badge": "My Workspaces & Portfolio",
+    "workspaces.localStorageSafe": "Safely Stored (LocalStorage)",
+    "workspaces.title": "Saved Company Moat Studies",
+    "workspaces.subtitle": "Keep all balance sheet audits, WTP/WTS moat drivers, and analytical memos in one place; resume instantly from your last audited step!",
+    "workspaces.uploadBackup": "Import Backup (.json)",
+    "workspaces.backupAll": "Backup All",
+    "workspaces.startNew": "Start New Audit",
+    "workspaces.totalFiles": "Total Dossiers",
+    "workspaces.companies": "companies",
+    "workspaces.myStudies": "My Custom Analyses",
+    "workspaces.customAnalyses": "custom analyses",
+    "workspaces.positiveValue": "Value Creating",
+    "workspaces.wideMoatCount": "Wide Moat",
+    "workspaces.highProtected": "wide moat",
+    "workspaces.masterBannerBadge": "Michael J. Mauboussin Methodology",
+    "workspaces.masterTemplateBadge": "Guided Master Case Template",
+    "workspaces.masterBannerTitle": "Analyze Real Cases with the \"Measuring the Moat\" Master Template",
+    "workspaces.masterBannerDesc": "Explore step-by-step ROIC & DuPont decomposition, negative working capital, WTP/WTS value sticks, and 20-year CAP duration across Costco & retail models; inspect the template or clone it for your target firm!",
+    "workspaces.openGuidedTemplate": "Open Guided Template",
+    "workspaces.startFromTemplate": "Start Fresh from Template",
+    "workspaces.searchPlaceholder": "Search company name, ticker or sector...",
+    "workspaces.clear": "Clear",
+    "workspaces.filterAll": "All",
+    "workspaces.filterTemplate": "Guided Template",
+    "workspaces.filterCustom": "My Analyses",
+    "workspaces.filterPresets": "Preset Cases",
+    "workspaces.filterWide": "Wide Moat",
+    "workspaces.filterValueCreating": "Value Creating",
+    "workspaces.sortBy": "Sort by:",
+    "workspaces.sortUpdated": "Recently Updated",
+    "workspaces.sortRoic": "Highest ROIC (%)",
+    "workspaces.sortMoatScore": "Highest Moat Score",
+    "workspaces.sortName": "Company Name (A-Z)",
+    "workspaces.noResultsTitle": "No Matching Analyses Found",
+    "workspaces.noResultsDesc": "Reset your active filters or create a new company analysis immediately.",
+    "workspaces.clearFilters": "Clear Filters",
+    "workspaces.addNew": "Add New Company",
+    "workspaces.caseStudy": "Case Study",
+    "workspaces.customAnalysisBadge": "Custom Analysis",
+    "workspaces.moat": "Moat",
+    "workspaces.spread": "Spread",
+    "workspaces.moatDrivers": "Moat Drivers:",
+    "workspaces.currentStep": "Current Step:",
+    "workspaces.resumeButton": "Resume Analysis",
+    "workspaces.resetPresets": "Reset Preset Cases",
+
     // Hero / Header
     "hero.badge": "Michael J. Mauboussin Methodology",
     "hero.title": "Economic Moat & ROIC X-Ray",
@@ -272,7 +382,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     try {
       const saved = localStorage.getItem("economic_moat_language");
       if (saved === "tr" || saved === "en") return saved;
-      // Default to Turkish or check navigator
       return "tr";
     } catch {
       return "tr";
@@ -315,7 +424,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const getFormulaGuides = (): Record<string, FormulaGuide> => {
     if (language === "en") {
-      // Merge with base fallback so all IDs work
       return { ...FORMULA_GUIDES_DATA, ...FORMULA_GUIDES_DATA_EN };
     }
     return FORMULA_GUIDES_DATA;
@@ -327,6 +435,22 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const getFlashcards = (): Flashcard[] => {
     return language === "en" ? INITIAL_FLASHCARDS_EN : INITIAL_FLASHCARDS;
+  };
+
+  const getStepMethodologyGuides = (): Record<number, StepMethodologyGuide> => {
+    return language === "en" ? STEP_METHODOLOGY_GUIDES_EN : STEP_METHODOLOGY_GUIDES;
+  };
+
+  const getInitialDossiers = (): CompanyAuditDossier[] => {
+    return language === "en" ? INITIAL_PRESET_DOSSIERS_EN : INITIAL_PRESET_DOSSIERS;
+  };
+
+  const getBalanceSheetGuide = (): any[] => {
+    return language === "en" ? BALANCE_SHEET_GUIDE_EN : BALANCE_SHEET_GUIDE;
+  };
+
+  const getMasterTemplate = (): CompanyAuditDossier => {
+    return language === "en" ? MAUBOUSSIN_GUIDED_TEMPLATE_EN : MAUBOUSSIN_GUIDED_TEMPLATE;
   };
 
   return (
@@ -342,6 +466,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         getFormulaGuides,
         getChecklistItems,
         getFlashcards,
+        getStepMethodologyGuides,
+        getInitialDossiers,
+        getBalanceSheetGuide,
+        getMasterTemplate,
       }}
     >
       {children}
@@ -356,3 +484,4 @@ export const useLanguage = (): LanguageContextType => {
   }
   return context;
 };
+

@@ -25,7 +25,9 @@ import {
   ArrowLeft,
   Download,
   Upload,
-  RotateCcw
+  RotateCcw,
+  ShieldAlert,
+  Swords
 } from "lucide-react";
 import { CompanyAuditDossier } from "../types";
 import {
@@ -34,12 +36,14 @@ import {
   MAUBOUSSIN_GUIDED_TEMPLATE,
   STEP_METHODOLOGY_GUIDES,
   calculateFinancialOutputs,
-  computeMoatScore
+  computeMoatScore,
+  getBalanceSheetGuide,
+  getInitialPresetDossiers
 } from "../data/companyAuditData";
+import { useLanguage } from "../context/LanguageContext";
 import { MyWorkspacesView } from "./MyWorkspacesView";
 import { MauboussinMethodologyCoach } from "./MauboussinMethodologyCoach";
 import { InvestmentCommitteeModal } from "./InvestmentCommitteeModal";
-import { ShieldAlert, Swords } from "lucide-react";
 
 interface CompanyAuditLabProps {
   onOpenAICoachWithPrompt?: (prompt: string) => void;
@@ -47,6 +51,7 @@ interface CompanyAuditLabProps {
 }
 
 export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: CompanyAuditLabProps) {
+  const { isEnglish, t } = useLanguage();
   // Modal for Investment Committee Devil's Advocate
   const [isCommitteeModalOpen, setIsCommitteeModalOpen] = useState(false);
   // Saved dossiers in local storage or fallback to presets
@@ -77,15 +82,15 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
   const [activeStep, setActiveStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
   const [copiedNotification, setCopiedNotification] = useState(false);
-  const [lastSavedTime, setLastSavedTime] = useState<string>(() => new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }));
+  const [lastSavedTime, setLastSavedTime] = useState<string>(() => new Date().toLocaleTimeString(isEnglish ? "en-US" : "tr-TR", { hour: "2-digit", minute: "2-digit" }));
   const [saveFlash, setSaveFlash] = useState(false);
 
   // Sync to local storage whenever dossiers change
   useEffect(() => {
     localStorage.setItem("moat_dossiers", JSON.stringify(dossiers));
-    const now = new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+    const now = new Date().toLocaleTimeString(isEnglish ? "en-US" : "tr-TR", { hour: "2-digit", minute: "2-digit" });
     setLastSavedTime(now);
-  }, [dossiers]);
+  }, [dossiers, isEnglish]);
 
   // Sync selectedId to local storage
   useEffect(() => {
@@ -142,48 +147,48 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
     const newId = "dossier-custom-" + Date.now();
     const newDossier: CompanyAuditDossier = {
       id: newId,
-      companyName: "Yeni Analiz Edilen Şirket",
-      ticker: "KOD",
-      industry: "Sektör Belirtiniz",
-      description: "Şirketin ana iş modeli ve değer önerisi.",
+      companyName: isEnglish ? "New Analyzed Company" : "Yeni Analiz Edilen Şirket",
+      ticker: "TICKER",
+      industry: isEnglish ? "Specify Industry" : "Sektör Belirtiniz",
+      description: isEnglish ? "Company's core business model and value proposition." : "Şirketin ana iş modeli ve değer önerisi.",
       isCustom: true,
       createdAt: new Date().toISOString().split("T")[0],
+      updatedAt: new Date().toISOString().split("T")[0],
       lastStep: 1,
       financials: {
-        revenue: 1000,
-        operatingIncome: 150,
-        effectiveTaxRate: 25,
-        totalAssets: 1200,
-        cashAndEquivalents: 150,
-        nonInterestCurrentLiabilities: 250,
-        wacc: 20
+        revenue: 10000,
+        operatingIncome: 1500,
+        effectiveTaxRate: 22,
+        totalAssets: 12000,
+        cashAndEquivalents: 2000,
+        nonInterestCurrentLiabilities: 2500,
+        wacc: 12
       },
       industryStructure: {
+        threatOfNewEntrants: "orta",
         supplierPower: "orta",
         buyerPower: "orta",
-        threatOfNewEntrants: "orta",
-        threatOfSubstitutes: "orta",
+        threatOfSubstitutes: "düşük",
         industryRivalry: "orta",
-        profitPoolPosition: "Sektörün kâr havuzundaki yeri..."
+        profitPoolPosition: ""
       },
       competitiveAdvantage: {
         primaryType: "tüketici_avantajı",
-        subDrivers: ["Marka/Arama Maliyeti"],
-        pricingPowerEvidence: "Enflasyonda fiyat artırabilme kanıtları...",
-        costAdvantageEvidence: "Rakiplere göre birim maliyet farkı..."
+        subDrivers: [isEnglish ? "Brand / Search Costs" : "Marka/Arama Maliyeti"],
+        pricingPowerEvidence: "",
+        costAdvantageEvidence: ""
       },
       interactionAndDiscipline: {
-        capacityDiscipline: "orta",
-        priceWarRisk: "orta",
-        managementCapitalAllocation: "ortalama"
+        capacityDiscipline: "yüksek",
+        priceWarRisk: "düşük",
+        managementCapitalAllocation: "mükemmel"
       },
       sustainability: {
-        estimatedCapYears: 5,
         moatWidth: "Dar Hendek (Narrow)",
-        keyVulnerability: "Giriş engellerinin aşınması..."
+        estimatedCapYears: 8,
+        keyVulnerability: ""
       },
-      notes: "Kendi analiz notlarınız...",
-      updatedAt: new Date().toISOString().split("T")[0]
+      notes: ""
     };
 
     setDossiers((prev) => [newDossier, ...prev]);
@@ -192,105 +197,147 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
     setViewMode("studio");
   };
 
-  const handleDuplicateDossier = (dossierToClone: CompanyAuditDossier) => {
+  const handleDuplicateDossier = (dossier: CompanyAuditDossier) => {
     const newId = "dossier-custom-" + Date.now();
     const cloned: CompanyAuditDossier = {
-      ...JSON.parse(JSON.stringify(dossierToClone)),
+      ...dossier,
       id: newId,
-      companyName: `${dossierToClone.companyName} (Kopya)`,
-      ticker: `${dossierToClone.ticker.replace(/ \(.*\)/, "")}-KOPYA`,
+      companyName: isEnglish ? `${dossier.companyName} (Copy)` : `${dossier.companyName} (Kopya)`,
       isCustom: true,
       createdAt: new Date().toISOString().split("T")[0],
       updatedAt: new Date().toISOString().split("T")[0],
-      lastStep: dossierToClone.lastStep || 1
+      lastStep: 1
     };
 
     setDossiers((prev) => [cloned, ...prev]);
     setSelectedId(newId);
-    setActiveStep(cloned.lastStep || 1);
+    setActiveStep(1);
+    setViewMode("studio");
   };
 
   const handleDeleteDossier = (id: string) => {
     if (dossiers.length <= 1) {
-      alert("En az bir analiz dosyası bulunmalıdır.");
+      alert(isEnglish ? "At least one dossier must remain in your workspace." : "En az 1 dosya listenizde bulunmalıdır.");
       return;
     }
-    const remaining = dossiers.filter((d) => d.id !== id);
-    setDossiers(remaining);
-    if (selectedId === id) {
-      setSelectedId(remaining[0].id);
-      setActiveStep(remaining[0].lastStep || 1);
-    }
+    const filtered = dossiers.filter((d) => d.id !== id);
+    setDossiers(filtered);
+    setSelectedId(filtered[0].id);
+    setActiveStep(1);
   };
 
   const handleImportDossiers = (imported: CompanyAuditDossier[]) => {
-    const formatted = imported.map((item) => ({
-      ...item,
-      id: `dossier-import-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      isCustom: true,
-      updatedAt: new Date().toISOString().split("T")[0]
-    }));
-
-    setDossiers((prev) => [...formatted, ...prev]);
-    if (formatted.length > 0) {
-      setSelectedId(formatted[0].id);
-      setActiveStep(formatted[0].lastStep || 1);
+    const existingIds = new Set(dossiers.map((d) => d.id));
+    const newUnique = imported.filter((item) => !existingIds.has(item.id));
+    if (newUnique.length > 0) {
+      setDossiers((prev) => [...newUnique, ...prev]);
+      setSelectedId(newUnique[0].id);
+    } else {
+      setSelectedId(imported[0].id);
     }
   };
 
   const handleResetToPresets = () => {
-    const userCustom = dossiers.filter((d) => d.isCustom);
-    setDossiers([...userCustom, ...INITIAL_PRESET_DOSSIERS]);
+    const presets = getInitialPresetDossiers(isEnglish);
+    const customOnes = dossiers.filter((d) => d.isCustom);
+    setDossiers([...customOnes, ...presets]);
+    setSelectedId(presets[0].id);
   };
 
   const finCalc = calculateFinancialOutputs(currentDossier.financials);
   const moatScore = computeMoatScore(currentDossier);
 
   const copyReportToClipboard = () => {
-    const text = `📊 EKONOMİK HENDEK DEĞERLENDİRME RAPORU
-Şirket: ${currentDossier.companyName} (${currentDossier.ticker})
-Sektör: ${currentDossier.industry}
-Tarih: ${currentDossier.updatedAt}
+    const reportText = `
+=== ${currentDossier.companyName} (${currentDossier.ticker}) MAUBOUSSIN MOAT AUDIT REPORT ===
+${isEnglish ? "Industry" : "Sektör"}: ${currentDossier.industry}
+${isEnglish ? "Date" : "Tarih"}: ${currentDossier.updatedAt}
 
-1. FİNANSAL VERİMLİLİK & ROIC:
-- Gelir: ${currentDossier.financials.revenue}
-- NOPAT: ${finCalc.nopat} (NOPAT Marjı: %${finCalc.nopatMarginPercent})
-- Yatırılan Sermaye (IC): ${finCalc.investedCapital} (Sermaye Devir Hızı: ${finCalc.capitalTurnover}x)
-- ROIC: %${finCalc.roicPercent} vs WACC: %${currentDossier.financials.wacc}
-- Değer Yayılımı (Spread): %${finCalc.spread} (${finCalc.isCreatingValue ? 'POZİTİF DEĞER YARATIMI' : 'DEĞER YIKIMI'})
-- Yıllık Ekonomik Kâr: ${finCalc.economicProfit}
+1. ${isEnglish ? "FINANCIAL X-RAY (ROIC & DUPONT)" : "FİNANSAL RÖNTGEN (ROIC & DUPONT)"}
+- ROIC: %${finCalc.roicPercent} (WACC: %${currentDossier.financials.wacc} | Spread: ${finCalc.spread >= 0 ? "+" : ""}%${finCalc.spread})
+- ${isEnglish ? "Value Status" : "Değer Durumu"}: ${finCalc.isCreatingValue ? (isEnglish ? "CREATING VALUE" : "DEĞER YARATIYOR") : (isEnglish ? "DESTROYING VALUE" : "DEĞER YIKIYOR")}
+- NOPAT: ${finCalc.nopat} M
+- ${isEnglish ? "Invested Capital" : "Yatırılan Sermaye (IC)"}: ${finCalc.investedCapital} M
+- NOPAT Margin: %${finCalc.nopatMarginPercent}
+- Capital Turnover: ${finCalc.capitalTurnover}x
+- ${isEnglish ? "Annual Economic Profit" : "Yıllık Ekonomik Kâr"}: ${finCalc.economicProfit} M
 
-2. STRATEJİK HENDEK TEŞHİSİ:
-- Hendek Tipi: ${currentDossier.competitiveAdvantage.primaryType.toUpperCase()}
-- Hendek Alt Motorları: ${currentDossier.competitiveAdvantage.subDrivers.join(", ") || "Yok"}
-- Mauboussin Hendek Skoru: %${moatScore.scorePercent}
-- Sonuç Teşhisi: ${moatScore.diagnosedMoat} (Tahmini CAP: ${currentDossier.sustainability.estimatedCapYears} Yıl)
-- Temel Risk: ${currentDossier.sustainability.keyVulnerability}
+2. ${isEnglish ? "INDUSTRY STRUCTURE & FORCES" : "SEKTÖR YAPISI & GÜÇLER"}
+- Threat of New Entrants: ${currentDossier.industryStructure.threatOfNewEntrants}
+- Supplier Power: ${currentDossier.industryStructure.supplierPower}
+- Buyer Power: ${currentDossier.industryStructure.buyerPower}
+- Threat of Substitutes: ${currentDossier.industryStructure.threatOfSubstitutes}
+- Industry Rivalry: ${currentDossier.industryStructure.industryRivalry}
 
-Özet Değerlendirme:
-${currentDossier.notes}`;
+3. ${isEnglish ? "COMPETITIVE ADVANTAGE & MOAT DRIVERS" : "REKABET AVANTAJI & HENDEK MOTORLARI"}
+- Primary Type: ${currentDossier.competitiveAdvantage.primaryType}
+- Sub Drivers: ${currentDossier.competitiveAdvantage.subDrivers.join(", ")}
+- Pricing Power: ${currentDossier.competitiveAdvantage.pricingPowerEvidence || (isEnglish ? "N/A" : "Belirtilmedi")}
+- Cost Advantage: ${currentDossier.competitiveAdvantage.costAdvantageEvidence || (isEnglish ? "N/A" : "Belirtilmedi")}
 
-    navigator.clipboard.writeText(text);
+4. ${isEnglish ? "CAPITAL ALLOCATION & GAME THEORY" : "SERMAYE TAHSİSİ & OYUN TEORİSİ"}
+- Capacity Discipline: ${currentDossier.interactionAndDiscipline.capacityDiscipline}
+- Price War Risk: ${currentDossier.interactionAndDiscipline.priceWarRisk}
+- Capital Allocation: ${currentDossier.interactionAndDiscipline.managementCapitalAllocation}
+
+5. ${isEnglish ? "FINAL VERDICT & SUSTAINABILITY" : "SONUÇ & SÜRDÜRÜLEBİLİRLİK"}
+- Diagnosed Moat: ${moatScore.diagnosedMoat}
+- Moat Score: %${moatScore.scorePercent} / 100
+- Estimated CAP: ${currentDossier.sustainability.estimatedCapYears} ${isEnglish ? "Years" : "Yıl"}
+- Key Vulnerability: ${currentDossier.sustainability.keyVulnerability || (isEnglish ? "N/A" : "Belirtilmedi")}
+
+${isEnglish ? "Notes" : "Notlar"}: ${currentDossier.notes || (isEnglish ? "No notes" : "Not girilmedi")}
+=============================================
+`;
+    navigator.clipboard.writeText(reportText);
     setCopiedNotification(true);
-    setTimeout(() => setCopiedNotification(false), 3000);
+    setTimeout(() => setCopiedNotification(false), 2500);
   };
 
   const askAICoachAboutThisCompany = () => {
+    if (!onOpenAICoachWithPrompt) return;
+    const prompt = isEnglish
+      ? `Can you evaluate this company according to Michael Mauboussin's 'Measuring the Moat' methodology?
+
+Company: ${currentDossier.companyName} (${currentDossier.ticker})
+Industry: ${currentDossier.industry}
+ROIC: %${finCalc.roicPercent} (WACC: %${currentDossier.financials.wacc}, Spread: %${finCalc.spread})
+NOPAT Margin: %${finCalc.nopatMarginPercent}, Capital Turnover: ${finCalc.capitalTurnover}x
+Moat Type: ${currentDossier.competitiveAdvantage.primaryType}
+Moat Drivers: ${currentDossier.competitiveAdvantage.subDrivers.join(", ")}
+Estimated CAP: ${currentDossier.sustainability.estimatedCapYears} years
+Key Vulnerability: ${currentDossier.sustainability.keyVulnerability}
+
+What are the critical moat risks and competitive longevity for this business?`
+      : `Michael Mauboussin'in "Measuring the Moat" metodolojisine göre bu şirketi değerlendirir misin?
+
+Şirket: ${currentDossier.companyName} (${currentDossier.ticker})
+Sektör: ${currentDossier.industry}
+ROIC: %${finCalc.roicPercent} (WACC: %${currentDossier.financials.wacc}, Fark: %${finCalc.spread})
+NOPAT Marjı: %${finCalc.nopatMarginPercent}, Sermaye Devir Hızı: ${finCalc.capitalTurnover}x
+Hendek Türü: ${currentDossier.competitiveAdvantage.primaryType}
+Hendek Motorları: ${currentDossier.competitiveAdvantage.subDrivers.join(", ")}
+Tahmini CAP Süresi: ${currentDossier.sustainability.estimatedCapYears} yıl
+Kırılganlık: ${currentDossier.sustainability.keyVulnerability}
+
+Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski hakkında derinlemesine bir analiz ve öneri verir misin?`;
+
+    onOpenAICoachWithPrompt(prompt);
+  };
+
+  const onOpenAICoachWithPromptProxy = (prompt: string) => {
     if (onOpenAICoachWithPrompt) {
-      const prompt = `Michael Mauboussin'in "Measuring the Moat" çerçevesinde ${currentDossier.companyName} (${currentDossier.ticker}) şirketini analiz ediyorum.
-Şirketin finansalları: ROIC: %${finCalc.roicPercent}, WACC: %${currentDossier.financials.wacc}, Spread: %${finCalc.spread}.
-Belirlediğim Hendek Tipi: ${currentDossier.competitiveAdvantage.primaryType}.
-Alt motorlar: ${currentDossier.competitiveAdvantage.subDrivers.join(", ")}.
-Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam gereken en kritik 3 Sokratik soruyu ve piyasadaki gerçek kanıtları nasıl teyit edeceğimi açıklar mısın?`;
       onOpenAICoachWithPrompt(prompt);
     }
   };
 
+  const balanceSheetGuideList = getBalanceSheetGuide(isEnglish);
+
   return (
-    <div className="space-y-8 pb-16" id="company-audit-lab">
-      {/* Primary Top View Mode Switcher */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-2 shadow-xs">
-        <div className="flex items-center gap-1.5">
+    <div className="space-y-6 max-w-7xl mx-auto px-2 sm:px-4" id="company-audit-laboratory">
+      {/* Top Workspace / Studio Toggle Bar */}
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-2.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setViewMode("workspaces")}
             className={`flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
@@ -300,7 +347,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
             }`}
           >
             <FolderKanban className="w-4 h-4" />
-            <span>📁 Çalışmalarım ({dossiers.length})</span>
+            <span>📁 {isEnglish ? `My Workspaces (${dossiers.length})` : `Çalışmalarım (${dossiers.length})`}</span>
           </button>
 
           <button
@@ -312,7 +359,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
             }`}
           >
             <Building2 className="w-4 h-4" />
-            <span>🔬 Bilanço & Hendek Röntgen Masası</span>
+            <span>🔬 {isEnglish ? "Balance Sheet & Moat Studio" : "Bilanço & Hendek Röntgen Masası"}</span>
           </button>
         </div>
 
@@ -321,7 +368,11 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
           <div className="flex items-center gap-1.5">
             <span className={`w-2 h-2 rounded-full ${saveFlash ? "bg-amber-400 animate-ping" : "bg-emerald-500"}`}></span>
             <span className="font-mono text-[11px]">
-              {saveFlash ? "Kaydediliyor..." : `Otomatik kaydedildi: ${lastSavedTime}`}
+              {saveFlash
+                ? (isEnglish ? "Saving..." : "Kaydediliyor...")
+                : isEnglish
+                ? `Auto-saved: ${lastSavedTime}`
+                : `Otomatik kaydedildi: ${lastSavedTime}`}
             </span>
           </div>
 
@@ -331,10 +382,10 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 handleUpdateCurrentDossier({});
               }}
               className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-[11px] font-semibold flex items-center gap-1 cursor-pointer"
-              title="Değişiklikleri yerel belleğe manuel doğrula"
+              title={isEnglish ? "Manually confirm changes to local storage" : "Değişiklikleri yerel belleğe manuel doğrula"}
             >
               <Save className="w-3 h-3 text-indigo-500" />
-              <span>Kaydet</span>
+              <span>{isEnglish ? "Save" : "Kaydet"}</span>
             </button>
           )}
         </div>
@@ -381,22 +432,24 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     onClick={() => setViewMode("workspaces")}
                     className="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center gap-1.5 cursor-pointer transition-colors"
                   >
-                    <ArrowLeft className="w-3.5 h-3.5" /> Tüm Çalışmalarım
+                    <ArrowLeft className="w-3.5 h-3.5" /> {isEnglish ? "All Workspaces" : "Tüm Çalışmalarım"}
                   </button>
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-                    Aktif Dosya: {currentDossier.companyName} ({currentDossier.ticker})
+                    {isEnglish ? "Active File: " : "Aktif Dosya: "} {currentDossier.companyName} ({currentDossier.ticker})
                   </span>
                   {currentDossier.isCustom && (
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 flex items-center gap-1">
-                      <Sparkles className="w-2.5 h-2.5" /> Özgün Çalışma
+                      <Sparkles className="w-2.5 h-2.5" /> {isEnglish ? "Custom Study" : "Özgün Çalışma"}
                     </span>
                   )}
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-                  {currentDossier.companyName} ({currentDossier.ticker}) — Hendek Teşhisi
+                  {currentDossier.companyName} ({currentDossier.ticker}) — {isEnglish ? "Moat Diagnosis" : "Hendek Teşhisi"}
                 </h1>
                 <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
-                  5 adımlı Mauboussin çerçevesinde bilançoyu doldurun, ROIC & DuPont çarpanlarını ve hendek motorlarını test edin. Değişiklikler anında <strong>'Çalışmalarım'</strong> altına kaydedilir.
+                  {isEnglish
+                    ? "Fill in the balance sheet figures according to Mauboussin's 5-step framework, test ROIC & DuPont multipliers and moat drivers. Changes are saved automatically under 'My Workspaces'."
+                    : "5 adımlı Mauboussin çerçevesinde bilançoyu doldurun, ROIC & DuPont çarpanlarını ve hendek motorlarını test edin. Değişiklikler anında 'Çalışmalarım' altına kaydedilir."}
                 </p>
               </div>
 
@@ -417,24 +470,24 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                       ? "bg-amber-500 text-white border-amber-600 shadow-sm"
                       : "bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/80 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800"
                   }`}
-                  title="Mauboussin 'Measuring the Moat' örnek vaka taslağını aç"
+                  title={isEnglish ? "Open Mauboussin 'Measuring the Moat' case template" : "Mauboussin 'Measuring the Moat' örnek vaka taslağını aç"}
                 >
                   <Award className="w-4 h-4 text-amber-400 fill-amber-400/20" />
-                  <span>📘 Mauboussin Rehber Taslağı</span>
+                  <span>📘 {isEnglish ? "Mauboussin Master Guide" : "Mauboussin Rehber Taslağı"}</span>
                 </button>
                 <button
                   onClick={() => setIsGuideModalOpen(true)}
                   className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
                 >
                   <BookOpen className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                  Bilanço Rehberi (KAP / 10-K)
+                  {isEnglish ? "Balance Sheet Guide (SEC 10-K / KAP)" : "Bilanço Rehberi (KAP / 10-K)"}
                 </button>
                 <button
                   onClick={handleAddNewCompany}
                   className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
-                  Yeni Şirket Ekle
+                  {isEnglish ? "Add New Company" : "Yeni Şirket Ekle"}
                 </button>
               </div>
             </div>
@@ -443,7 +496,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
             <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 overflow-x-auto pb-2 scrollbar-thin">
               <div className="flex items-center gap-2 shrink-0">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1 shrink-0">
-                  Dosya Değiştir:
+                  {isEnglish ? "Switch Dossier:" : "Dosya Değiştir:"}
                 </span>
                 {dossiers.map((doss) => {
                   const isSelected = doss.id === currentDossier.id;
@@ -473,10 +526,10 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 <button
                   onClick={() => handleDuplicateDossier(currentDossier)}
                   className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-                  title="Bu çalışmanın kopyasını oluştur"
+                  title={isEnglish ? "Create a clone of this dossier" : "Bu çalışmanın kopyasını oluştur"}
                 >
                   <Copy className="w-3.5 h-3.5 text-indigo-500" />
-                  <span>Klonla</span>
+                  <span>{isEnglish ? "Clone" : "Klonla"}</span>
                 </button>
               </div>
             </div>
@@ -491,10 +544,12 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 </div>
                 <div>
                   <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-slate-100">
-                    Örnek Vaka: Michael Mauboussin "Measuring the Moat" Usta Taslağı
+                    {isEnglish ? "Master Case Study: Michael Mauboussin 'Measuring the Moat' Blueprint" : "Örnek Vaka: Michael Mauboussin 'Measuring the Moat' Usta Taslağı"}
                   </h3>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 max-w-2xl leading-relaxed">
-                    Bu dosya, perakende sektöründe (Costco & BİM modeli) <strong>negatif işletme sermayesi</strong>, <strong>%19.6 ROIC</strong> ve <strong>20 yıllık CAP süresi</strong> analizini pratik etmeniz için önceden eksiksiz doldurulmuş altın standart şablondur.
+                    {isEnglish
+                      ? "This dossier is a pre-filled gold standard template in the retail sector (Costco & BİM model) to practice negative working capital, 19.6% ROIC, and 20-year CAP duration analysis."
+                      : "Bu dosya, perakende sektöründe (Costco & BİM modeli) negatif işletme sermayesi, %19.6 ROIC ve 20 yıllık CAP süresi analizini pratik etmeniz için önceden eksiksiz doldurulmuş altın standart şablondur."}
                   </p>
                 </div>
               </div>
@@ -503,7 +558,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 className="px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold shrink-0 transition-colors flex items-center gap-2 shadow-xs cursor-pointer"
               >
                 <Copy className="w-4 h-4" />
-                <span>Bu Şablonu Kendi Şirketime Kopyala</span>
+                <span>{isEnglish ? "Copy Template to My Studies" : "Bu Şablonu Kendi Şirketime Kopyala"}</span>
               </button>
             </div>
           )}
@@ -515,11 +570,11 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               {/* Step Navigation Tabs */}
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-2 flex items-center justify-between gap-1 sm:gap-2 shadow-xs overflow-x-auto scrollbar-thin">
                 {[
-                  { step: 1, title: "1. Finansal Röntgen (ROIC)", icon: Calculator },
-                  { step: 2, title: "2. Sektör & Kâr Havuzu", icon: Layers },
-                  { step: 3, title: "3. Değer Çubuğu & Hendek", icon: Shield },
-                  { step: 4, title: "4. Oyun Teorisi & Sermaye", icon: Zap },
-                  { step: 5, title: "5. Sonuç & Teşhis Raporu", icon: Award }
+                  { step: 1, title: isEnglish ? "1. Financial X-Ray (ROIC)" : "1. Finansal Röntgen (ROIC)", icon: Calculator },
+                  { step: 2, title: isEnglish ? "2. Industry & Profit Pool" : "2. Sektör & Kâr Havuzu", icon: Layers },
+                  { step: 3, title: isEnglish ? "3. Value Stick & Moat" : "3. Değer Çubuğu & Hendek", icon: Shield },
+                  { step: 4, title: isEnglish ? "4. Game Theory & Capital" : "4. Oyun Teorisi & Sermaye", icon: Zap },
+                  { step: 5, title: isEnglish ? "5. Verdict & Diagnosis" : "5. Sonuç & Teşhis Raporu", icon: Award }
                 ].map((st) => {
                   const IconComp = st.icon;
                   const isActive = activeStep === st.step;
@@ -564,24 +619,26 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 <div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                     <Calculator className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                    Adım 1: Finansal Röntgen & Bilanço Girdileri
+                    {isEnglish ? "Step 1: Financial X-Ray & Balance Sheet Inputs" : "Adım 1: Finansal Röntgen & Bilanço Girdileri"}
                   </h3>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                    Şirketin yıllık KAP bildiriminden veya 10-K raporundan aşağıdaki 7 kritik sayıyı girin.
+                    {isEnglish
+                      ? "Enter the 7 critical financial figures from the company's annual 10-K or financial report."
+                      : "Şirketin yıllık KAP bildiriminden veya 10-K raporundan aşağıdaki 7 kritik sayıyı girin."}
                   </p>
                 </div>
                 <button
                   onClick={() => setIsGuideModalOpen(true)}
                   className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
                 >
-                  <HelpCircle className="w-3.5 h-3.5" /> Nereden Bulurum?
+                  <HelpCircle className="w-3.5 h-3.5" /> {isEnglish ? "Where to Find?" : "Nereden Bulurum?"}
                 </button>
               </div>
 
               {/* Company Info Header */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">Şirket Adı:</label>
+                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">{isEnglish ? "Company Name:" : "Şirket Adı:"}</label>
                   <input
                     type="text"
                     value={currentDossier.companyName}
@@ -590,7 +647,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">Hisse / Borsa Kodu:</label>
+                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">{isEnglish ? "Ticker / Symbol:" : "Hisse / Borsa Kodu:"}</label>
                   <input
                     type="text"
                     value={currentDossier.ticker}
@@ -599,7 +656,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">Faaliyet Sektörü:</label>
+                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">{isEnglish ? "Industry / Sector:" : "Faaliyet Sektörü:"}</label>
                   <input
                     type="text"
                     value={currentDossier.industry}
@@ -613,8 +670,10 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">1. Yıllık Gelir (Hasılat / Revenue)</label>
-                    <span className="text-[10px] text-slate-400 font-mono">Milyon TL / $</span>
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {isEnglish ? "1. Annual Revenue" : "1. Yıllık Gelir (Hasılat / Revenue)"}
+                    </label>
+                    <span className="text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
                   </div>
                   <input
                     type="number"
@@ -622,13 +681,17 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     onChange={(e) => handleFinancialChange("revenue", Number(e.target.value))}
                     className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Gelir Tablosu'ndaki 'Hasılat' (Total Revenue) satırı.</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    {isEnglish ? "Top line on the Income Statement (Total Revenue)." : "Gelir Tablosu'ndaki 'Hasılat' (Total Revenue) satırı."}
+                  </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">2. Esas Faaliyet Kârı (EBIT)</label>
-                    <span className="text-[10px] text-slate-400 font-mono">Milyon TL / $</span>
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {isEnglish ? "2. Operating Income (EBIT)" : "2. Esas Faaliyet Kârı (EBIT)"}
+                    </label>
+                    <span className="text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
                   </div>
                   <input
                     type="number"
@@ -636,12 +699,16 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     onChange={(e) => handleFinancialChange("operatingIncome", Number(e.target.value))}
                     className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Finansman ve vergiden önceki operasyonel kâr (Operating Income).</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    {isEnglish ? "Operating profit before financing costs and taxes (Operating Income)." : "Finansman ve vergiden önceki operasyonel kâr (Operating Income)."}
+                  </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">3. Efektif Vergi Oranı (%)</label>
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {isEnglish ? "3. Effective Tax Rate (%)" : "3. Efektif Vergi Oranı (%)"}
+                    </label>
                     <span className="text-[10px] text-slate-400 font-mono">%</span>
                   </div>
                   <input
@@ -650,13 +717,17 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     onChange={(e) => handleFinancialChange("effectiveTaxRate", Number(e.target.value))}
                     className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Vergi Gideri / Vergi Öncesi Kâr (Türkiye için standart %25-30, ABD için %15-21).</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    {isEnglish ? "Tax Expense / Pre-Tax Income (standard 15-25%)." : "Vergi Gideri / Vergi Öncesi Kâr (Türkiye için standart %25-30, ABD için %15-21)."}
+                  </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">4. Toplam Varlıklar (Total Assets)</label>
-                    <span className="text-[10px] text-slate-400 font-mono">Milyon TL / $</span>
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {isEnglish ? "4. Total Assets" : "4. Toplam Varlıklar (Total Assets)"}
+                    </label>
+                    <span className="text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
                   </div>
                   <input
                     type="number"
@@ -664,13 +735,17 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     onChange={(e) => handleFinancialChange("totalAssets", Number(e.target.value))}
                     className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Bilanço aktif toplamı (Dönen + Duran Varlıklar).</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    {isEnglish ? "Total assets on the balance sheet (Current + Non-Current)." : "Bilanço aktif toplamı (Dönen + Duran Varlıklar)."}
+                  </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">5. Nakit ve Nakit Benzerleri</label>
-                    <span className="text-[10px] text-slate-400 font-mono">Milyon TL / $</span>
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {isEnglish ? "5. Cash & Cash Equivalents" : "5. Nakit ve Nakit Benzerleri"}
+                    </label>
+                    <span className="text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
                   </div>
                   <input
                     type="number"
@@ -678,13 +753,17 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     onChange={(e) => handleFinancialChange("cashAndEquivalents", Number(e.target.value))}
                     className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Kasada duran atıl nakit ve kısa vadeli finansal yatırımlar.</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    {isEnglish ? "Excess idle cash and short-term marketable investments." : "Kasada duran atıl nakit ve kısa vadeli finansal yatırımlar."}
+                  </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">6. Ticari Borçlar & Faizsiz Kısa Borçlar</label>
-                    <span className="text-[10px] text-slate-400 font-mono">Milyon TL / $</span>
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {isEnglish ? "6. Non-Interest Bearing Current Liabilities" : "6. Ticari Borçlar & Faizsiz Kısa Borçlar"}
+                    </label>
+                    <span className="text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
                   </div>
                   <input
                     type="number"
@@ -692,12 +771,16 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     onChange={(e) => handleFinancialChange("nonInterestCurrentLiabilities", Number(e.target.value))}
                     className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">Tedarikçilere olan borçlar (Accounts Payable - Faizsiz sermaye).</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    {isEnglish ? "Accounts payable to suppliers (Interest-free working capital financing)." : "Tedarikçilere olan borçlar (Accounts Payable - Faizsiz sermaye)."}
+                  </p>
                 </div>
 
                 <div className="sm:col-span-2 p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/50 space-y-1">
                   <div className="flex justify-between items-center">
-                    <label className="text-xs font-bold text-indigo-900 dark:text-indigo-200">7. Sermaye Maliyeti (WACC - Hurdle Rate)</label>
+                    <label className="text-xs font-bold text-indigo-900 dark:text-indigo-200">
+                      {isEnglish ? "7. Cost of Capital (WACC - Hurdle Rate)" : "7. Sermaye Maliyeti (WACC - Hurdle Rate)"}
+                    </label>
                     <span className="text-xs font-mono font-bold text-indigo-700 dark:text-indigo-400">%{currentDossier.financials.wacc}</span>
                   </div>
                   <input
@@ -709,7 +792,9 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     className="w-full h-2 bg-indigo-200 dark:bg-indigo-900/60 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                   />
                   <p className="text-[11px] text-indigo-800/80 dark:text-indigo-300">
-                    Yatırımcıların bu şirketten talep ettiği asgari getiri oranı (BIST hisseleri için genelde %25-35, ABD hisseleri için %8-10).
+                    {isEnglish
+                      ? "Minimum hurdle rate of return demanded by investors (typically 8-10% for US blue chips, 25-35% in high-inflation emerging markets)."
+                      : "Yatırımcıların bu şirketten talep ettiği asgari getiri oranı (BIST hisseleri için genelde %25-35, ABD hisseleri için %8-10)."}
                   </p>
                 </div>
               </div>
@@ -722,7 +807,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   onClick={() => setActiveStep(2)}
                   className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
-                  Adım 2'ye Geç: Sektör Yapısı <ArrowRight className="w-4 h-4" />
+                  {isEnglish ? "Proceed to Step 2: Industry Structure" : "Adım 2'ye Geç: Sektör Yapısı"} <ArrowRight className="w-4 h-4" />
                 </motion.button>
               </div>
             </motion.div>
@@ -741,10 +826,12 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               <div className="pb-4 border-b border-slate-100 dark:border-slate-800">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <Layers className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                  Adım 2: Sektör Yapısı & Porter 5 Güç Değerlendirmesi
+                  {isEnglish ? "Step 2: Industry Structure & Porter 5 Forces Assessment" : "Adım 2: Sektör Yapısı & Porter 5 Güç Değerlendirmesi"}
                 </h3>
                 <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                  Michael Porter ve Mauboussin'in öğrettiği gibi: "Kötü bir sektörde harika bir şirket bile ortalamaya çekilir."
+                  {isEnglish
+                    ? "As Michael Porter and Mauboussin teach: 'In a structurally difficult industry, even a great company gets pulled toward average.'"
+                    : "Michael Porter ve Mauboussin'in öğrettiği gibi: 'Kötü bir sektörde harika bir şirket bile ortalamaya çekilir.'"}
                 </p>
               </div>
 
@@ -752,32 +839,32 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 {[
                   {
                     key: "threatOfNewEntrants",
-                    label: "1. Yeni Giriş Tehdidi (Giriş Engelleri)",
-                    desc: "Yarın yeni bir rakip piyasaya girip şirketin müşterilerini kolayca kapabilir mi?",
+                    label: isEnglish ? "1. Threat of New Entrants (Barriers to Entry)" : "1. Yeni Giriş Tehdidi (Giriş Engelleri)",
+                    desc: isEnglish ? "Can a new rival enter tomorrow and easily capture customer share?" : "Yarın yeni bir rakip piyasaya girip şirketin müşterilerini kolayca kapabilir mi?",
                     goodIsLow: true
                   },
                   {
                     key: "supplierPower",
-                    label: "2. Tedarikçi Pazarlık Gücü",
-                    desc: "Hammadde/bileşen satanlar (örneğin Nvidia TSMC'ye, Havayolu Boeing'e) fiyatı tek taraflı dikte edebilir mi?",
+                    label: isEnglish ? "2. Bargaining Power of Suppliers" : "2. Tedarikçi Pazarlık Gücü",
+                    desc: isEnglish ? "Can key input suppliers unilaterally dictate price increases?" : "Hammadde/bileşen satanlar (örneğin Nvidia TSMC'ye, Havayolu Boeing'e) fiyatı tek taraflı dikte edebilir mi?",
                     goodIsLow: true
                   },
                   {
                     key: "buyerPower",
-                    label: "3. Müşteri Pazarlık Gücü",
-                    desc: "Müşteri toplu alım yapıp şirketin kâr marjını ezebilir mi?",
+                    label: isEnglish ? "3. Bargaining Power of Buyers" : "3. Müşteri Pazarlık Gücü",
+                    desc: isEnglish ? "Can buyers exert leverage and squeeze the company's profit margins?" : "Müşteri toplu alım yapıp şirketin kâr marjını ezebilir mi?",
                     goodIsLow: true
                   },
                   {
                     key: "threatOfSubstitutes",
-                    label: "4. İkame Ürün Tehdidi",
-                    desc: "Müşteriler tamamen farklı bir teknolojiye (tren yerine uçak, petrol yerine elektrik) kayabilir mi?",
+                    label: isEnglish ? "4. Threat of Substitutes" : "4. İkame Ürün Tehdidi",
+                    desc: isEnglish ? "Can customers switch to an entirely different technology or alternative?" : "Müşteriler tamamen farklı bir teknolojiye (tren yerine uçak, petrol yerine elektrik) kayabilir mi?",
                     goodIsLow: true
                   },
                   {
                     key: "industryRivalry",
-                    label: "5. Sektör İçi Rekabet Şiddeti",
-                    desc: "Rakipler pazar payı için yıkıcı fiyat kırma savaşlarına giriyor mu?",
+                    label: isEnglish ? "5. Industry Rivalry Intensity" : "5. Sektör İçi Rekabet Şiddeti",
+                    desc: isEnglish ? "Do competitors engage in destructive price wars to win volume?" : "Rakipler pazar payı için yıkıcı fiyat kırma savaşlarına giriyor mu?",
                     goodIsLow: true
                   }
                 ].map((item) => {
@@ -792,6 +879,11 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                         {(["düşük", "orta", "yüksek"] as const).map((level) => {
                           const isSelected = val === level;
                           const isFavorable = (level === "düşük" && item.goodIsLow) || (level === "yüksek" && !item.goodIsLow);
+                          const levelLabels = {
+                            düşük: isEnglish ? "Low" : "Düşük",
+                            orta: isEnglish ? "Medium" : "Orta",
+                            yüksek: isEnglish ? "High" : "Yüksek"
+                          };
                           return (
                             <button
                               key={level}
@@ -811,7 +903,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                                   : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
                               }`}
                             >
-                              {level}
+                              {levelLabels[level]}
                             </button>
                           );
                         })}
@@ -822,7 +914,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
 
                 <div className="pt-2">
                   <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                    Sektör Kâr Havuzu Konumu (Profit Pool):
+                    {isEnglish ? "Industry Profit Pool Position:" : "Sektör Kâr Havuzu Konumu (Profit Pool):"}
                   </label>
                   <textarea
                     rows={2}
@@ -835,7 +927,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                         }
                       })
                     }
-                    placeholder="Sektörde en çok kârı hangi halka topluyor? Şirket nerede duruyor?"
+                    placeholder={isEnglish ? "Which segment in the value chain captures the bulk of industry profits? Where is this company positioned?" : "Sektörde en çok kârı hangi halka topluyor? Şirket nerede duruyor?"}
                     className="mt-1.5 w-full p-3 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100"
                   />
                 </div>
@@ -848,7 +940,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   onClick={() => setActiveStep(1)}
                   className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs cursor-pointer"
                 >
-                  ◀ Finansallara Dön
+                  {isEnglish ? "◀ Back to Financials" : "◀ Finansallara Dön"}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -856,7 +948,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   onClick={() => setActiveStep(3)}
                   className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
-                  Adım 3'e Geç: Hendek Motorları <ArrowRight className="w-4 h-4" />
+                  {isEnglish ? "Proceed to Step 3: Moat Drivers" : "Adım 3'e Geç: Hendek Motorları"} <ArrowRight className="w-4 h-4" />
                 </motion.button>
               </div>
             </motion.div>
@@ -875,23 +967,37 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               <div className="pb-4 border-b border-slate-100 dark:border-slate-800">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <Shield className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                  Adım 3: Değer Çubuğu & Rekabet Avantajı Kaynağı
+                  {isEnglish ? "Step 3: Value Stick & Sources of Competitive Advantage" : "Adım 3: Değer Çubuğu & Rekabet Avantajı Kaynağı"}
                 </h3>
                 <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                  Şirket bu kârı nereden üretiyor? Müşteriye daha çok değer katıp fiyat yükselterek mi (WTP), yoksa maliyetleri kısarak mı (WTS)?
+                  {isEnglish
+                    ? "Where does the economic profit come from? By expanding customer Willingness to Pay (WTP) or lowering cost (WTS)?"
+                    : "Şirket bu kârı nereden üretiyor? Müşteriye daha çok değer katıp fiyat yükselterek mi (WTP), yoksa maliyetleri kısarak mı (WTS)?"}
                 </p>
               </div>
 
               {/* Primary Advantage Radio */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                  Temel Rekabet Üstünlüğü Türü:
+                  {isEnglish ? "Primary Competitive Advantage Archetype:" : "Temel Rekabet Üstünlüğü Türü:"}
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {[
-                    { id: "tüketici_avantajı", title: "Tüketici Avantajı (WTP)", desc: "Yüksek fiyatlama gücü, marka, geçiş maliyeti, ağ etkisi." },
-                    { id: "üretim_avantajı", title: "Üretim / Süreç Avantajı", desc: "Gizli formül, patent, benzersiz coğrafi lojistik üstünlük." },
-                    { id: "ölçek_avantajı", title: "Ölçek Üstünlüğü (Birim Maliyet)", desc: "Devasa hacim sayesinde en düşük birim maliyet (Costco/BIM)." }
+                    {
+                      id: "tüketici_avantajı",
+                      title: isEnglish ? "Consumer Advantage (WTP)" : "Tüketici Avantajı (WTP)",
+                      desc: isEnglish ? "High pricing power, brand loyalty, switching costs, network effects." : "Yüksek fiyatlama gücü, marka, geçiş maliyeti, ağ etkisi."
+                    },
+                    {
+                      id: "üretim_avantajı",
+                      title: isEnglish ? "Production / Process Advantage" : "Üretim / Süreç Avantajı",
+                      desc: isEnglish ? "Secret recipe, patents, unique geographic logistics edge." : "Gizli formül, patent, benzersiz coğrafi lojistik üstünlük."
+                    },
+                    {
+                      id: "ölçek_avantajı",
+                      title: isEnglish ? "Scale Advantage (Unit Cost)" : "Ölçek Üstünlüğü (Birim Maliyet)",
+                      desc: isEnglish ? "Lowest unit cost enabled by massive scale (Costco / BİM)." : "Devasa hacim sayesinde en düşük birim maliyet (Costco/BIM)."
+                    }
                   ].map((t) => {
                     const isSelected = currentDossier.competitiveAdvantage.primaryType === t.id;
                     return (
@@ -922,26 +1028,28 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               {/* Moat Sub-driver checkboxes */}
               <div className="space-y-2 pt-2">
                 <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                  Şirkette Bulunan Hendek Alt Motorları (Birden fazla seçebilirsiniz):
+                  {isEnglish ? "Active Moat Sub-Drivers (Select all that apply):" : "Şirkette Bulunan Hendek Alt Motorları (Birden fazla seçebilirsiniz):"}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {[
-                    "Geçiş Maliyeti",
-                    "Ağ Etkisi",
-                    "Marka/Arama Maliyeti",
-                    "Patent/Lisans",
-                    "Süreç Üstünlüğü",
-                    "Ölçek Ekonomisi"
-                  ].map((sub) => {
-                    const hasSub = currentDossier.competitiveAdvantage.subDrivers.includes(sub);
+                    { id: "Geçiş Maliyeti", label: isEnglish ? "Switching Costs" : "Geçiş Maliyeti" },
+                    { id: "Ağ Etkisi", label: isEnglish ? "Network Effects" : "Ağ Etkisi" },
+                    { id: "Marka/Arama Maliyeti", label: isEnglish ? "Brand / Search Costs" : "Marka/Arama Maliyeti" },
+                    { id: "Patent/Lisans", label: isEnglish ? "Patents / Licenses" : "Patent/Lisans" },
+                    { id: "Süreç Üstünlüğü", label: isEnglish ? "Process Superiority" : "Süreç Üstünlüğü" },
+                    { id: "Ölçek Ekonomisi", label: isEnglish ? "Economies of Scale" : "Ölçek Ekonomisi" }
+                  ].map((subObj) => {
+                    const hasSub =
+                      currentDossier.competitiveAdvantage.subDrivers.includes(subObj.id) ||
+                      currentDossier.competitiveAdvantage.subDrivers.includes(subObj.label);
                     return (
                       <button
-                        key={sub}
+                        key={subObj.id}
                         onClick={() => {
                           const currentSubs = currentDossier.competitiveAdvantage.subDrivers;
                           const newSubs = hasSub
-                            ? currentSubs.filter((s) => s !== sub)
-                            : [...currentSubs, sub];
+                            ? currentSubs.filter((s) => s !== subObj.id && s !== subObj.label)
+                            : [...currentSubs, isEnglish ? subObj.label : subObj.id];
                           handleUpdateCurrentDossier({
                             competitiveAdvantage: {
                               ...currentDossier.competitiveAdvantage,
@@ -955,7 +1063,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                             : "bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
                         }`}
                       >
-                        <span>{sub}</span>
+                        <span>{subObj.label}</span>
                         {hasSub ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <div className="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600" />}
                       </button>
                     );
@@ -967,7 +1075,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div>
                   <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                    Fiyat Gücü Kanıtı (Pricing Power):
+                    {isEnglish ? "Pricing Power Evidence:" : "Fiyat Gücü Kanıtı (Pricing Power):"}
                   </label>
                   <textarea
                     rows={2}
@@ -980,14 +1088,14 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                         }
                       })
                     }
-                    placeholder="Şirket enflasyonda fiyat artırabildi mi? Müşteri kaybı oldu mu?"
+                    placeholder={isEnglish ? "Did the company raise prices during inflation without losing volume?" : "Şirket enflasyonda fiyat artırabildi mi? Müşteri kaybı oldu mu?"}
                     className="mt-1 w-full p-2.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100"
                   />
                 </div>
 
                 <div>
                   <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                    Birim Maliyet / Süreç Kanıtı:
+                    {isEnglish ? "Cost / Process Advantage Evidence:" : "Birim Maliyet / Süreç Kanıtı:"}
                   </label>
                   <textarea
                     rows={2}
@@ -1000,7 +1108,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                         }
                       })
                     }
-                    placeholder="Rakiplere göre faaliyet gideri % veya tedarik maliyet avantajı..."
+                    placeholder={isEnglish ? "Operating expenses % compared to rivals or proprietary supply chain edge..." : "Rakiplere göre faaliyet gideri % veya tedarik maliyet avantajı..."}
                     className="mt-1 w-full p-2.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100"
                   />
                 </div>
@@ -1013,7 +1121,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   onClick={() => setActiveStep(2)}
                   className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs cursor-pointer"
                 >
-                  ◀ Sektör Yapısına Dön
+                  {isEnglish ? "◀ Back to Industry" : "◀ Sektör Yapısına Dön"}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -1021,7 +1129,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   onClick={() => setActiveStep(4)}
                   className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
-                  Adım 4'e Geç: Oyun Teorisi <ArrowRight className="w-4 h-4" />
+                  {isEnglish ? "Proceed to Step 4: Game Theory" : "Adım 4'e Geç: Oyun Teorisi"} <ArrowRight className="w-4 h-4" />
                 </motion.button>
               </div>
             </motion.div>
@@ -1040,104 +1148,139 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               <div className="pb-4 border-b border-slate-100 dark:border-slate-800">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <Zap className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                  Adım 4: Dinamik Etkileşim & Sermaye Tahsisi Disiplini
+                  {isEnglish ? "Step 4: Dynamic Interaction & Capital Allocation Discipline" : "Adım 4: Dinamik Etkileşim & Sermaye Tahsisi Disiplini"}
                 </h3>
                 <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                  Rakiplerle fiyat savaşı olasılığı ve yönetimin serbest nakit akışını nasıl değerlendirdiği.
+                  {isEnglish
+                    ? "Probability of destructive price wars and management's capital allocation track record."
+                    : "Rakiplerle fiyat savaşı olasılığı ve yönetimin serbest nakit akışını nasıl değerlendirdiği."}
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">1. Kapasite Disiplini</div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400">Sektörde atıl fabrika/stok/uçak fazlası riski var mı?</div>
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {isEnglish ? "1. Capacity Discipline" : "1. Kapasite Disiplini"}
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                      {isEnglish ? "Is there a risk of industry overcapacity (excess factories, planes, inventory)?" : "Sektörde atıl fabrika/stok/uçak fazlası riski var mı?"}
+                    </div>
                   </div>
                   <div className="flex gap-2">
-                    {(["yüksek", "orta", "düşük"] as const).map((lvl) => (
-                      <button
-                        key={lvl}
-                        onClick={() =>
-                          handleUpdateCurrentDossier({
-                            interactionAndDiscipline: {
-                              ...currentDossier.interactionAndDiscipline,
-                              capacityDiscipline: lvl
-                            }
-                          })
-                        }
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider border cursor-pointer ${
-                          currentDossier.interactionAndDiscipline.capacityDiscipline === lvl
-                            ? lvl === "yüksek"
-                              ? "bg-emerald-600 text-white border-emerald-600"
-                              : "bg-indigo-600 text-white border-indigo-600"
-                            : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
-                        }`}
-                      >
-                        {lvl}
-                      </button>
-                    ))}
+                    {(["yüksek", "orta", "düşük"] as const).map((lvl) => {
+                      const lvlLabels = {
+                        yüksek: isEnglish ? "High" : "Yüksek",
+                        orta: isEnglish ? "Medium" : "Orta",
+                        düşük: isEnglish ? "Low" : "Düşük"
+                      };
+                      return (
+                        <button
+                          key={lvl}
+                          onClick={() =>
+                            handleUpdateCurrentDossier({
+                              interactionAndDiscipline: {
+                                ...currentDossier.interactionAndDiscipline,
+                                capacityDiscipline: lvl
+                              }
+                            })
+                          }
+                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider border cursor-pointer ${
+                            currentDossier.interactionAndDiscipline.capacityDiscipline === lvl
+                              ? lvl === "yüksek"
+                                ? "bg-emerald-600 text-white border-emerald-600"
+                                : "bg-indigo-600 text-white border-indigo-600"
+                              : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                          }`}
+                        >
+                          {lvlLabels[lvl]}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">2. Fiyat Kırma & Fiyat Savaşı Riski (Mahkumlar İkilemi)</div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400">Rakipler pazar payı kapmak için kârları sıfırlayacak savaşlara girer mi?</div>
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {isEnglish ? "2. Price War Risk (Prisoner's Dilemma)" : "2. Fiyat Kırma & Fiyat Savaşı Riski (Mahkumlar İkilemi)"}
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                      {isEnglish ? "Do competitors engage in margin-destroying price wars to gain market share?" : "Rakipler pazar payı kapmak için kârları sıfırlayacak savaşlara girer mi?"}
+                    </div>
                   </div>
                   <div className="flex gap-2">
-                    {(["düşük", "orta", "yüksek"] as const).map((lvl) => (
-                      <button
-                        key={lvl}
-                        onClick={() =>
-                          handleUpdateCurrentDossier({
-                            interactionAndDiscipline: {
-                              ...currentDossier.interactionAndDiscipline,
-                              priceWarRisk: lvl
-                            }
-                          })
-                        }
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider border cursor-pointer ${
-                          currentDossier.interactionAndDiscipline.priceWarRisk === lvl
-                            ? lvl === "düşük"
-                              ? "bg-emerald-600 text-white border-emerald-600"
-                              : "bg-rose-600 text-white border-rose-600"
-                            : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
-                        }`}
-                      >
-                        {lvl}
-                      </button>
-                    ))}
+                    {(["düşük", "orta", "yüksek"] as const).map((lvl) => {
+                      const lvlLabels = {
+                        düşük: isEnglish ? "Low" : "Düşük",
+                        orta: isEnglish ? "Medium" : "Orta",
+                        yüksek: isEnglish ? "High" : "Yüksek"
+                      };
+                      return (
+                        <button
+                          key={lvl}
+                          onClick={() =>
+                            handleUpdateCurrentDossier({
+                              interactionAndDiscipline: {
+                                ...currentDossier.interactionAndDiscipline,
+                                priceWarRisk: lvl
+                              }
+                            })
+                          }
+                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider border cursor-pointer ${
+                            currentDossier.interactionAndDiscipline.priceWarRisk === lvl
+                              ? lvl === "düşük"
+                                ? "bg-emerald-600 text-white border-emerald-600"
+                                : "bg-rose-600 text-white border-rose-600"
+                              : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                          }`}
+                        >
+                          {lvlLabels[lvl]}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">3. Yönetimin Sermaye Tahsis Becerisi (Capital Allocation)</div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400">Kazanılan parayı yüksek ROIC'li işlere yatırıp, gereksiz satın almalardan kaçınıyor mu?</div>
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                      {isEnglish ? "3. Management Capital Allocation Skill" : "3. Yönetimin Sermaye Tahsis Becerisi (Capital Allocation)"}
+                    </div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                      {isEnglish ? "Does management reinvest cash into high-ROIC projects and avoid empire-building M&A?" : "Kazanılan parayı yüksek ROIC'li işlere yatırıp, gereksiz satın almalardan kaçınıyor mu?"}
+                    </div>
                   </div>
                   <div className="flex gap-2">
-                    {(["mükemmel", "ortalama", "kötü"] as const).map((lvl) => (
-                      <button
-                        key={lvl}
-                        onClick={() =>
-                          handleUpdateCurrentDossier({
-                            interactionAndDiscipline: {
-                              ...currentDossier.interactionAndDiscipline,
-                              managementCapitalAllocation: lvl
-                            }
-                          })
-                        }
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider border cursor-pointer ${
-                          currentDossier.interactionAndDiscipline.managementCapitalAllocation === lvl
-                            ? lvl === "mükemmel"
-                              ? "bg-emerald-600 text-white border-emerald-600"
-                              : "bg-amber-600 text-white border-amber-600"
-                            : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
-                        }`}
-                      >
-                        {lvl}
-                      </button>
-                    ))}
+                    {(["mükemmel", "ortalama", "kötü"] as const).map((lvl) => {
+                      const lvlLabels = {
+                        mükemmel: isEnglish ? "Excellent" : "Mükemmel",
+                        ortalama: isEnglish ? "Average" : "Ortalama",
+                        kötü: isEnglish ? "Poor" : "Kötü"
+                      };
+                      return (
+                        <button
+                          key={lvl}
+                          onClick={() =>
+                            handleUpdateCurrentDossier({
+                              interactionAndDiscipline: {
+                                ...currentDossier.interactionAndDiscipline,
+                                managementCapitalAllocation: lvl
+                              }
+                            })
+                          }
+                          className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider border cursor-pointer ${
+                            currentDossier.interactionAndDiscipline.managementCapitalAllocation === lvl
+                              ? lvl === "mükemmel"
+                                ? "bg-emerald-600 text-white border-emerald-600"
+                                : "bg-amber-600 text-white border-amber-600"
+                              : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
+                          }`}
+                        >
+                          {lvlLabels[lvl]}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -1149,7 +1292,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   onClick={() => setActiveStep(3)}
                   className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs cursor-pointer"
                 >
-                  ◀ Değer Çubuğuna Dön
+                  {isEnglish ? "◀ Back to Moat Drivers" : "◀ Değer Çubuğuna Dön"}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -1157,7 +1300,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   onClick={() => setActiveStep(5)}
                   className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
-                  Son Adım: Raporu Oluştur <ArrowRight className="w-4 h-4" />
+                  {isEnglish ? "Final Step: Generate Report" : "Son Adım: Raporu Oluştur"} <ArrowRight className="w-4 h-4" />
                 </motion.button>
               </div>
             </motion.div>
@@ -1177,10 +1320,12 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 <div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                     <Award className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                    Adım 5: Nihai Hendek Teşhisi & Yatırım Raporu
+                    {isEnglish ? "Step 5: Final Moat Diagnosis & Investment Thesis" : "Adım 5: Nihai Hendek Teşhisi & Yatırım Raporu"}
                   </h3>
                   <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                    Michael Mauboussin metodolojisine göre şirketin ekonomik hendek özeti ve risk haritası.
+                    {isEnglish
+                      ? "Economic moat summary and risk assessment according to Michael Mauboussin's methodology."
+                      : "Michael Mauboussin metodolojisine göre şirketin ekonomik hendek özeti ve risk haritası."}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1189,14 +1334,14 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     className="px-3.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
                   >
                     <Copy className="w-3.5 h-3.5" />
-                    {copiedNotification ? "Kopyalandı!" : "Raporu Kopyala"}
+                    {copiedNotification ? (isEnglish ? "Copied!" : "Kopyalandı!") : isEnglish ? "Copy Report" : "Raporu Kopyala"}
                   </button>
                   <button
                     onClick={askAICoachAboutThisCompany}
                     className="px-3.5 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-indigo-700 dark:text-indigo-300 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-indigo-200 dark:border-indigo-800"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
-                    AI Koçuna Değerlendirttir
+                    {isEnglish ? "Review with AI Coach" : "AI Koçuna Değerlendirttir"}
                   </button>
                 </div>
               </div>
@@ -1205,10 +1350,16 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
                   <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    Teşhis Edilen Hendek Genişliği (Moat Width)
+                    {isEnglish ? "Diagnosed Moat Width" : "Teşhis Edilen Hendek Genişliği (Moat Width)"}
                   </div>
                   <div className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mt-1 flex items-center gap-2">
-                    {moatScore.diagnosedMoat}
+                    {isEnglish
+                      ? moatScore.scorePercent >= 75
+                        ? "Wide Moat (Geniş Hendek)"
+                        : moatScore.scorePercent >= 45
+                        ? "Narrow Moat (Dar Hendek)"
+                        : "No Moat (Hendeksiz)"
+                      : moatScore.diagnosedMoat}
                   </div>
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {moatScore.summaryTags.map((tag, idx) => (
@@ -1223,11 +1374,11 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 </div>
 
                 <div className="text-center bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs shrink-0 w-full md:w-auto">
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400">Mauboussin Hendek Skoru</div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">{isEnglish ? "Mauboussin Moat Score" : "Mauboussin Hendek Skoru"}</div>
                   <div className="text-3xl font-mono font-black text-indigo-600 dark:text-indigo-400 mt-0.5">
                     %{moatScore.scorePercent}
                   </div>
-                  <div className="text-[10px] text-slate-400">100 Üzerinden</div>
+                  <div className="text-[10px] text-slate-400">{isEnglish ? "Out of 100" : "100 Üzerinden"}</div>
                 </div>
               </div>
 
@@ -1236,10 +1387,10 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-2">
                   <div className="flex justify-between items-center">
                     <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                      Tahmini Rekabetçi Avantaj Dönemi (CAP)
+                      {isEnglish ? "Estimated Competitive Advantage Period (CAP)" : "Tahmini Rekabetçi Avantaj Dönemi (CAP)"}
                     </label>
                     <span className="text-sm font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                      {currentDossier.sustainability.estimatedCapYears} Yıl
+                      {currentDossier.sustainability.estimatedCapYears} {isEnglish ? "Years" : "Yıl"}
                     </span>
                   </div>
                   <input
@@ -1258,13 +1409,15 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                   />
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                    Şirketin ortalamaya dönmeden (ROIC = WACC olmadan) kârını koruyabileceği tahmini yıl sayısı.
+                    {isEnglish
+                      ? "Estimated number of years the company can sustain economic profits above WACC before fading to mean."
+                      : "Şirketin ortalamaya dönmeden (ROIC = WACC olmadan) kârını koruyabileceği tahmini yıl sayısı."}
                   </p>
                 </div>
 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
                   <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                    Hendeği Tehdit Eden En Büyük Kırılganlık:
+                    {isEnglish ? "Key Moat Threat / Vulnerability:" : "Hendeği Tehdit Eden En Büyük Kırılganlık:"}
                   </label>
                   <input
                     type="text"
@@ -1277,7 +1430,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                         }
                       })
                     }
-                    placeholder="Örn: Regülasyon baskısı, teknolojik ikame, müşteri sadakati kaybı..."
+                    placeholder={isEnglish ? "E.g. Regulatory scrutiny, technological disruption, lost customer loyalty..." : "Örn: Regülasyon baskısı, teknolojik ikame, müşteri sadakati kaybı..."}
                     className="w-full px-3 py-2 text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
                 </div>
@@ -1286,13 +1439,13 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               {/* Final Notes */}
               <div>
                 <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                  Kişisel Analiz Özeti ve Notlarınız:
+                  {isEnglish ? "Personal Investment Thesis & Audit Notes:" : "Kişisel Analiz Özeti ve Notlarınız:"}
                 </label>
                 <textarea
                   rows={3}
                   value={currentDossier.notes}
                   onChange={(e) => handleUpdateCurrentDossier({ notes: e.target.value })}
-                  placeholder="Bu şirket neden hendekli veya hendeksiz? Yatırım tezini özetleyin..."
+                  placeholder={isEnglish ? "Why does this company possess or lack a moat? Summarize your investment thesis..." : "Bu şirket neden hendekli veya hendeksiz? Yatırım tezini özetleyin..."}
                   className="mt-1 w-full p-3 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100"
                 />
               </div>
@@ -1303,11 +1456,13 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   <div className="flex items-center justify-center sm:justify-start gap-2">
                     <ShieldAlert className="w-4 h-4 text-amber-400" />
                     <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
-                      Yatırım Komitesi Savunması (Devil's Advocate)
+                      {isEnglish ? "Investment Committee Defense (Devil's Advocate)" : "Yatırım Komitesi Savunması (Devil's Advocate)"}
                     </span>
                   </div>
                   <p className="text-xs text-slate-300 max-w-lg">
-                    Analizinizi şüpheci Mauboussin yatırım komitesi önünde test edin. Şirketin en zayıf noktalarına karşı tezinizi savunun ve puan alın!
+                    {isEnglish
+                      ? "Stress-test your thesis before the skeptical Mauboussin investment committee. Defend against the company's biggest vulnerabilities!"
+                      : "Analizinizi şüpheci Mauboussin yatırım komitesi önünde test edin. Şirketin en zayıf noktalarına karşı tezinizi savunun ve puan alın!"}
                   </p>
                 </div>
 
@@ -1319,7 +1474,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shrink-0 shadow-sm"
                 >
                   <ShieldAlert className="w-4 h-4" />
-                  <span>Komiteye Sun</span>
+                  <span>{isEnglish ? "Present to Committee" : "Komiteye Sun"}</span>
                 </motion.button>
               </div>
 
@@ -1329,9 +1484,9 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   onClick={() => handleDeleteDossier(currentDossier.id)}
                   className="text-xs font-semibold text-rose-600 hover:text-rose-700 flex items-center gap-1 cursor-pointer"
                 >
-                  <Trash2 className="w-3.5 h-3.5" /> Bu Dosyayı Sil
+                  <Trash2 className="w-3.5 h-3.5" /> {isEnglish ? "Delete This Study" : "Bu Dosyayı Sil"}
                 </button>
-                <span className="text-[11px] text-slate-400">Son Güncelleme: {currentDossier.updatedAt}</span>
+                <span className="text-[11px] text-slate-400">{isEnglish ? `Last Updated: ${currentDossier.updatedAt}` : `Son Güncelleme: ${currentDossier.updatedAt}`}</span>
               </div>
             </motion.div>
           )}
@@ -1344,7 +1499,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-xs space-y-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                Canlı ROIC Röntgeni
+                {isEnglish ? "Live ROIC Diagnosis" : "Canlı ROIC Röntgeni"}
               </span>
               <span
                 className={`px-2.5 py-0.5 rounded-full text-xs font-bold font-mono ${
@@ -1353,13 +1508,13 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                     : "bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800"
                 }`}
               >
-                {finCalc.isCreatingValue ? "DEĞER YARATIYOR" : "DEĞER YIKIYOR"}
+                {finCalc.isCreatingValue ? (isEnglish ? "CREATING VALUE" : "DEĞER YARATIYOR") : isEnglish ? "DESTROYING VALUE" : "DEĞER YIKIYOR"}
               </span>
             </div>
 
             {/* Big ROIC vs WACC Spread */}
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-center space-y-1">
-              <div className="text-xs text-slate-500 dark:text-slate-400">ROIC (Yatırılan Sermaye Getirisi)</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">{isEnglish ? "ROIC (Return on Invested Capital)" : "ROIC (Yatırılan Sermaye Getirisi)"}</div>
               <div
                 className={`text-3xl sm:text-4xl font-mono font-black ${
                   finCalc.roicPercent >= currentDossier.financials.wacc
@@ -1370,7 +1525,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 %{finCalc.roicPercent}
               </div>
               <div className="text-xs text-slate-600 dark:text-slate-300 font-mono">
-                WACC: %{currentDossier.financials.wacc} | Fark (Spread):{" "}
+                WACC: %{currentDossier.financials.wacc} | {isEnglish ? "Spread" : "Fark (Spread)"}:{" "}
                 <strong className={finCalc.spread >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}>
                   {finCalc.spread > 0 ? `+${finCalc.spread}%` : `${finCalc.spread}%`}
                 </strong>
@@ -1380,17 +1535,17 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
             {/* DuPont Breakdown */}
             <div className="space-y-2">
               <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Mauboussin DuPont Ayrıştırması:
+                {isEnglish ? "Mauboussin DuPont Decomposition:" : "Mauboussin DuPont Ayrıştırması:"}
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                 <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">NOPAT Marjı (Kârlılık)</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">{isEnglish ? "NOPAT Margin (Profitability)" : "NOPAT Marjı (Kârlılık)"}</div>
                   <div className="text-base font-bold text-slate-900 dark:text-slate-100 mt-0.5">
                     %{finCalc.nopatMarginPercent}
                   </div>
                 </div>
                 <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">Sermaye Devir Hızı (Verimlilik)</div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">{isEnglish ? "Capital Turnover (Efficiency)" : "Sermaye Devir Hızı (Verimlilik)"}</div>
                   <div className="text-base font-bold text-slate-900 dark:text-slate-100 mt-0.5">
                     {finCalc.capitalTurnover}x
                   </div>
@@ -1404,17 +1559,17 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
             {/* Financial Intermediate Details */}
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs font-mono">
               <div className="flex justify-between text-slate-600 dark:text-slate-300">
-                <span>NOPAT (Net Faaliyet Kârı):</span>
-                <span className="font-bold text-slate-900 dark:text-slate-100">{finCalc.nopat} Milyon</span>
+                <span>{isEnglish ? "NOPAT (Net Operating Profit):" : "NOPAT (Net Faaliyet Kârı):"}</span>
+                <span className="font-bold text-slate-900 dark:text-slate-100">{finCalc.nopat} {isEnglish ? "Million" : "Milyon"}</span>
               </div>
               <div className="flex justify-between text-slate-600 dark:text-slate-300">
-                <span>Yatırılan Sermaye (IC):</span>
-                <span className="font-bold text-slate-900 dark:text-slate-100">{finCalc.investedCapital} Milyon</span>
+                <span>{isEnglish ? "Invested Capital (IC):" : "Yatırılan Sermaye (IC):"}</span>
+                <span className="font-bold text-slate-900 dark:text-slate-100">{finCalc.investedCapital} {isEnglish ? "Million" : "Milyon"}</span>
               </div>
               <div className="flex justify-between text-slate-600 dark:text-slate-300">
-                <span>Yıllık Ekonomik Kâr:</span>
+                <span>{isEnglish ? "Annual Economic Profit:" : "Yıllık Ekonomik Kâr:"}</span>
                 <span className={`font-bold ${finCalc.economicProfit >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
-                  {finCalc.economicProfit >= 0 ? `+${finCalc.economicProfit}` : finCalc.economicProfit} Milyon
+                  {finCalc.economicProfit >= 0 ? `+${finCalc.economicProfit}` : finCalc.economicProfit} {isEnglish ? "Million" : "Milyon"}
                 </span>
               </div>
             </div>
@@ -1424,10 +1579,12 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
           <div className="p-5 rounded-3xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/50 space-y-3">
             <div className="flex items-center gap-2 text-xs font-bold text-indigo-900 dark:text-indigo-200">
               <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
-              Piyasa Analisti İpucu (Mauboussin İlkesi)
+              {isEnglish ? "Market Analyst Insight (Mauboussin Principle)" : "Piyasa Analisti İpucu (Mauboussin İlkesi)"}
             </div>
             <p className="text-xs text-indigo-900/80 dark:text-indigo-300/90 leading-relaxed">
-              Bir şirketin gelir büyümesi tek başına anlamsızdır. Eğer şirket %10 ROIC ile büyüyor ve sermaye maliyeti (WACC) %15 ise, <strong>her büyüdüğü gün hissedar değerini yok eder!</strong> Gerçek servet sadece ROIC &gt; WACC farkından doğar.
+              {isEnglish
+                ? "Revenue growth alone is meaningless. If a company grows with a 10% ROIC while its cost of capital (WACC) is 15%, every dollar of growth destroys shareholder value! Real wealth is created only when ROIC > WACC."
+                : "Bir şirketin gelir büyümesi tek başına anlamsızdır. Eğer şirket %10 ROIC ile büyüyor ve sermaye maliyeti (WACC) %15 ise, her büyüdüğü gün hissedar değerini yok eder! Gerçek servet sadece ROIC > WACC farkından doğar."}
             </p>
           </div>
         </div>
@@ -1444,10 +1601,12 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
               <div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                   <BookOpen className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                  Bilanço Röntgeni: Hangi Sayıyı Nereden Alacaksınız?
+                  {isEnglish ? "Balance Sheet X-Ray: Where to Extract Each Metric?" : "Bilanço Röntgeni: Hangi Sayıyı Nereden Alacaksınız?"}
                 </h3>
                 <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                  KAP (Borsa İstanbul) ve SEC 10-K (ABD Borsaları) finansal tablolarını Mauboussin metotlarıyla okuma rehberi.
+                  {isEnglish
+                    ? "Field guide for extracting figures from SEC 10-K (US Stocks) and KAP (Borsa Istanbul) with Mauboussin frameworks."
+                    : "KAP (Borsa İstanbul) ve SEC 10-K (ABD Borsaları) finansal tablolarını Mauboussin metotlarıyla okuma rehberi."}
                 </p>
               </div>
               <button
@@ -1459,7 +1618,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
             </div>
 
             <div className="space-y-4">
-              {BALANCE_SHEET_GUIDE.map((guide) => (
+              {balanceSheetGuideList.map((guide) => (
                 <div
                   key={guide.id}
                   className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 space-y-2 text-xs"
@@ -1483,10 +1642,10 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                   </div>
 
                   <div className="pt-1 text-slate-700 dark:text-slate-300">
-                    <strong>Ne Anlama Gelir?</strong> {guide.practicalMeaning}
+                    <strong>{isEnglish ? "Practical Meaning:" : "Ne Anlama Gelir?"}</strong> {guide.practicalMeaning}
                   </div>
                   <div className="text-[11px] text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 p-2 rounded-lg border border-amber-200 dark:border-amber-900/50">
-                    💡 <strong>Tuzak Uyarısı:</strong> {guide.warningTip}
+                    💡 <strong>{isEnglish ? "Common Trap Warning:" : "Tuzak Uyarısı:"}</strong> {guide.warningTip}
                   </div>
                 </div>
               ))}
@@ -1497,7 +1656,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
                 onClick={() => setIsGuideModalOpen(false)}
                 className="px-5 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs cursor-pointer hover:bg-indigo-700 transition-colors"
               >
-                Anladım, Analize Dön
+                {isEnglish ? "Got It, Return to Audit" : "Anladım, Analize Dön"}
               </button>
             </div>
           </div>
@@ -1509,7 +1668,7 @@ Bana bu şirketin hendek sürdürülebilirliğini (CAP) test etmek için sormam 
         isOpen={isCommitteeModalOpen}
         onClose={() => setIsCommitteeModalOpen(false)}
         dossier={currentDossier}
-        onAskAICoach={onOpenAICoachWithPrompt}
+        onAskAICoach={onOpenAICoachWithPromptProxy}
       />
     </div>
   );

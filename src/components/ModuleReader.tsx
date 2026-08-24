@@ -459,29 +459,29 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
                 </div>
 
                 {/* Main Equation Box */}
-                <div className="p-4 sm:p-5 bg-gradient-to-b from-slate-900 to-slate-950 space-y-4">
-                  <div className="p-3.5 sm:p-4 rounded-xl bg-slate-950 border border-slate-800/80 font-mono text-xs sm:text-sm text-amber-300 tracking-wide leading-relaxed shadow-inner overflow-x-auto">
+                <div className="p-4 sm:p-5 bg-slate-900 dark:bg-slate-950 space-y-4">
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm text-amber-300 tracking-wide leading-relaxed shadow-inner overflow-x-auto">
                     <pre className="font-mono font-bold whitespace-pre-wrap">{section.formulaBox.equation}</pre>
                   </div>
 
                   {/* Variables Breakdown Pills */}
                   {section.formulaBox.variables && section.formulaBox.variables.length > 0 && (
                     <div className="space-y-1.5">
-                      <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                      <div className="text-[11px] font-bold text-slate-300 dark:text-slate-400 uppercase tracking-wider">
                         {isEnglish ? "Variables & Parameters" : "Değişkenler & Parametre Açıklamaları"}
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {section.formulaBox.variables.map((v, vIdx) => (
                           <div
                             key={vIdx}
-                            className="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700/50 flex items-start gap-2.5 text-xs"
+                            className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-start gap-2.5 text-xs"
                           >
                             <span className="px-2 py-0.5 rounded-md bg-indigo-950 text-indigo-300 font-mono font-black border border-indigo-800/60 shrink-0">
                               {v.symbol}
                             </span>
                             <div className="min-w-0">
-                              <div className="font-bold text-slate-200">{v.label}</div>
-                              {v.desc && <div className="text-[11px] text-slate-400 leading-tight mt-0.5">{v.desc}</div>}
+                              <div className="font-bold text-slate-100">{v.label}</div>
+                              {v.desc && <div className="text-[11px] text-slate-300 dark:text-slate-400 leading-tight mt-0.5">{v.desc}</div>}
                             </div>
                           </div>
                         ))}
@@ -491,7 +491,7 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
                   {/* Example Calculation */}
                   {section.formulaBox.exampleCalculation && (
-                    <div className="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-800/50 space-y-1.5">
+                    <div className="p-3.5 rounded-xl bg-indigo-950/60 border border-indigo-800/60 space-y-1.5">
                       <div className="flex items-center gap-1.5 text-[11px] font-bold text-indigo-300 uppercase tracking-wider">
                         <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                         <span>{isEnglish ? "Numerical Proof & Example" : "Sayısal Örnek Sağlaması"}</span>

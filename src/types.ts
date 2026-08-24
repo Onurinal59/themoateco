@@ -184,3 +184,14 @@ export interface CompanyAuditDossier {
   tags?: string[];
 }
 
+export interface StepMethodologyGuide {
+  step: number;
+  title: string;
+  mauboussinQuote: string;
+  coreConcepts: string[];
+  keyQuestions: string[];
+  commonPitfalls: string[];
+  practicalExercise: string;
+}
+
+

@@ -52,8 +52,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
   onResetToPresets,
   onOpenAuditStudio,
 }) => {
-  const { language } = useLanguage();
-  const isEnglish = language === "en";
+  const { language, isEnglish, t } = useLanguage();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<"all" | "custom" | "presets" | "template" | "wide" | "valueCreating">("all");
@@ -78,18 +77,18 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
     }
     onSelectDossier(MAUBOUSSIN_GUIDED_TEMPLATE.id, 1);
     onOpenAuditStudio();
-    showToast("Mauboussin 'Measuring the Moat' rehberli vaka taslağı açıldı.");
+    showToast(isEnglish ? "Mauboussin 'Measuring the Moat' template opened." : "Mauboussin 'Measuring the Moat' rehberli vaka taslağı açıldı.");
   };
 
   const handleStartCustomFromTemplate = () => {
     onDuplicateDossier({
       ...MAUBOUSSIN_GUIDED_TEMPLATE,
-      companyName: "Yeni Şirket Analizim (Mauboussin Şablonu)",
-      ticker: "YENI-ANALIZ",
+      companyName: isEnglish ? "My New Audit (Mauboussin Template)" : "Yeni Şirket Analizim (Mauboussin Şablonu)",
+      ticker: "NEW-AUDIT",
       isCustom: true
     });
     onOpenAuditStudio();
-    showToast("Mauboussin taslağı üzerinden yeni özel çalışma başlatıldı.");
+    showToast(isEnglish ? "New custom audit initialized from template." : "Mauboussin taslağı üzerinden yeni özel çalışma başlatıldı.");
   };
 
   // Calculate high-level portfolio statistics
@@ -104,7 +103,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
       fin,
       moat,
       isValueCreating: fin.isCreatingValue,
-      isWideMoat: moat.scorePercent >= 75 || d.sustainability.moatWidth.includes("Geniş"),
+      isWideMoat: moat.scorePercent >= 75 || d.sustainability.moatWidth.toLowerCase().includes("geniş") || d.sustainability.moatWidth.toLowerCase().includes("wide"),
     };
   });
 
@@ -122,7 +121,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
 
     if (filterType === "custom") return dossier.isCustom === true;
     if (filterType === "presets") return !dossier.isCustom && dossier.id !== MAUBOUSSIN_GUIDED_TEMPLATE.id;
-    if (filterType === "template") return dossier.id === MAUBOUSSIN_GUIDED_TEMPLATE.id || dossier.tags?.includes("Rehber Taslak");
+    if (filterType === "template") return dossier.id === MAUBOUSSIN_GUIDED_TEMPLATE.id || dossier.tags?.some(tag => tag.includes("Taslak") || tag.includes("Template"));
     if (filterType === "wide") return isWideMoat;
     if (filterType === "valueCreating") return isValueCreating;
     return true;
@@ -140,7 +139,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
       return b.moat.scorePercent - a.moat.scorePercent;
     }
     if (sortBy === "name") {
-      return a.dossier.companyName.localeCompare(b.dossier.companyName, "tr");
+      return a.dossier.companyName.localeCompare(b.dossier.companyName, isEnglish ? "en" : "tr");
     }
     return 0;
   });
@@ -155,7 +154,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
     link.download = `${dossier.ticker.replace(/[^a-zA-Z0-9]/g, "_")}_moat_analysis.json`;
     link.click();
     URL.revokeObjectURL(url);
-    showToast(`"${dossier.companyName}" JSON formatında indirildi.`);
+    showToast(isEnglish ? `"${dossier.companyName}" exported as JSON.` : `"${dossier.companyName}" JSON formatında indirildi.`);
   };
 
   // Export all studies
@@ -165,10 +164,10 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `tum_hendek_calismalarim_${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `all_moat_studies_${new Date().toISOString().split("T")[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
-    showToast(`Tüm ${dossiers.length} çalışma yedek dosyası olarak indirildi.`);
+    showToast(isEnglish ? `All ${dossiers.length} studies backed up to JSON.` : `Tüm ${dossiers.length} çalışma yedek dosyası olarak indirildi.`);
   };
 
   // Handle JSON file upload
@@ -184,17 +183,17 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
         if (Array.isArray(parsed)) {
           // Multiple dossiers
           onImportDossiers(parsed);
-          showToast(`${parsed.length} adet analiz başarıyla içe aktarıldı!`);
+          showToast(isEnglish ? `${parsed.length} studies imported successfully!` : `${parsed.length} adet analiz başarıyla içe aktarıldı!`);
         } else if (parsed && parsed.companyName && parsed.financials) {
           // Single dossier
           onImportDossiers([parsed]);
-          showToast(`"${parsed.companyName}" analizi içe aktarıldı!`);
+          showToast(isEnglish ? `"${parsed.companyName}" study imported!` : `"${parsed.companyName}" analizi içe aktarıldı!`);
         } else {
-          alert("Geçersiz dosya formatı. Lütfen geçerli bir Hendek Analizi JSON dosyası seçin.");
+          alert(isEnglish ? "Invalid format. Please select a valid Moat Analysis JSON file." : "Geçersiz dosya formatı. Lütfen geçerli bir Hendek Analizi JSON dosyası seçin.");
         }
       } catch (err) {
         console.error("Import error:", err);
-        alert("Dosya okunurken bir hata oluştu. Lütfen JSON formatını kontrol edin.");
+        alert(isEnglish ? "Error reading file. Please check JSON syntax." : "Dosya okunurken bir hata oluştu. Lütfen JSON formatını kontrol edin.");
       }
     };
 
@@ -224,23 +223,23 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
       />
 
       {/* Top Banner with Stats */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xs">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xs transition-colors">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50 flex items-center gap-1.5">
-                <FolderKanban className="w-3.5 h-3.5" /> Çalışmalarım & Portföyüm
+                <FolderKanban className="w-3.5 h-3.5" /> {t("workspaces.badge", "Çalışmalarım & Portföyüm")}
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/50 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                Tarayıcıda Güvende (LocalStorage)
+                {t("workspaces.localStorageSafe", "Tarayıcıda Güvende (LocalStorage)")}
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-              Kayıtlı Şirket Hendek Analizlerim
+              {t("workspaces.title", "Kayıtlı Şirket Hendek Analizlerim")}
             </h1>
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
-              Borsa İstanbul ve dünya piyasalarında incelediğiniz tüm hisselerin bilanço röntgenlerini, WTP/WTS hendek motorlarını ve notlarını burada saklayın; <strong>kaldığınız adımdan anında devam edin!</strong>
+              {t("workspaces.subtitle", "Borsa İstanbul ve dünya piyasalarında incelediğiniz tüm hisselerin bilanço röntgenlerini, WTP/WTS hendek motorlarını ve notlarını burada saklayın; kaldığınız adımdan anında devam edin!")}
             </p>
           </div>
 
@@ -248,19 +247,19 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
             <button
               onClick={() => fileInputRef.current?.click()}
               className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
-              title="Daha önce indirdiğiniz bir JSON analiz yedeğini yükleyin"
+              title={isEnglish ? "Import a previously exported JSON backup" : "Daha önce indirdiğiniz bir JSON analiz yedeğini yükleyin"}
             >
               <Upload className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              Yedekten Yükle (.json)
+              {t("workspaces.uploadBackup", "Yedekten Yükle (.json)")}
             </button>
 
             <button
               onClick={handleExportAll}
               className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
-              title="Tüm kayıtlı analizleri tek dosya olarak bilgisayarınıza indirin"
+              title={isEnglish ? "Download all saved studies as a JSON file" : "Tüm kayıtlı analizleri tek dosya olarak bilgisayarınıza indirin"}
             >
               <Download className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              Tümünü Yedekle
+              {t("workspaces.backupAll", "Tümünü Yedekle")}
             </button>
 
             <button
@@ -268,7 +267,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
               className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              Yeni Şirket Analizi Başlat
+              {t("workspaces.startNew", "Yeni Şirket Analizi Başlat")}
             </button>
           </div>
         </div>
@@ -277,31 +276,31 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
           <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-800">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-              <FolderKanban className="w-4 h-4 text-indigo-500" /> Toplam Dosya
+              <FolderKanban className="w-4 h-4 text-indigo-500" /> {t("workspaces.totalFiles", "Toplam Dosya")}
             </span>
             <div className="mt-1 flex items-baseline gap-2">
               <span className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">
                 {totalCount}
               </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400">şirket</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{t("workspaces.companies", "şirket")}</span>
             </div>
           </div>
 
           <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-800">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-amber-500" /> Kendi Çalışmalarım
+              <Sparkles className="w-4 h-4 text-amber-500" /> {t("workspaces.myStudies", "Kendi Çalışmalarım")}
             </span>
             <div className="mt-1 flex items-baseline gap-2">
               <span className="text-2xl font-extrabold text-amber-600 dark:text-amber-400">
                 {customCount}
               </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400">özgün analiz</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{t("workspaces.customAnalyses", "özgün analiz")}</span>
             </div>
           </div>
 
           <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-800">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-emerald-500" /> Pozitif Değer Yaratan
+              <TrendingUp className="w-4 h-4 text-emerald-500" /> {t("workspaces.positiveValue", "Pozitif Değer Yaratan")}
             </span>
             <div className="mt-1 flex items-baseline gap-2">
               <span className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
@@ -313,53 +312,53 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
 
           <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-800">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-              <Shield className="w-4 h-4 text-indigo-500" /> Geniş Hendekli
+              <Shield className="w-4 h-4 text-indigo-500" /> {t("workspaces.wideMoatCount", "Geniş Hendekli")}
             </span>
             <div className="mt-1 flex items-baseline gap-2">
               <span className="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">
                 {wideMoatCount}
               </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400">yüksek korumalı</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">{t("workspaces.highProtected", "yüksek korumalı")}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* FEATURED: Mauboussin 'Measuring the Moat' Practice Blueprint Hero Card */}
-      <div className="bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-md border border-indigo-500/30 relative overflow-hidden">
+      {/* FEATURED: Mauboussin 'Measuring the Moat' Practice Blueprint Hero Card - PERFECT LIGHT & DARK THEME */}
+      <div className="bg-gradient-to-br from-indigo-50/90 via-purple-50/40 to-indigo-100/60 dark:from-indigo-950 dark:via-slate-900 dark:to-indigo-950 text-slate-900 dark:text-white rounded-3xl p-6 sm:p-8 shadow-xs border border-indigo-200/80 dark:border-indigo-500/30 relative overflow-hidden transition-colors">
         <div className="absolute right-0 top-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-200 border border-indigo-400/30 flex items-center gap-1.5">
-                <Award className="w-3.5 h-3.5 text-amber-400" /> Michael J. Mauboussin Metodolojisi
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-indigo-100 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-200 border border-indigo-200 dark:border-indigo-400/30 flex items-center gap-1.5">
+                <Award className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" /> {t("workspaces.masterBannerBadge", "Michael J. Mauboussin Metodolojisi")}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
-                Rehberli Örnek Vaka Taslağı
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-400/30">
+                {t("workspaces.masterTemplateBadge", "Rehberli Örnek Vaka Taslağı")}
               </span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
-              "Measuring the Moat" Ustalık Taslağı ile Gerçek Vaka Analizi Yapın
+            <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              {t("workspaces.masterBannerTitle", "\"Measuring the Moat\" Ustalık Taslağı ile Gerçek Vaka Analizi Yapın")}
             </h2>
-            <p className="text-xs sm:text-sm text-indigo-100/80 leading-relaxed">
-              Costco & BİM perakende modelleri üzerinden <strong>ROIC & DuPont ayrıştırması</strong>, <strong>negatif işletme sermayesi</strong>, <strong>WTP/WTS değer çubuğu</strong> ve <strong>20 yıllık CAP ömrü</strong> analizini adım adım inceleyin; ister şablonu inceleyin, ister anında kendi şirketiniz için kopyalayın!
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-indigo-100/80 leading-relaxed">
+              {t("workspaces.masterBannerDesc", "Costco & BİM perakende modelleri üzerinden ROIC & DuPont ayrıştırması, negatif işletme sermayesi, WTP/WTS değer çubuğu ve 20 yıllık CAP ömrü analizini adım adım inceleyin; ister şablonu inceleyin, ister anında kendi şirketiniz için kopyalayın!")}
             </p>
           </div>
 
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0 w-full sm:w-auto">
             <button
               onClick={handleOpenMasterTemplate}
-              className="flex-1 sm:flex-none px-5 py-3 rounded-2xl bg-indigo-500 hover:bg-indigo-400 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+              className="flex-1 sm:flex-none px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
             >
               <Play className="w-4 h-4 fill-current" />
-              Rehberli Şablonu Aç
+              {t("workspaces.openGuidedTemplate", "Rehberli Şablonu Aç")}
             </button>
             <button
               onClick={handleStartCustomFromTemplate}
-              className="flex-1 sm:flex-none px-5 py-3 rounded-2xl bg-slate-800/80 hover:bg-slate-700 text-slate-100 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-700 transition-all cursor-pointer"
+              className="flex-1 sm:flex-none px-5 py-3 rounded-2xl bg-white dark:bg-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 shadow-2xs transition-all cursor-pointer"
             >
-              <Copy className="w-4 h-4 text-indigo-400" />
-              Bu Şablondan Yeni Başlat
+              <Copy className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              {t("workspaces.startFromTemplate", "Bu Şablondan Yeni Başlat")}
             </button>
           </div>
         </div>
@@ -374,7 +373,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Şirket adı, hisse kodu veya sektör ara..."
+            placeholder={t("workspaces.searchPlaceholder", "Şirket adı, hisse kodu veya sektör ara...")}
             className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
           />
           {searchQuery && (
@@ -382,7 +381,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
               onClick={() => setSearchQuery("")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
             >
-              Temizle
+              {t("workspaces.clear", "Temizle")}
             </button>
           )}
         </div>
@@ -390,19 +389,19 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
         {/* Filter Pills */}
         <div className="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
           {[
-            { id: "all", label: `Tümü (${totalCount})` },
-            { id: "template", label: "📘 Rehber Taslak" },
-            { id: "custom", label: `Özgün Çalışmalarım (${customCount})` },
-            { id: "presets", label: "Hazır Vakalar" },
-            { id: "wide", label: `Geniş Hendek (${wideMoatCount})` },
-            { id: "valueCreating", label: `Değer Yaratan (${valueCreatingCount})` },
+            { id: "all", label: `${t("workspaces.filterAll", "Tümü")} (${totalCount})` },
+            { id: "template", label: `📘 ${t("workspaces.filterTemplate", "Rehber Taslak")}` },
+            { id: "custom", label: `${t("workspaces.filterCustom", "Özgün Çalışmalarım")} (${customCount})` },
+            { id: "presets", label: t("workspaces.filterPresets", "Hazır Vakalar") },
+            { id: "wide", label: `${t("workspaces.filterWide", "Geniş Hendek")} (${wideMoatCount})` },
+            { id: "valueCreating", label: `${t("workspaces.filterValueCreating", "Değer Yaratan")} (${valueCreatingCount})` },
           ].map((flt) => (
             <button
               key={flt.id}
               onClick={() => setFilterType(flt.id as any)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 filterType === flt.id
-                  ? "bg-indigo-600 text-white shadow-xs"
+                  ? "bg-indigo-600 text-white shadow-xs font-bold"
                   : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
               }`}
             >
@@ -413,16 +412,16 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
 
         {/* Sort selector */}
         <div className="flex items-center gap-2 self-end md:self-auto shrink-0">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Sırala:</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400">{t("workspaces.sortBy", "Sırala:")}</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
             className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 cursor-pointer"
           >
-            <option value="updated">Son Düzenlenen</option>
-            <option value="roic">En Yüksek ROIC (%)</option>
-            <option value="moatScore">En Yüksek Hendek Skoru</option>
-            <option value="name">Şirket Adı (A-Z)</option>
+            <option value="updated">{t("workspaces.sortUpdated", "Son Düzenlenen")}</option>
+            <option value="roic">{t("workspaces.sortRoic", "En Yüksek ROIC (%)")}</option>
+            <option value="moatScore">{t("workspaces.sortMoatScore", "En Yüksek Hendek Skoru")}</option>
+            <option value="name">{t("workspaces.sortName", "Şirket Adı (A-Z)")}</option>
           </select>
         </div>
       </div>
@@ -434,10 +433,10 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
             <Search className="w-8 h-8" />
           </div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-            Aramanızla Eşleşen Çalışma Bulunamadı
+            {t("workspaces.noResultsTitle", "Aramanızla Eşleşen Çalışma Bulunamadı")}
           </h3>
           <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
-            Filtreleri sıfırlayabilir veya hemen yeni bir şirket analizi başlatabilirsiniz.
+            {t("workspaces.noResultsDesc", "Filtreleri sıfırlayabilir veya hemen yeni bir şirket analizi başlatabilirsiniz.")}
           </p>
           <div className="flex items-center justify-center gap-3 pt-2">
             <button
@@ -447,13 +446,13 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
               }}
               className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer"
             >
-              Filtreleri Temizle
+              {t("workspaces.clearFilters", "Filtreleri Temizle")}
             </button>
             <button
               onClick={onCreateNew}
               className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 cursor-pointer"
             >
-              Yeni Şirket Ekle
+              {t("workspaces.addNew", "Yeni Şirket Ekle")}
             </button>
           </div>
         </div>
@@ -462,13 +461,21 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
           {sortedList.map(({ dossier, fin, moat, isValueCreating, isWideMoat }) => {
             const isCurrentlyActive = dossier.id === activeDossierId;
             const currentStepNumber = dossier.lastStep || 1;
-            const stepTitles: Record<number, string> = {
+            const stepTitlesTR: Record<number, string> = {
               1: "Adım 1: Finansal Röntgen (ROIC)",
               2: "Adım 2: Sektör & Kâr Havuzu",
               3: "Adım 3: Değer Çubuğu & Hendek",
               4: "Adım 4: Oyun Teorisi & Sermaye",
               5: "Adım 5: Sonuç & Teşhis Raporu"
             };
+            const stepTitlesEN: Record<number, string> = {
+              1: "Step 1: Financial X-Ray (ROIC)",
+              2: "Step 2: Industry & Profit Pool",
+              3: "Step 3: Value Stick & Moat",
+              4: "Step 4: Game Theory & Capital",
+              5: "Step 5: Synthesis & Verdict"
+            };
+            const stepTitles = isEnglish ? stepTitlesEN : stepTitlesTR;
 
             return (
               <div
@@ -489,11 +496,11 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                         </span>
                         {dossier.isCustom ? (
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 flex items-center gap-1">
-                            <Sparkles className="w-2.5 h-2.5" /> Özgün Analiz
+                            <Sparkles className="w-2.5 h-2.5" /> {t("workspaces.customAnalysisBadge", "Özgün Analiz")}
                           </span>
                         ) : (
                           <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                            Vaka Örneği
+                            {t("workspaces.caseStudy", "Vaka Örneği")}
                           </span>
                         )}
                       </div>
@@ -516,7 +523,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                           ? "bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300"
                           : "bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300"
                       }`}>
-                        {moat.diagnosedMoat.split(" ")[0]} Hendek
+                        {isEnglish ? (isWideMoat ? "Wide Moat" : moat.scorePercent >= 50 ? "Narrow Moat" : "No Moat") : `${moat.diagnosedMoat.split(" ")[0]} Hendek`}
                       </span>
                     </div>
                   </div>
@@ -536,7 +543,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                       </span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Yayılım</span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 block">{t("workspaces.spread", "Yayılım")}</span>
                       <span className={`text-xs font-bold ${
                         isValueCreating ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
                       }`}>
@@ -548,7 +555,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                   {/* Key Moat Drivers Tag Cloud */}
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                      <span className="font-semibold">Hendek Motorları:</span>
+                      <span className="font-semibold">{t("workspaces.moatDrivers", "Hendek Motorları:")}</span>
                       <span className="text-indigo-600 dark:text-indigo-400 capitalize">
                         {dossier.competitiveAdvantage.primaryType.replace("_", " ")}
                       </span>
@@ -574,7 +581,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                   <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3 text-indigo-500" />
-                      Kaldığın Adım:
+                      {t("workspaces.currentStep", "Kaldığın Adım:")}
                     </span>
                     <span className="font-semibold text-slate-700 dark:text-slate-300">
                       {stepTitles[currentStepNumber] || `Adım ${currentStepNumber}`}
@@ -589,10 +596,10 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                     <button
                       onClick={() => {
                         onDuplicateDossier(dossier);
-                        showToast(`"${dossier.companyName}" çalışmasının kopyası oluşturuldu.`);
+                        showToast(isEnglish ? `Duplicate of "${dossier.companyName}" created.` : `"${dossier.companyName}" çalışmasının kopyası oluşturuldu.`);
                       }}
                       className="p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                      title="Bu çalışmanın kopyasını oluştur (Şablon olarak kullan)"
+                      title={isEnglish ? "Duplicate this audit as a template" : "Bu çalışmanın kopyasını oluştur (Şablon olarak kullan)"}
                     >
                       <Copy className="w-4 h-4" />
                     </button>
@@ -601,7 +608,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                     <button
                       onClick={() => handleExportSingle(dossier)}
                       className="p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                      title="JSON Olarak Dışa Aktar"
+                      title={isEnglish ? "Export as JSON" : "JSON Olarak Dışa Aktar"}
                     >
                       <Download className="w-4 h-4" />
                     </button>
@@ -612,7 +619,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                         if (deleteConfirmId === dossier.id) {
                           onDeleteDossier(dossier.id);
                           setDeleteConfirmId(null);
-                          showToast(`"${dossier.companyName}" silindi.`);
+                          showToast(isEnglish ? `"${dossier.companyName}" deleted.` : `"${dossier.companyName}" silindi.`);
                         } else {
                           setDeleteConfirmId(dossier.id);
                           setTimeout(() => setDeleteConfirmId(null), 4000);
@@ -623,7 +630,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                           ? "bg-rose-500 text-white animate-pulse"
                           : "text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40"
                       }`}
-                      title={deleteConfirmId === dossier.id ? "Silmek için tekrar tıkla" : "Çalışmayı Sil"}
+                      title={deleteConfirmId === dossier.id ? (isEnglish ? "Click again to confirm delete" : "Silmek için tekrar tıkla") : (isEnglish ? "Delete Study" : "Çalışmayı Sil")}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -638,7 +645,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                     className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer"
                   >
                     <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Kaldığın Yerden Devam Et</span>
+                    <span>{t("workspaces.resumeButton", "Kaldığın Yerden Devam Et")}</span>
                   </button>
                 </div>
               </div>
@@ -652,20 +659,22 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
         <div className="flex items-center gap-2">
           <AlertCircle className="w-4 h-4 text-indigo-500 shrink-0" />
           <span>
-            Verileriniz tamamen tarayıcınızın yerel hafızasında saklanır. İsterseniz orijinal örnekleri geri yükleyebilirsiniz.
+            {isEnglish
+              ? "All your research is stored securely in your browser's local storage. You can restore default preset benchmarks at any time."
+              : "Verileriniz tamamen tarayıcınızın yerel hafızasında saklanır. İsterseniz orijinal örnekleri geri yükleyebilirsiniz."}
           </span>
         </div>
         <button
           onClick={() => {
-            if (confirm("Varsayılan örnek vaka analizlerini (BİM, Apple, THY, Nvidia) sıfırlamak istiyor musunuz? Özel yaptığınız analizler korunacaktır.")) {
+            if (confirm(isEnglish ? "Reset default case studies (BIM, Apple, THY, Nvidia)? Your custom studies will remain intact." : "Varsayılan örnek vaka analizlerini (BİM, Apple, THY, Nvidia) sıfırlamak istiyor musunuz? Özel yaptığınız analizler korunacaktır.")) {
               onResetToPresets();
-              showToast("Hazır vaka analizleri yenilendi.");
+              showToast(isEnglish ? "Preset cases refreshed." : "Hazır vaka analizleri yenilendi.");
             }
           }}
           className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline flex items-center gap-1 cursor-pointer whitespace-nowrap"
         >
           <RefreshCw className="w-3.5 h-3.5" />
-          Örnek Vakaları Sıfırla
+          {t("workspaces.resetPresets", "Örnek Vakaları Sıfırla")}
         </button>
       </div>
     </div>

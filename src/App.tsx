@@ -18,6 +18,7 @@ import { INITIAL_PRESET_DOSSIERS } from "./data/companyAuditData";
 import { GlossaryModal } from "./components/GlossaryModal";
 import { AICoachDrawer } from "./components/AICoachDrawer";
 import { OnboardingGuideModal } from "./components/OnboardingGuideModal";
+import { FloatingGuideWidget } from "./components/FloatingGuideWidget";
 import { FormulaDeepDiveModal } from "./components/FormulaDeepDiveModal";
 import { FormulaWorkshopView } from "./components/FormulaWorkshopView";
 import { Footer } from "./components/Footer";
@@ -37,15 +38,8 @@ export default function App() {
     return checkAndUpdateStreak(loaded);
   });
 
-  // Guide / Onboarding modal state (auto-open for first-time visitors)
-  const [isGuideOpen, setIsGuideOpen] = useState<boolean>(() => {
-    try {
-      const seen = localStorage.getItem("moat_guide_seen");
-      return !seen;
-    } catch {
-      return false;
-    }
-  });
+  // Guide / Onboarding modal state (Default false: user can trigger via floating character widget or nav)
+  const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
 
   // Formula Deep Dive Modal Global State
   const [isFormulaModalOpen, setIsFormulaModalOpen] = useState<boolean>(false);
@@ -286,6 +280,12 @@ export default function App() {
           setIsAICoachOpen(true);
         }}
         onOpenGuide={() => setIsGuideOpen(true)}
+      />
+
+      {/* Floating Bottom-Left Guided Learning Character Widget */}
+      <FloatingGuideWidget
+        onOpenGuide={() => setIsGuideOpen(true)}
+        isAllCompleted={userState.completedModules.length >= currentModules.length}
       />
 
       {/* Floating Socratic AI Coach Drawer */}
