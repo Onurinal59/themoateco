@@ -23,36 +23,44 @@ import {
 
 export interface DetectiveFinancialItem {
   id: string;
-  name: string;
+  nameTr: string;
+  nameEn: string;
   category: "income_statement" | "balance_sheet_asset" | "balance_sheet_liability" | "footnote_item";
   reportedValue: number;
   economicValueAdjusted: number;
   hasFootnote: boolean;
   footnoteNumber?: number;
-  footnoteTitle?: string;
-  footnoteText?: string;
-  auditAdjustmentNote: string;
+  footnoteTitleTr?: string;
+  footnoteTitleEn?: string;
+  footnoteTextTr?: string;
+  footnoteTextEn?: string;
+  auditAdjustmentNoteTr: string;
+  auditAdjustmentNoteEn: string;
   adjustmentType: "nopat_addback" | "invested_capital_add" | "invested_capital_subtract" | "wacc_weight_shift" | "none";
-  adjustmentImpactExplanation: string;
+  adjustmentImpactExplanationTr: string;
+  adjustmentImpactExplanationEn: string;
 }
 
 export interface DetectiveCase {
   id: string;
   companyName: string;
   ticker: string;
-  industry: string;
-  scenarioDescription: string;
-  currency: string;
+  industryTr: string;
+  industryEn: string;
+  scenarioDescriptionTr: string;
+  scenarioDescriptionEn: string;
+  currencyTr: string;
+  currencyEn: string;
   reportedTaxRate: number;
   
   // Reported raw numbers
   reportedRevenue: number;
-  reportedOperatingCost: number; // excluding special
+  reportedOperatingCost: number;
   reportedEbit: number;
   reportedTotalAssets: number;
   reportedCashAndEquivalents: number;
-  reportedNonOperatingCash: number; // Atıl nakit
-  reportedCurrentLiabilities: number; // Non-interest bearing (Ticari borçlar vb.)
+  reportedNonOperatingCash: number;
+  reportedCurrentLiabilities: number;
   reportedInterestBearingDebt: number;
   reportedShareholdersEquity: number;
   
@@ -65,103 +73,135 @@ export interface DetectiveCase {
 
   // Student guidance questions
   discoveryQuestions: {
-    question: string;
+    questionTr: string;
+    questionEn: string;
     targetItemId: string;
-    hint: string;
-    whyItMatters: string;
+    hintTr: string;
+    hintEn: string;
+    whyItMattersTr: string;
+    whyItMattersEn: string;
   }[];
 
   // Pedagogical Summary
-  takeaway: string;
+  takeawayTr: string;
+  takeawayEn: string;
 }
 
 export const DETECTIVE_CASES: DetectiveCase[] = [
   {
     id: "tech-cloud-rnd",
-    companyName: "Nexus Cloud & AI Systems A.Ş.",
+    companyName: "Nexus Cloud & AI Systems Inc.",
     ticker: "NXAI",
-    industry: "Yazılım, Bulut & Yapay Zeka",
-    currency: "Milyon $",
-    scenarioDescription: "Yüksek Ar-Ge harcaması yapan ve bilançosunda devasa hazine bonosu/nakit tutan küresel bir SaaS devi. Standart muhasebede Ar-Ge gider yazıldığı ve atıl nakit varlıklarda tutulduğu için ROIC yanıltıcı görünmektedir.",
+    industryTr: "Yazılım, Bulut & Yapay Zeka",
+    industryEn: "Enterprise Cloud & AI Software",
+    currencyTr: "Milyon $",
+    currencyEn: "Million $",
+    scenarioDescriptionTr: "Yüksek Ar-Ge harcaması yapan ve bilançosunda devasa hazine bonosu/nakit tutan küresel bir SaaS devi. Standart muhasebede Ar-Ge gider yazıldığı ve atıl nakit varlıklarda tutulduğu için ROIC yanıltıcı görünmektedir.",
+    scenarioDescriptionEn: "A global enterprise SaaS leader spending heavily on multi-year R&D with substantial non-operating Treasury bonds on its balance sheet. Standard GAAP expenses R&D immediately and leaves cash idle, distorting reported ROIC.",
     reportedTaxRate: 0.20,
     reportedRevenue: 24000,
     reportedOperatingCost: 16000,
-    reportedEbit: 4500, // Ar-Ge 3.500 düştükten sonra
+    reportedEbit: 4500,
     reportedTotalAssets: 48000,
     reportedCashAndEquivalents: 22000,
-    reportedNonOperatingCash: 19000, // 19 Milyar $ atıl devlet tahvili
-    reportedCurrentLiabilities: 6000, // Ticari borçlar & ertelenmiş gelirler (faizsiz)
+    reportedNonOperatingCash: 19000,
+    reportedCurrentLiabilities: 6000,
     reportedInterestBearingDebt: 8000,
     reportedShareholdersEquity: 34000,
     costOfEquity: 10.5,
     costOfDebtPreTax: 5.5,
-    takeaway: "Ar-Ge harcamalarını aktifleştirip faydalı ömrüne (3-5 yıl) itfa etmek ve operasyon dışı atıl nakdi bilançodan ayıklamak, şirketin gerçek ekonomik NOPAT ve Yatırılan Sermaye (Invested Capital) gücünü açığa çıkarır.",
+    takeawayTr: "Ar-Ge harcamalarını aktifleştirip faydalı ömrüne (3-5 yıl) itfa etmek ve operasyon dışı atıl nakdi bilançodan ayıklamak, şirketin gerçek ekonomik NOPAT ve Yatırılan Sermaye (Invested Capital) gücünü açığa çıkarır.",
+    takeawayEn: "Capitalizing R&D expenditures with economic amortization (3-5 years) and carving out non-operating idle cash reveals the genuine economic NOPAT and true Invested Capital productivity.",
     lineItems: [
       {
         id: "rnd-expense",
-        name: "Yıllık Ar-Ge Harcaması (Gelir Tablosu Gideri)",
+        nameTr: "Yıllık Ar-Ge Harcaması (Gelir Tablosu Gideri)",
+        nameEn: "Annual R&D Expenditure (Expensed on Income Statement)",
         category: "income_statement",
         reportedValue: 3500,
-        economicValueAdjusted: 1100, // Amortisman payı (Cari Ar-Ge kâra iade edilir, 2400 net NOPAT artışı)
+        economicValueAdjusted: 1100,
         hasFootnote: true,
         footnoteNumber: 14,
-        footnoteTitle: "Araştırma ve Geliştirme Politikası & Yazılım Varlıkları",
-        footnoteText: "Şirket cari yılda 3.500 Milyon $ Ar-Ge harcaması yapmış olup US GAAP/UFRS uyarınca tamamını faaliyet gideri kaydetmiştir. Geliştirilen büyük dil modelleri ve bulut algoritmalarının tahmini ekonomik ömrü 4 yıldır. Geçmiş 4 yılın itfa amortismanı 2.400 Milyon $'dır.",
-        auditAdjustmentNote: "3.500 M$ gider kâra geri eklenir, 2.400 M$ ekonomik itfa düşülür -> Net EBIT Düzeltmesi: +1.100 M$. Kalan 7.200 M$ birikmiş Ar-Ge varlığı bilançoya (Invested Capital) eklenir.",
+        footnoteTitleTr: "Araştırma ve Geliştirme Politikası & Yazılım Varlıkları",
+        footnoteTitleEn: "Note 14 — R&D Policy & Capitalized Software Assets",
+        footnoteTextTr: "Şirket cari yılda 3.500 Milyon $ Ar-Ge harcaması yapmış olup US GAAP uyarınca tamamını faaliyet gideri kaydetmiştir. Geliştirilen büyük dil modelleri ve bulut algoritmalarının tahmini ekonomik ömrü 4 yıldır. Geçmiş 4 yılın itfa amortismanı 2.400 Milyon $'dır.",
+        footnoteTextEn: "The company incurred $3,500M in R&D, expensed entirely under US GAAP. Key algorithmic AI models retain an estimated 4-year useful economic lifespan. Prior 4-year cumulative economic amortization equals $2,400M.",
+        auditAdjustmentNoteTr: "3.500 M$ gider kâra geri eklenir, 2.400 M$ ekonomik itfa düşülür -> Net EBIT Düzeltmesi: +1.100 M$. Kalan 7.200 M$ birikmiş Ar-Ge varlığı bilançoya (Invested Capital) eklenir.",
+        auditAdjustmentNoteEn: "Add back $3,500M R&D expense to EBIT, deduct $2,400M economic amortization -> Net EBIT Adjustment: +$1,100M. Capitalize remaining $7,200M net R&D asset onto Invested Capital.",
         adjustmentType: "nopat_addback",
-        adjustmentImpactExplanation: "EBIT'i +1.100 M$, NOPAT'ı +880 M$ artırır. Bilançoya +7.200 M$ sermaye varlığı ekler.",
+        adjustmentImpactExplanationTr: "EBIT'i +1.100 M$, NOPAT'ı +880 M$ artırır. Bilançoya +7.200 M$ sermaye varlığı ekler.",
+        adjustmentImpactExplanationEn: "Increases EBIT by +$1,100M, NOPAT by +$880M, and adds +$7,200M productive intangible capital to the Balance Sheet.",
       },
       {
         id: "excess-cash-item",
-        name: "Hazine Bonoları ve Vadeli Mevduatlar (Atıl Nakit)",
+        nameTr: "Hazine Bonoları ve Vadeli Mevduatlar (Atıl Nakit)",
+        nameEn: "Treasury Bills & Short-Term Equiv. (Non-Operating Excess Cash)",
         category: "balance_sheet_asset",
         reportedValue: 22000,
-        economicValueAdjusted: 3000, // Sadece 3.000 operasyonel
+        economicValueAdjusted: 3000,
         hasFootnote: true,
         footnoteNumber: 4,
-        footnoteTitle: "Nakit ve Finansal Varlıkların Operasyonel Ayrımı",
-        footnoteText: "Toplam 22.000 Milyon $'lık likit varlığın yalnızca 3.000 Milyon $'ı maaş ve günlük operasyon işletme sermayesi için elzemdir. 19.000 Milyon $'lık bakiye ABD Hazine Bonolarında faiz geliri amaçlı park edilmiştir.",
-        auditAdjustmentNote: "19.000 M$'lık atıl bono yatırılan sermayeden (Invested Capital) çıkarılmalıdır. Çünkü ana faaliyet kârı fabrikalar, sunucular ve mühendislerle üretilir, hazine bonosu faizi ana faaliyet kârına (NOPAT) dahil değildir.",
+        footnoteTitleTr: "Nakit ve Finansal Varlıkların Operasyonel Ayrımı",
+        footnoteTitleEn: "Note 4 — Operational vs Non-Operating Cash Allocation",
+        footnoteTextTr: "Toplam 22.000 Milyon $'lık likit varlığın yalnızca 3.000 Milyon $'ı maaş ve günlük operasyon işletme sermayesi için elzemdir. 19.000 Milyon $'lık bakiye ABD Hazine Bonolarında faiz geliri amaçlı park edilmiştir.",
+        footnoteTextEn: "Of total $22,000M liquid assets, only $3,000M is required for operational payroll and working capital. The remaining $19,000M is parked in US Treasury securities for yield management.",
+        auditAdjustmentNoteTr: "19.000 M$'lık atıl bono yatırılan sermayeden (Invested Capital) çıkarılmalıdır. Çünkü ana faaliyet kârı fabrikalar, sunucular ve mühendislerle üretilir, hazine bonosu faizi ana faaliyet kârına (NOPAT) dahil değildir.",
+        auditAdjustmentNoteEn: "Deduct $19,000M excess cash from Invested Capital. Operating NOPAT is generated by servers and engineers, not parked Treasury bills.",
         adjustmentType: "invested_capital_subtract",
-        adjustmentImpactExplanation: "Invested Capital'i 19.000 M$ düşürerek paydadaki yapay şişkinliği yok eder.",
+        adjustmentImpactExplanationTr: "Invested Capital'i 19.000 M$ düşürerek paydadaki yapay şişkinliği yok eder.",
+        adjustmentImpactExplanationEn: "Reduces Invested Capital by $19,000M, eliminating denominator distortion and revealing pure core ROIC.",
       },
       {
         id: "sbc-item",
-        name: "Hisse Bazlı Personel Ödemeleri (Stock-Based Comp - SBC)",
+        nameTr: "Hisse Bazlı Personel Ödemeleri (Stock-Based Comp - SBC)",
+        nameEn: "Stock-Based Compensation (SBC Dilution)",
         category: "income_statement",
         reportedValue: 1200,
         economicValueAdjusted: 1200,
         hasFootnote: true,
         footnoteNumber: 18,
-        footnoteTitle: "Hisse Opsiyonları ve Yönetici Primleri",
-        footnoteText: "Şirket mühendislere ve üst yönetime 1.200 Milyon $ değerinde kısıtlı hisse senedi (RSU) dağıtmıştır. Bazı analistler bunu 'nakitsiz gider' diyerek NOPAT'a ekleme hatasına düşmektedir.",
-        auditAdjustmentNote: "DİKKAT TUZAĞI: Mauboussin uyarır: SBC nakitsiz olsa da hissedarlar için gerçek bir seyreltme maliyetidir (Gerçek Ücret Gideridir). NOPAT'a GERİ EKLENMEMELİDİR!",
+        footnoteTitleTr: "Hisse Opsiyonları ve Yönetici Primleri",
+        footnoteTitleEn: "Note 18 — Stock Options & Executive Share Grants",
+        footnoteTextTr: "Şirket mühendislere ve üst yönetime 1.200 Milyon $ değerinde kısıtlı hisse senedi (RSU) dağıtmıştır. Bazı analistler bunu 'nakitsiz gider' diyerek NOPAT'a ekleme hatasına düşmektedir.",
+        footnoteTextEn: "The company granted $1,200M in restricted stock units (RSUs) to engineers. Some analysts mistakenly treat this as a non-cash expense and add it back to operating profit.",
+        auditAdjustmentNoteTr: "DİKKAT TUZAĞI: Mauboussin uyarır: SBC nakitsiz olsa da hissedarlar için gerçek bir seyreltme maliyetidir (Gerçek Ücret Gideridir). NOPAT'a GERİ EKLENMEMELİDİR!",
+        auditAdjustmentNoteEn: "PITFALL WARNING: Mauboussin emphasizes: SBC is a real economic compensation cost diluting shareholders. It must NEVER be added back to NOPAT.",
         adjustmentType: "none",
-        adjustmentImpactExplanation: "Düzeltme yapılmaz; NOPAT'ı yapay şişirmemek için gerçek faaliyet gideri sayılır.",
+        adjustmentImpactExplanationTr: "Düzeltme yapılmaz; NOPAT'ı yapay şişirmemek için gerçek faaliyet gideri sayılır.",
+        adjustmentImpactExplanationEn: "No adjustment made; treated strictly as an operational operating expense.",
       },
     ],
     discoveryQuestions: [
       {
-        question: "Ar-Ge harcamaları kârdan hemen düşülünce ve sermayeye yazılmayınca ROIC neden bozulur?",
+        questionTr: "Ar-Ge harcamaları kârdan hemen düşülünce ve sermayeye yazılmayınca ROIC neden bozulur?",
+        questionEn: "Why is ROIC distorted when multi-year R&D is expensed immediately instead of capitalized?",
         targetItemId: "rnd-expense",
-        hint: "Dipnot 14'e bakın: Yazılım algoritması 4 yıl boyunca gelir üretecek bir 'Varlık'tır (Asset).",
-        whyItMatters: "Yazılım şirketleri gençken Ar-Ge nedeniyle kârsız, olgunlaşınca ise sermayesiz görünüp yapay %100+ ROIC üretir.",
+        hintTr: "Dipnot 14'e bakın: Yazılım algoritması 4 yıl boyunca gelir üretecek bir 'Varlık'tır (Asset).",
+        hintEn: "See Note 14: An algorithmic platform is a multi-year economic productive asset.",
+        whyItMattersTr: "Yazılım şirketleri gençken Ar-Ge nedeniyle kârsız, olgunlaşınca ise sermayesiz görünüp yapay %100+ ROIC üretir.",
+        whyItMattersEn: "Young tech firms appear falsely unprofitable, while mature firms appear asset-light with artificial 100%+ ROIC without capitalization.",
       },
       {
-        question: "Şirketin kasasındaki 19 Milyar $'lık Hazine Bonosu ana faaliyet sermayesine dahil edilmeli midir?",
+        questionTr: "Şirketin kasasındaki 19 Milyar $'lık Hazine Bonosu ana faaliyet sermayesine dahil edilmeli midir?",
+        questionEn: "Should $19B in non-operating Treasury securities be included in core Invested Capital?",
         targetItemId: "excess-cash-item",
-        hint: "Dipnot 4'e bakın: Faiz geliri EBIT'e dahil değildir; dolayısıyla bonolar da Yatırılan Sermaye'de olmamalıdır.",
-        whyItMatters: "Atıl nakit düşülmezse şirketin çekirdek işinin ne kadar yüksek sermaye getirisi ürettiği gizlenir.",
+        hintTr: "Dipnot 4'e bakın: Faiz geliri EBIT'e dahil değildir; dolayısıyla bonolar da Yatırılan Sermaye'de olmamalıdır.",
+        hintEn: "See Note 4: Interest income is non-operating; matching requires excluding the parked assets from capital.",
+        whyItMattersTr: "Atıl nakit düşülmezse şirketin çekirdek işinin ne kadar yüksek sermaye getirisi ürettiği gizlenir.",
+        whyItMattersEn: "Failing to carve out idle cash penalizes the company's real underlying business returns.",
       },
     ]
   },
   {
     id: "retail-leases-capitalization",
-    companyName: "Atlas İndirim Marketleri & Mağazacılık A.Ş.",
+    companyName: "Atlas Supermarket & Retail Stores Inc.",
     ticker: "ATLS",
-    industry: "Organize Perakende & Süpermarket",
-    currency: "Milyon TL",
-    scenarioDescription: "12.000 mağazasının tamamını kiralayan ulusal bir perakende devi. Mağaza satın almak yerine kiraladığı için geleneksel bilançoda yatırılan sermayesi çok küçük, ROIC oranı ise yapay olarak astronomik görünmektedir.",
+    industryTr: "Organize Perakende & Süpermarket",
+    industryEn: "Discount Retail & Grocery Chain",
+    currencyTr: "Milyon TL",
+    currencyEn: "Million TL",
+    scenarioDescriptionTr: "12.000 mağazasının tamamını kiralayan ulusal bir perakende devi. Mağaza satın almak yerine kiraladığı için geleneksel bilançoda yatırılan sermayesi çok küçük, ROIC oranı ise yapay olarak astronomik görünmektedir.",
+    scenarioDescriptionEn: "A national grocery giant leasing all 12,000 store locations. Off-balance-sheet leases make traditional invested capital appear tiny and reported ROIC artificially astronomical.",
     reportedTaxRate: 0.22,
     reportedRevenue: 95000,
     reportedOperatingCost: 89000,
@@ -169,62 +209,79 @@ export const DETECTIVE_CASES: DetectiveCase[] = [
     reportedTotalAssets: 32000,
     reportedCashAndEquivalents: 4500,
     reportedNonOperatingCash: 2000,
-    reportedCurrentLiabilities: 21000, // Tedarikçi ticari borçları (Negatif işletme sermayesi)
-    reportedInterestBearingDebt: 2500, // Banka kredisi çok az görünüyor!
+    reportedCurrentLiabilities: 21000,
+    reportedInterestBearingDebt: 2500,
     reportedShareholdersEquity: 8500,
     costOfEquity: 18.0,
     costOfDebtPreTax: 24.0,
-    takeaway: "Mağaza kiralayan perakendecide kira taahhütlerini iskonto edip sermayeye ve borca eklemek (Kullanım Hakkı Varlığı), şirketin gerçek borçluluğunu, WACC ağırlığını ve sermaye yoğunluğunu ortaya koyar.",
+    takeawayTr: "Mağaza kiralayan perakendecide kira taahhütlerini iskonto edip sermayeye ve borca eklemek (Kullanım Hakkı Varlığı), şirketin gerçek borçluluğunu, WACC ağırlığını ve sermaye yoğunluğunu ortaya koyar.",
+    takeawayEn: "Capitalizing non-cancellable operating leases into Right-of-Use assets and debt liabilities reveals true capital intensity, realistic debt weights for WACC, and genuine ROIC.",
     lineItems: [
       {
         id: "operating-leases-item",
-        name: "Mağaza Faaliyet Kiralamaları Taahhütleri (Gelecek 5 Yıl)",
+        nameTr: "Mağaza Faaliyet Kiralamaları Taahhütleri (Gelecek 5-7 Yıl)",
+        nameEn: "Operating Store Lease Commitments (Next 5-7 Years)",
         category: "footnote_item",
-        reportedValue: 0, // Tarihsel US GAAP / Eski bilançolarda 0 borç
-        economicValueAdjusted: 16500, // İndirgenmiş bugünkü değer
+        reportedValue: 0,
+        economicValueAdjusted: 16500,
         hasFootnote: true,
         footnoteNumber: 21,
-        footnoteTitle: "Uzun Vadeli Kira Sözleşmeleri & İptal Edilemez Taahhütler",
-        footnoteText: "Şirketin 12.000 mağazası için gelecek 7 yıllık asgari iptal edilemez kira yükümlülüklerinin toplamı 25.000 Milyon TL'dir. İskonto oranı %16 ile bugünkü indirgenmiş değeri 16.500 Milyon TL'dir. Cari yıl kira gideri içindeki zımni faiz payı 1.200 Milyon TL'dir.",
-        auditAdjustmentNote: "16.500 Milyon TL 'Kullanım Hakkı Varlığı' olarak Yatırılan Sermaye'ye ve 'Kira Borcu' olarak Borç hanesine eklenir. Kira içindeki 1.200 M TL faiz EBIT'e geri eklenir.",
+        footnoteTitleTr: "Uzun Vadeli Kira Sözleşmeleri & İptal Edilemez Taahhütler",
+        footnoteTitleEn: "Note 21 — Long-Term Non-Cancellable Lease Commitments",
+        footnoteTextTr: "Şirketin 12.000 mağazası için gelecek 7 yıllık asgari iptal edilemez kira yükümlülüklerinin toplamı 25.000 Milyon TL'dir. İskonto oranı %16 ile bugünkü indirgenmiş değeri 16.500 Milyon TL'dir. Cari yıl kira gideri içindeki zımni faiz payı 1.200 Milyon TL'dir.",
+        footnoteTextEn: "Total undiscounted minimum lease commitments across 12,000 locations equal 25,000M TL. Discounted at 16% cost of debt, present value is 16,500M TL. Imputed lease interest expense in current SG&A is 1,200M TL.",
+        auditAdjustmentNoteTr: "16.500 Milyon TL 'Kullanım Hakkı Varlığı' olarak Yatırılan Sermaye'ye ve 'Kira Borcu' olarak Borç hanesine eklenir. Kira içindeki 1.200 M TL faiz EBIT'e geri eklenir.",
+        auditAdjustmentNoteEn: "Add 16,500M TL Right-of-Use Asset to Invested Capital and Lease Debt. Reclassify 1,200M TL imputed interest out of SG&A back into EBIT.",
         adjustmentType: "invested_capital_add",
-        adjustmentImpactExplanation: "EBIT'i +1.200 M TL (NOPAT'ı +936 M TL), Yatırılan Sermayeyi ise +16.500 M TL artırır.",
+        adjustmentImpactExplanationTr: "EBIT'i +1.200 M TL (NOPAT'ı +936 M TL), Yatırılan Sermayeyi ise +16.500 M TL artırır.",
+        adjustmentImpactExplanationEn: "Increases EBIT by +1,200M TL (NOPAT +936M TL) and Invested Capital & Debt by +16,500M TL.",
       },
       {
         id: "working-capital-item",
-        name: "Negatif İşletme Sermayesi (Tedarikçi Finansmanı)",
+        nameTr: "Negatif İşletme Sermayesi (Tedarikçi Finansmanı)",
+        nameEn: "Negative Working Capital (Supplier Float Financing)",
         category: "balance_sheet_liability",
         reportedValue: 21000,
         economicValueAdjusted: 21000,
         hasFootnote: true,
         footnoteNumber: 8,
-        footnoteTitle: "Ticari Borçlar ve Tedarikçi Vade Süreleri",
-        footnoteText: "Şirket sattığı sütü ve bisküviyi müşteriden anında nakit/kartla (0 gün) tahsil ederken, üreticiye ödemeyi ortalama 75 günde yapmaktadır. Bu durum 8.000 Milyon TL negatif işletme sermayesi fonlaması yaratır.",
-        auditAdjustmentNote: "Faizsiz ticari borçlar Yatırılan Sermaye'den düşülür. Bu perakendecinin müşterilerden ve tedarikçilerden bedava fon sağladığını kanıtlar.",
+        footnoteTitleTr: "Ticari Borçlar ve Tedarikçi Vade Süreleri",
+        footnoteTitleEn: "Note 8 — Accounts Payable & Payment Terms",
+        footnoteTextTr: "Şirket sattığı ürünü müşteriden anında nakit/kartla (0 gün) tahsil ederken, üreticiye ödemeyi ortalama 75 günde yapmaktadır. Bu durum 8.000 Milyon TL negatif işletme sermayesi fonlaması yaratır.",
+        footnoteTextEn: "Customers pay instantly at checkout (0 days), while suppliers are paid in 75 days on average. This generates 8,000M TL in free non-interest operating float.",
+        auditAdjustmentNoteTr: "Faizsiz ticari borçlar Yatırılan Sermaye'den düşülür. Bu perakendecinin müşterilerden ve tedarikçilerden bedava fon sağladığını kanıtlar.",
+        auditAdjustmentNoteEn: "Non-interest-bearing trade liabilities are deducted from Invested Capital, reflecting powerful zero-cost working capital float.",
         adjustmentType: "none",
-        adjustmentImpactExplanation: "Yatırılan Sermaye formülünde (Dönen Varlıklar - Nakit - Kısa Vadeli Faizsiz Borçlar) yer alır.",
+        adjustmentImpactExplanationTr: "Yatırılan Sermaye formülünde (Dönen Varlıklar - Nakit - Kısa Vadeli Faizsiz Borçlar) yer alır.",
+        adjustmentImpactExplanationEn: "Integrated into the standard NIBCL deduction from gross operating assets.",
       },
     ],
     discoveryQuestions: [
       {
-        question: "Perakendeci mağazayı satın almak yerine 10 yıllığına kiralayınca neden bilançoda 'Borç' ve 'Varlık' gizlenmiş olur?",
+        questionTr: "Perakendeci mağazayı satın almak yerine 10 yıllığına kiralayınca neden bilançoda 'Borç' ve 'Varlık' gizlenmiş olur?",
+        questionEn: "Why does leasing store property rather than purchasing hide assets and debt on traditional statements?",
         targetItemId: "operating-leases-item",
-        hint: "Dipnot 21'e bakın: 16.500 Milyon TL'lik kira sözleşmesi banka kredisinden farksız bir borç taahhüdüdür.",
-        whyItMatters: "Kira borcu eklenmezse şirketin WACC'ı yanlış hesaplanır ve ROIC %60 gibi yanıltıcı yüksek çıkar.",
+        hintTr: "Dipnot 21'e bakın: 16.500 Milyon TL'lik kira sözleşmesi banka kredisinden farksız bir borç taahhüdüdür.",
+        hintEn: "See Note 21: A multi-year irrevocable contract is economically identical to collateralized debt financing.",
+        whyItMattersTr: "Kira borcu eklenmezse şirketin WACC'ı yanlış hesaplanır ve ROIC %60 gibi yanıltıcı yüksek çıkar.",
+        whyItMattersEn: "Ignoring lease obligations understates invested capital and creates deceptively elevated ROIC figures.",
       },
     ]
   },
   {
     id: "industrial-restructuring-pension",
-    companyName: "Demir Çelik & Ağır Makine Sanayi A.Ş.",
+    companyName: "Atlas Heavy Industrial & Machinery Co.",
     ticker: "DMRÇ",
-    industry: "Ağır Sanayi & Metalurji",
-    currency: "Milyon TL",
-    scenarioDescription: "Geçtiğimiz yıl tek seferlik fabrika kapatma tazminatı ödeyen ve bilançosunda devasa fonlanmamış kıdem tazminatı yükümlülüğü olan döngüsel sanayi devi.",
+    industryTr: "Ağır Sanayi & Metalurji",
+    industryEn: "Heavy Metallurgy & Industrial Equipment",
+    currencyTr: "Milyon TL",
+    currencyEn: "Million TL",
+    scenarioDescriptionTr: "Geçtiğimiz yıl tek seferlik fabrika kapatma tazminatı ödeyen ve bilançosunda devasa fonlanmamış kıdem tazminatı yükümlülüğü olan döngüsel sanayi devi.",
+    scenarioDescriptionEn: "A cyclical heavy industrial player burdened by a one-off plant closure charge and significant unfunded employee severance/pension obligations.",
     reportedTaxRate: 0.20,
     reportedRevenue: 38000,
     reportedOperatingCost: 34500,
-    reportedEbit: 1500, // 1.200 M TL tek seferlik ceza/zarar düşülmüş hali!
+    reportedEbit: 1500,
     reportedTotalAssets: 42000,
     reportedCashAndEquivalents: 3000,
     reportedNonOperatingCash: 1200,
@@ -233,43 +290,57 @@ export const DETECTIVE_CASES: DetectiveCase[] = [
     reportedShareholdersEquity: 23000,
     costOfEquity: 16.0,
     costOfDebtPreTax: 20.0,
-    takeaway: "Tek seferlik kazaları/cezaları NOPAT'a geri eklemek (Normalizasyon) ve fonlanmamış kıdem tazminatlarını borç benzeri yükümlülük saymak sürdürülebilir kazanç gücünü netleştirir.",
+    takeawayTr: "Tek seferlik kazaları/cezaları NOPAT'a geri eklemek (Normalizasyon) ve fonlanmamış kıdem tazminatlarını borç benzeri yükümlülük saymak sürdürülebilir kazanç gücünü netleştirir.",
+    takeawayEn: "Normalizing non-recurring restructuring penalties back into NOPAT and treating unfunded pension deficits as debt-equivalents unmasks normalized earnings power.",
     lineItems: [
       {
         id: "one-off-restructuring",
-        name: "Tek Seferlik Fabrika Kapatma ve Çevre Cezası",
+        nameTr: "Tek Seferlik Fabrika Kapatma ve Çevre Cezası",
+        nameEn: "One-Off Plant Decommissioning & Environmental Charge",
         category: "income_statement",
         reportedValue: 1200,
-        economicValueAdjusted: 0, // Gelecekte tekrarlanmayacak
+        economicValueAdjusted: 0,
         hasFootnote: true,
         footnoteNumber: 29,
-        footnoteTitle: "Olağandışı Giderler ve Fabrika Dönüşüm Karşılığı",
-        footnoteText: "Eski yüksek fırının kapatılması ve çevre rehabilitasyon cezaları nedeniyle cari dönemde 1.200 Milyon TL tek seferlik karşılık ayrılmış ve faaliyet kârından düşülmüştür.",
-        auditAdjustmentNote: "Tek seferlik 1.200 M TL gider EBIT'e geri eklenir. Böylece şirketin normalleştirilmiş kalıcı faaliyet kârı ortaya çıkar.",
+        footnoteTitleTr: "Olağandışı Giderler ve Fabrika Dönüşüm Karşılığı",
+        footnoteTitleEn: "Note 29 — Non-Recurring Plant Restructuring Provisions",
+        footnoteTextTr: "Eski yüksek fırının kapatılması ve çevre rehabilitasyon cezaları nedeniyle cari dönemde 1.200 Milyon TL tek seferlik karşılık ayrılmış ve faaliyet kârından düşülmüştür.",
+        footnoteTextEn: "The permanent decommissioning of an obsolete blast furnace resulted in a one-time 1,200M TL charge reducing reported operating profit.",
+        auditAdjustmentNoteTr: "Tek seferlik 1.200 M TL gider EBIT'e geri eklenir. Böylece şirketin normalleştirilmiş kalıcı faaliyet kârı ortaya çıkar.",
+        auditAdjustmentNoteEn: "Add back 1,200M TL to EBIT to restore normalized baseline sustainable earning power.",
         adjustmentType: "nopat_addback",
-        adjustmentImpactExplanation: "EBIT'i +1.200 M TL, NOPAT'ı +960 M TL artırarak normalleştirir.",
+        adjustmentImpactExplanationTr: "EBIT'i +1.200 M TL, NOPAT'ı +960 M TL artırarak normalleştirir.",
+        adjustmentImpactExplanationEn: "Normalizes sustainable EBIT by +1,200M TL and after-tax NOPAT by +960M TL.",
       },
       {
         id: "pension-deficit",
-        name: "Fonlanmamış Kıdem Tazminatı & Emeklilik Yükümlülüğü",
+        nameTr: "Fonlanmamış Kıdem Tazminatı & Emeklilik Yükümlülüğü",
+        nameEn: "Unfunded Pension & Severance Benefit Deficit",
         category: "balance_sheet_liability",
         reportedValue: 2800,
         economicValueAdjusted: 2800,
         hasFootnote: true,
         footnoteNumber: 16,
-        footnoteTitle: "Çalışanlara Sağlanan Faydalar ve Aktüeryal Açık",
-        footnoteText: "Şirketin 8.500 kıdemli personeli için aktüeryal hesaplanan kıdem tazminatı karşılığı 2.800 Milyon TL'dir. Bu borç için herhangi bir bloke fon ayrılmamıştır.",
-        auditAdjustmentNote: "Fonlanmamış kıdem tazminatları borç benzeri (Debt-Equivalent) bir finansal yükümlülüktür ve WACC hesaplanırken borç tarafına dahil edilmelidir.",
+        footnoteTitleTr: "Çalışanlara Sağlanan Faydalar ve Aktüeryal Açık",
+        footnoteTitleEn: "Note 16 — Employee Benefits & Actuarial Deficit",
+        footnoteTextTr: "Şirketin 8.500 kıdemli personeli için aktüeryal hesaplanan kıdem tazminatı karşılığı 2.800 Milyon TL'dir. Bu borç için herhangi bir bloke fon ayrılmamıştır.",
+        footnoteTextEn: "Actuarially calculated severance obligations for 8,500 senior staff total 2,800M TL with zero segregated trust assets.",
+        auditAdjustmentNoteTr: "Fonlanmamış kıdem tazminatları borç benzeri (Debt-Equivalent) bir finansal yükümlülüktür ve WACC hesaplanırken borç tarafına dahil edilmelidir.",
+        auditAdjustmentNoteEn: "Unfunded obligations are contractual debt equivalents and must be factored into debt weighting for WACC and enterprise valuation.",
         adjustmentType: "wacc_weight_shift",
-        adjustmentImpactExplanation: "WACC hesaplamasında borç ağırlığını artırır ve hisse değerlemesinde borç olarak düşülür.",
+        adjustmentImpactExplanationTr: "WACC hesaplamasında borç ağırlığını artırır ve hisse değerlemesinde borç olarak düşülür.",
+        adjustmentImpactExplanationEn: "Adjusts debt ratio upward in WACC and is deducted in equity bridge calculations.",
       }
     ],
     discoveryQuestions: [
       {
-        question: "1.200 Milyon TL'lik tek seferlik çevre cezası gelecek yılların hendek kârlılığı tahmininde neden dışarıda bırakılmalıdır?",
+        questionTr: "1.200 Milyon TL'lik tek seferlik çevre cezası gelecek yılların hendek kârlılığı tahmininde neden dışarıda bırakılmalıdır?",
+        questionEn: "Why should the 1,200M TL non-recurring environmental penalty be excluded from future moat projections?",
         targetItemId: "one-off-restructuring",
-        hint: "Dipnot 29'a bakın: Şirket bu fırını kapattı ve ceza bir daha ödenmeyecek.",
-        whyItMatters: "Normalizasyon yapılmazsa şirketin gelecekteki kâr potansiyeli çok düşük tahmin edilir.",
+        hintTr: "Dipnot 29'a bakın: Şirket bu fırını kapattı ve ceza bir daha ödenmeyecek.",
+        hintEn: "See Note 29: The facility is fully decommissioned; this cash outflow will not recur.",
+        whyItMattersTr: "Normalizasyon yapılmazsa şirketin gelecekteki kâr potansiyeli çok düşük tahmin edilir.",
+        whyItMattersEn: "Without normalization, long-term steady-state cash flow capacity will be severely understated.",
       }
     ]
   }
@@ -287,7 +358,6 @@ export const FootnoteDetectiveLab: React.FC = () => {
 
   const currentCase = DETECTIVE_CASES.find((c) => c.id === activeCaseId) || DETECTIVE_CASES[0];
 
-  // Helper toggle for an adjustment
   const handleToggleAdjustment = (itemId: string) => {
     setAppliedAdjustments((prev) => ({
       ...prev,
@@ -301,9 +371,6 @@ export const FootnoteDetectiveLab: React.FC = () => {
   const rawEbit = currentCase.reportedEbit;
   const rawTaxRate = currentCase.reportedTaxRate;
   const rawNopat = rawEbit * (1 - rawTaxRate);
-  
-  // Raw Invested Capital = Total Assets - Non-interest Current Liabilities
-  // (Traditional standard formula before corrections)
   const rawInvestedCapital = currentCase.reportedTotalAssets - currentCase.reportedCurrentLiabilities;
   const rawRoic = rawInvestedCapital > 0 ? (rawNopat / rawInvestedCapital) * 100 : 0;
 
@@ -326,13 +393,13 @@ export const FootnoteDetectiveLab: React.FC = () => {
       if (item.id === "rnd-expense") {
         deltaEbit += 1100;
         deltaNopat += 880;
-        deltaInvestedCapital += 7200; // Net capitalized R&D asset
+        deltaInvestedCapital += 7200;
       } else if (item.id === "excess-cash-item") {
         deltaInvestedCapital -= currentCase.reportedNonOperatingCash;
       } else if (item.id === "operating-leases-item") {
-        deltaEbit += 1200; // Interest portion of lease
+        deltaEbit += 1200;
         deltaNopat += 936;
-        deltaInvestedCapital += 16500; // Right-of-use asset
+        deltaInvestedCapital += 16500;
         extraDebtForWacc += 16500;
       } else if (item.id === "one-off-restructuring") {
         deltaEbit += 1200;
@@ -355,11 +422,11 @@ export const FootnoteDetectiveLab: React.FC = () => {
   const weightEquityAdj = totalAdjCapital > 0 ? currentCase.reportedShareholdersEquity / totalAdjCapital : weightEquityRaw;
   const adjWacc = (weightEquityAdj * currentCase.costOfEquity) + (weightDebtAdj * costOfDebtAfterTaxRaw);
 
-  // Spread (ROIC - WACC)
   const rawSpread = rawRoic - rawWacc;
   const adjSpread = adjRoic - adjWacc;
 
   const activeFootnote = currentCase.lineItems.find((item) => item.id === selectedFootnoteId);
+  const currencyLabel = isEnglish ? currentCase.currencyEn : currentCase.currencyTr;
 
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-8 shadow-xs animate-in fade-in duration-200" id="footnote-detective-lab">
@@ -388,7 +455,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors cursor-pointer"
             >
-              <RotateCcw className="w-3.5 h-3.5" /> {isEnglish ? "Reset" : "Sıfırla"}
+              <RotateCcw className="w-3.5 h-3.5" /> {isEnglish ? "Reset Adjustments" : "Sıfırla"}
             </button>
           </div>
         </div>
@@ -410,7 +477,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
                   : "bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300"
               }`}
             >
-              {c.ticker} ({c.industry.split(",")[0]})
+              {c.ticker} ({isEnglish ? c.industryEn.split(",")[0] : c.industryTr.split(",")[0]})
             </button>
           ))}
         </div>
@@ -419,11 +486,11 @@ export const FootnoteDetectiveLab: React.FC = () => {
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2">
             <span>{currentCase.companyName} ({currentCase.ticker})</span>
             <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-              {currentCase.currency}
+              {currencyLabel}
             </span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed max-w-4xl">
-            {currentCase.scenarioDescription}
+            {isEnglish ? currentCase.scenarioDescriptionEn : currentCase.scenarioDescriptionTr}
           </p>
         </div>
       </div>
@@ -435,7 +502,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
           <span className="text-[10px] uppercase font-bold text-slate-400">{isEnglish ? "Net Operating Profit (NOPAT)" : "Net Faaliyet Kârı (NOPAT)"}</span>
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-extrabold text-white">
-              {Math.round(adjNopat).toLocaleString()} {currentCase.currency}
+              {Math.round(adjNopat).toLocaleString()} {currencyLabel}
             </span>
             {deltaNopat !== 0 && (
               <span className="text-xs font-bold text-emerald-400">
@@ -451,7 +518,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
           <span className="text-[10px] uppercase font-bold text-slate-400">{isEnglish ? "Invested Capital (IC)" : "Yatırılan Sermaye (IC)"}</span>
           <div className="flex items-baseline gap-2">
             <span className="text-xl font-extrabold text-white">
-              {Math.round(adjInvestedCapital).toLocaleString()} {currentCase.currency}
+              {Math.round(adjInvestedCapital).toLocaleString()} {currencyLabel}
             </span>
             {deltaInvestedCapital !== 0 && (
               <span className={`text-xs font-bold ${deltaInvestedCapital < 0 ? "text-emerald-400" : "text-amber-400"}`}>
@@ -484,7 +551,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
               {adjSpread >= 0 ? `+%{${adjSpread.toFixed(1)}}` : `%{${adjSpread.toFixed(1)}}`}
             </span>
             <span className="text-[11px] text-slate-400">
-              {adjSpread > 5 ? isEnglish ? "Wide Moat" : "Geniş Hendek" : adjSpread > 0 ? isEnglish ? "Narrow Moat" : "Dar Hendek" : isEnglish ? "Value Destroyer" : "Değer Yıkımı"}
+              {adjSpread > 5 ? (isEnglish ? "Wide Moat" : "Geniş Hendek") : adjSpread > 0 ? (isEnglish ? "Narrow Moat" : "Dar Hendek") : (isEnglish ? "Value Destroyer" : "Değer Yıkımı")}
             </span>
           </div>
           <span className="text-[11px] text-slate-400 block">{isEnglish ? "Raw Spread: %" : "Ham Yayılım: %"}{rawSpread.toFixed(1)}</span>
@@ -492,7 +559,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
       </div>
 
       {/* Sub-view Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
         <button
           onClick={() => setActiveViewTab("balance-sheet")}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
@@ -542,17 +609,16 @@ export const FootnoteDetectiveLab: React.FC = () => {
         </button>
       </div>
 
-      {/* TAB 1: Bilanço & Yatırılan Sermaye (Invested Capital) */}
+      {/* TAB 1: Balance Sheet & Invested Capital */}
       {activeViewTab === "balance-sheet" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Balance Sheet Table */}
           <div className="lg:col-span-7 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
-                Ekonomik Bilanço Kalemleri (10-K Raporu)
+                {isEnglish ? "Economic Balance Sheet Items (10-K / Audit)" : "Ekonomik Bilanço Kalemleri (10-K Raporu)"}
               </h3>
               <span className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">
-                Dipnot ikonuna tıklayarak inceleyin 🔍
+                {isEnglish ? "Click footnote buttons to inspect 🔍" : "Dipnot ikonuna tıklayarak inceleyin 🔍"}
               </span>
             </div>
 
@@ -560,25 +626,25 @@ export const FootnoteDetectiveLab: React.FC = () => {
               <table className="w-full min-w-[480px] text-left">
                 <thead className="bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
                   <tr>
-                    <th className="p-3">Bilanço Kalemi</th>
-                    <th className="p-3 text-right">Raporlanan</th>
-                    <th className="p-3 text-center">Dipnot</th>
-                    <th className="p-3 text-right">Düzeltme</th>
+                    <th className="p-3">{isEnglish ? "Balance Sheet Line" : "Bilanço Kalemi"}</th>
+                    <th className="p-3 text-right">{isEnglish ? "Reported" : "Raporlanan"}</th>
+                    <th className="p-3 text-center">{isEnglish ? "Footnote" : "Dipnot"}</th>
+                    <th className="p-3 text-right">{isEnglish ? "Adjustment Action" : "Düzeltme"}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
                   {/* Total Assets */}
                   <tr className="bg-slate-50/50 dark:bg-slate-900/50">
-                    <td className="p-3 font-bold">Toplam Varlıklar (Total Assets)</td>
+                    <td className="p-3 font-bold">{isEnglish ? "Total Assets" : "Toplam Varlıklar (Total Assets)"}</td>
                     <td className="p-3 text-right font-mono font-bold">{currentCase.reportedTotalAssets.toLocaleString()}</td>
                     <td className="p-3 text-center">-</td>
-                    <td className="p-3 text-right text-slate-400">Ham Taban</td>
+                    <td className="p-3 text-right text-slate-400">{isEnglish ? "Raw Base" : "Ham Taban"}</td>
                   </tr>
 
                   {/* Excess Cash */}
                   <tr className={appliedAdjustments["excess-cash-item"] ? "bg-emerald-50/40 dark:bg-emerald-950/20" : ""}>
                     <td className="p-3 pl-6 flex items-center gap-1.5">
-                      <span>↳ Nakit ve Vadeli Hazine Bonoları</span>
+                      <span>{isEnglish ? "↳ Cash & Marketable Securities (Treasury Bills)" : "↳ Nakit ve Vadeli Hazine Bonoları"}</span>
                     </td>
                     <td className="p-3 text-right font-mono">{currentCase.reportedCashAndEquivalents.toLocaleString()}</td>
                     <td className="p-3 text-center">
@@ -586,7 +652,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
                         onClick={() => setSelectedFootnoteId("excess-cash-item")}
                         className="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 font-bold text-[10px] hover:scale-105 transition-transform cursor-pointer"
                       >
-                        Dipnot 4
+                        {isEnglish ? "Note 4" : "Dipnot 4"}
                       </button>
                     </td>
                     <td className="p-3 text-right">
@@ -599,7 +665,9 @@ export const FootnoteDetectiveLab: React.FC = () => {
                               : "bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
                           }`}
                         >
-                          {appliedAdjustments["excess-cash-item"] ? "✓ Düşüldü (-19.000)" : "Atıl Nakdi Çıkar"}
+                          {appliedAdjustments["excess-cash-item"]
+                            ? (isEnglish ? `✓ Deducted (-${currentCase.reportedNonOperatingCash.toLocaleString()})` : `✓ Düşüldü (-${currentCase.reportedNonOperatingCash.toLocaleString()})`)
+                            : (isEnglish ? "Deduct Excess Cash" : "Atıl Nakdi Çıkar")}
                         </button>
                       )}
                     </td>
@@ -609,15 +677,15 @@ export const FootnoteDetectiveLab: React.FC = () => {
                   {currentCase.id === "retail-leases-capitalization" && (
                     <tr className={appliedAdjustments["operating-leases-item"] ? "bg-emerald-50/40 dark:bg-emerald-950/20" : ""}>
                       <td className="p-3 pl-6 font-semibold text-indigo-700 dark:text-indigo-300">
-                        ↳ Kullanım Hakkı Varlığı (Mağaza Kiraları)
+                        {isEnglish ? "↳ Capitalized Right-of-Use Asset (Store Leases)" : "↳ Kullanım Hakkı Varlığı (Mağaza Kiraları)"}
                       </td>
-                      <td className="p-3 text-right font-mono text-slate-400">0 (Eski US GAAP)</td>
+                      <td className="p-3 text-right font-mono text-slate-400">{isEnglish ? "0 (Historical GAAP)" : "0 (Eski US GAAP)"}</td>
                       <td className="p-3 text-center">
                         <button
                           onClick={() => setSelectedFootnoteId("operating-leases-item")}
                           className="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 font-bold text-[10px] hover:scale-105 transition-transform cursor-pointer"
                         >
-                          Dipnot 21
+                          {isEnglish ? "Note 21" : "Dipnot 21"}
                         </button>
                       </td>
                       <td className="p-3 text-right">
@@ -629,7 +697,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
                               : "bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
                           }`}
                         >
-                          {appliedAdjustments["operating-leases-item"] ? "✓ Eklendi (+16.500)" : "Kirayı Aktifleştir"}
+                          {appliedAdjustments["operating-leases-item"] ? (isEnglish ? "✓ Added (+16,500)" : "✓ Eklendi (+16.500)") : (isEnglish ? "Capitalize Leases" : "Kirayı Aktifleştir")}
                         </button>
                       </td>
                     </tr>
@@ -639,15 +707,15 @@ export const FootnoteDetectiveLab: React.FC = () => {
                   {currentCase.id === "tech-cloud-rnd" && (
                     <tr className={appliedAdjustments["rnd-expense"] ? "bg-emerald-50/40 dark:bg-emerald-950/20" : ""}>
                       <td className="p-3 pl-6 font-semibold text-indigo-700 dark:text-indigo-300">
-                        ↳ Birikmiş Ar-Ge Yazılım Varlığı (Capitalized R&D)
+                        {isEnglish ? "↳ Capitalized Net R&D Software Asset" : "↳ Birikmiş Ar-Ge Yazılım Varlığı (Capitalized R&D)"}
                       </td>
-                      <td className="p-3 text-right font-mono text-slate-400">0 (Gider Yazıldı)</td>
+                      <td className="p-3 text-right font-mono text-slate-400">{isEnglish ? "0 (Expensed under GAAP)" : "0 (Gider Yazıldı)"}</td>
                       <td className="p-3 text-center">
                         <button
                           onClick={() => setSelectedFootnoteId("rnd-expense")}
                           className="px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 font-bold text-[10px] hover:scale-105 transition-transform cursor-pointer"
                         >
-                          Dipnot 14
+                          {isEnglish ? "Note 14" : "Dipnot 14"}
                         </button>
                       </td>
                       <td className="p-3 text-right">
@@ -659,7 +727,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
                               : "bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800"
                           }`}
                         >
-                          {appliedAdjustments["rnd-expense"] ? "✓ Eklendi (+7.200)" : "Ar-Ge'yi Aktifleştir"}
+                          {appliedAdjustments["rnd-expense"] ? (isEnglish ? "✓ Added (+7,200)" : "✓ Eklendi (+7.200)") : (isEnglish ? "Capitalize R&D" : "Ar-Ge'yi Aktifleştir")}
                         </button>
                       </td>
                     </tr>
@@ -668,24 +736,26 @@ export const FootnoteDetectiveLab: React.FC = () => {
                   {/* Current Liabilities */}
                   <tr>
                     <td className="p-3 font-semibold text-rose-600 dark:text-rose-400">
-                      (-) Kısa Vadeli Ticari & Faizsiz Borçlar (NIBCL)
+                      {isEnglish ? "(-) Non-Interest Bearing Current Liabilities (NIBCL)" : "(-) Kısa Vadeli Ticari & Faizsiz Borçlar (NIBCL)"}
                     </td>
                     <td className="p-3 text-right font-mono font-bold text-rose-600">
                       -{currentCase.reportedCurrentLiabilities.toLocaleString()}
                     </td>
                     <td className="p-3 text-center">-</td>
-                    <td className="p-3 text-right text-slate-400">Otomatik İndirilir</td>
+                    <td className="p-3 text-right text-slate-400">{isEnglish ? "Auto Deducted" : "Otomatik İndirilir"}</td>
                   </tr>
 
                   {/* Result: Invested Capital */}
                   <tr className="bg-indigo-50 dark:bg-indigo-950/60 font-bold text-slate-900 dark:text-slate-100">
-                    <td className="p-3">DÜZELTİLMİŞ YATIRILAN SERMAYE (Invested Capital)</td>
+                    <td className="p-3">{isEnglish ? "ADJUSTED INVESTED CAPITAL (IC)" : "DÜZELTİLMİŞ YATIRILAN SERMAYE (Invested Capital)"}</td>
                     <td className="p-3 text-right font-mono font-bold text-indigo-600 dark:text-indigo-400 text-sm">
-                      {Math.round(adjInvestedCapital).toLocaleString()} {currentCase.currency}
+                      {Math.round(adjInvestedCapital).toLocaleString()} {currencyLabel}
                     </td>
                     <td className="p-3 text-center">-</td>
                     <td className="p-3 text-right font-mono text-emerald-600 dark:text-emerald-400">
-                      {adjInvestedCapital !== rawInvestedCapital ? `Fark: ${(adjInvestedCapital - rawInvestedCapital).toLocaleString()}` : "Düzeltme Yok"}
+                      {adjInvestedCapital !== rawInvestedCapital
+                        ? `${isEnglish ? "Delta: " : "Fark: "}${(adjInvestedCapital - rawInvestedCapital > 0 ? "+" : "") + (adjInvestedCapital - rawInvestedCapital).toLocaleString()}`
+                        : (isEnglish ? "No Adjustments" : "Düzeltme Yok")}
                     </td>
                   </tr>
                 </tbody>
@@ -694,10 +764,12 @@ export const FootnoteDetectiveLab: React.FC = () => {
 
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 space-y-1">
               <strong className="text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
-                <BookOpen className="w-4 h-4 text-indigo-600" /> Mauboussin Yatırılan Sermaye (IC) Formülü:
+                <BookOpen className="w-4 h-4 text-indigo-600" /> {isEnglish ? "Mauboussin Invested Capital (IC) Equation:" : "Mauboussin Yatırılan Sermaye (IC) Formülü:"}
               </strong>
               <p className="font-mono text-[11px] text-indigo-700 dark:text-indigo-300">
-                Invested Capital = Toplam Varlıklar - Operasyon Dışı Atıl Nakit + Aktifleştirilen Ar-Ge & Kiralar - Faizsiz Kısa Vadeli Borçlar
+                {isEnglish
+                  ? "Invested Capital = Total Assets - Non-Operating Excess Cash + Capitalized Intangibles & Leases - NIBCL"
+                  : "Invested Capital = Toplam Varlıklar - Operasyon Dışı Atıl Nakit + Aktifleştirilen Ar-Ge & Kiralar - Faizsiz Kısa Vadeli Borçlar"}
               </p>
             </div>
           </div>
@@ -706,30 +778,30 @@ export const FootnoteDetectiveLab: React.FC = () => {
           <div className="lg:col-span-5 space-y-4">
             <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
               <FileText className="w-4 h-4 text-amber-500" />
-              Dipnot İnceleme Penceresi
+              {isEnglish ? "Footnote Inspector Window" : "Dipnot İnceleme Penceresi"}
             </h3>
 
             {activeFootnote ? (
               <div className="p-5 rounded-3xl bg-amber-50/70 dark:bg-slate-800 border border-amber-200 dark:border-amber-900/50 space-y-4 font-serif animate-in fade-in">
                 <div className="space-y-1 font-sans">
                   <span className="text-[10px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
-                    Dipnot {activeFootnote.footnoteNumber} — Resmi Şirket Açıklaması
+                    {isEnglish ? `Note ${activeFootnote.footnoteNumber} — Official Disclosure` : `Dipnot ${activeFootnote.footnoteNumber} — Resmi Şirket Açıklaması`}
                   </span>
                   <h4 className="text-sm font-extrabold text-slate-900 dark:text-slate-100">
-                    {activeFootnote.footnoteTitle}
+                    {isEnglish ? activeFootnote.footnoteTitleEn : activeFootnote.footnoteTitleTr}
                   </h4>
                 </div>
 
                 <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed italic bg-white/80 dark:bg-slate-900/80 p-3 rounded-xl border border-amber-200/60 dark:border-slate-700">
-                  "{activeFootnote.footnoteText}"
+                  "{isEnglish ? activeFootnote.footnoteTextEn : activeFootnote.footnoteTextTr}"
                 </p>
 
                 <div className="font-sans space-y-2 pt-2 border-t border-amber-200 dark:border-slate-700">
                   <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300 block">
-                    🔍 Mauboussin Ekonomik Analiz Notu:
+                    {isEnglish ? "🔍 Forensic Accounting Audit Note:" : "🔍 Mauboussin Ekonomik Analiz Notu:"}
                   </span>
                   <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                    {activeFootnote.auditAdjustmentNote}
+                    {isEnglish ? activeFootnote.auditAdjustmentNoteEn : activeFootnote.auditAdjustmentNoteTr}
                   </p>
                 </div>
 
@@ -745,12 +817,12 @@ export const FootnoteDetectiveLab: React.FC = () => {
                     {appliedAdjustments[activeFootnote.id] ? (
                       <>
                         <CheckCircle2 className="w-4 h-4" />
-                        <span>Düzeltme Aktif (Geri Almak İçin Tıkla)</span>
+                        <span>{isEnglish ? "Adjustment Active (Click to Revert)" : "Düzeltme Aktif (Geri Almak İçin Tıkla)"}</span>
                       </>
                     ) : (
                       <>
                         <Sparkles className="w-4 h-4 text-amber-300" />
-                        <span>Bu Düzeltmeyi Modele Uygula</span>
+                        <span>{isEnglish ? "Apply Forensic Adjustment to Model" : "Bu Düzeltmeyi Modele Uygula"}</span>
                       </>
                     )}
                   </button>
@@ -760,7 +832,9 @@ export const FootnoteDetectiveLab: React.FC = () => {
               <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-800/40 border border-dashed border-slate-300 dark:border-slate-700 text-center space-y-3">
                 <Search className="w-8 h-8 text-slate-400 mx-auto" />
                 <p className="text-xs text-slate-500 max-w-xs mx-auto">
-                  Sol taraftaki tablodan <strong>Dipnot 4, Dipnot 14 veya Dipnot 21</strong> butonlarına tıklayarak şirketin gizli mali gerçeklerini açığa çıkarın.
+                  {isEnglish
+                    ? "Click on any Note button in the table on the left to reveal hidden accounting disclosures."
+                    : "Sol taraftaki tablodan Dipnot butonlarına tıklayarak şirketin gizli mali gerçeklerini açığa çıkarın."}
                 </p>
               </div>
             )}
@@ -768,27 +842,27 @@ export const FootnoteDetectiveLab: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 2: Gelir Tablosu & NOPAT Düzeltmesi */}
+      {/* TAB 2: Income Statement & NOPAT Adjustments */}
       {activeViewTab === "income-statement" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-7 space-y-4">
             <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
-              Gelir Tablosu ve NOPAT Türetimi
+              {isEnglish ? "Income Statement & NOPAT Derivation" : "Gelir Tablosu ve NOPAT Türetimi"}
             </h3>
 
             <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-x-auto text-xs">
               <table className="w-full min-w-[500px] text-left">
                 <thead className="bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
                   <tr>
-                    <th className="p-3">Gelir Tablosu Kalemi</th>
-                    <th className="p-3 text-right">Raporlanan</th>
-                    <th className="p-3 text-right">Ekonomik Düzeltme</th>
-                    <th className="p-3 text-right">Düzeltilmiş</th>
+                    <th className="p-3">{isEnglish ? "Line Item" : "Gelir Tablosu Kalemi"}</th>
+                    <th className="p-3 text-right">{isEnglish ? "Reported" : "Raporlanan"}</th>
+                    <th className="p-3 text-right">{isEnglish ? "Audit Adjustment" : "Ekonomik Düzeltme"}</th>
+                    <th className="p-3 text-right">{isEnglish ? "Adjusted" : "Düzeltilmiş"}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
                   <tr>
-                    <td className="p-3 font-bold">Net Satışlar / Hasılat (Revenue)</td>
+                    <td className="p-3 font-bold">{isEnglish ? "Net Revenues" : "Net Satışlar / Hasılat (Revenue)"}</td>
                     <td className="p-3 text-right font-mono">{rawRevenue.toLocaleString()}</td>
                     <td className="p-3 text-right text-slate-400">-</td>
                     <td className="p-3 text-right font-mono font-bold">{rawRevenue.toLocaleString()}</td>
@@ -798,14 +872,14 @@ export const FootnoteDetectiveLab: React.FC = () => {
                   {currentCase.id === "tech-cloud-rnd" && (
                     <tr className={appliedAdjustments["rnd-expense"] ? "bg-emerald-50/40 dark:bg-emerald-950/20" : ""}>
                       <td className="p-3 pl-6 text-indigo-700 dark:text-indigo-300">
-                        (+) Ar-Ge Gideri Geri İadesi (Net Amortisman Düşülmüş)
+                        {isEnglish ? "(+) R&D Expense Add-Back (Net of Economic Amortization)" : "(+) Ar-Ge Gideri Geri İadesi (Net Amortisman Düşülmüş)"}
                       </td>
-                      <td className="p-3 text-right text-slate-400">-3.500 (Gider)</td>
+                      <td className="p-3 text-right text-slate-400">{isEnglish ? "-3,500 (Expensed)" : "-3.500 (Gider)"}</td>
                       <td className="p-3 text-right text-emerald-600 font-bold">
-                        {appliedAdjustments["rnd-expense"] ? "+1.100 M$" : "0 (Uygulanmadı)"}
+                        {appliedAdjustments["rnd-expense"] ? `+1,100 ${currencyLabel}` : (isEnglish ? "0 (Not applied)" : "0 (Uygulanmadı)")}
                       </td>
                       <td className="p-3 text-right font-mono">
-                        {appliedAdjustments["rnd-expense"] ? "+1.100 M$" : "0"}
+                        {appliedAdjustments["rnd-expense"] ? "+1,100" : "0"}
                       </td>
                     </tr>
                   )}
@@ -814,14 +888,14 @@ export const FootnoteDetectiveLab: React.FC = () => {
                   {currentCase.id === "industrial-restructuring-pension" && (
                     <tr className={appliedAdjustments["one-off-restructuring"] ? "bg-emerald-50/40 dark:bg-emerald-950/20" : ""}>
                       <td className="p-3 pl-6 text-indigo-700 dark:text-indigo-300">
-                        (+) Tek Seferlik Fabrika Kapatma Cezası İadesi
+                        {isEnglish ? "(+) One-Off Restructuring Penalty Add-Back" : "(+) Tek Seferlik Fabrika Kapatma Cezası İadesi"}
                       </td>
-                      <td className="p-3 text-right text-slate-400">-1.200 (Ceza)</td>
+                      <td className="p-3 text-right text-slate-400">{isEnglish ? "-1,200 (One-off)" : "-1.200 (Ceza)"}</td>
                       <td className="p-3 text-right text-emerald-600 font-bold">
-                        {appliedAdjustments["one-off-restructuring"] ? "+1.200 M TL" : "0"}
+                        {appliedAdjustments["one-off-restructuring"] ? `+1,200 ${currencyLabel}` : "0"}
                       </td>
                       <td className="p-3 text-right font-mono">
-                        {appliedAdjustments["one-off-restructuring"] ? "+1.200" : "0"}
+                        {appliedAdjustments["one-off-restructuring"] ? "+1,200" : "0"}
                       </td>
                     </tr>
                   )}
@@ -830,21 +904,21 @@ export const FootnoteDetectiveLab: React.FC = () => {
                   {currentCase.id === "retail-leases-capitalization" && (
                     <tr className={appliedAdjustments["operating-leases-item"] ? "bg-emerald-50/40 dark:bg-emerald-950/20" : ""}>
                       <td className="p-3 pl-6 text-indigo-700 dark:text-indigo-300">
-                        (+) Kira Gideri İçindeki Zımni Faiz Payının İadesi
+                        {isEnglish ? "(+) Reclassification of Imputed Lease Interest from SG&A" : "(+) Kira Gideri İçindeki Zımni Faiz Payının İadesi"}
                       </td>
-                      <td className="p-3 text-right text-slate-400">Faaliyet Giderinde</td>
+                      <td className="p-3 text-right text-slate-400">{isEnglish ? "In SG&A" : "Faaliyet Giderinde"}</td>
                       <td className="p-3 text-right text-emerald-600 font-bold">
-                        {appliedAdjustments["operating-leases-item"] ? "+1.200 M TL" : "0"}
+                        {appliedAdjustments["operating-leases-item"] ? `+1,200 ${currencyLabel}` : "0"}
                       </td>
                       <td className="p-3 text-right font-mono">
-                        {appliedAdjustments["operating-leases-item"] ? "+1.200" : "0"}
+                        {appliedAdjustments["operating-leases-item"] ? "+1,200" : "0"}
                       </td>
                     </tr>
                   )}
 
                   {/* EBIT */}
                   <tr className="bg-slate-50 dark:bg-slate-900/60 font-bold">
-                    <td className="p-3">FAALİYET KÂRI (EBIT)</td>
+                    <td className="p-3">{isEnglish ? "OPERATING PROFIT (EBIT)" : "FAALİYET KÂRI (EBIT)"}</td>
                     <td className="p-3 text-right font-mono">{rawEbit.toLocaleString()}</td>
                     <td className="p-3 text-right text-emerald-600 font-mono">+{deltaEbit.toLocaleString()}</td>
                     <td className="p-3 text-right font-mono text-indigo-600 dark:text-indigo-400 font-extrabold">
@@ -854,7 +928,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
 
                   {/* Effective Tax */}
                   <tr>
-                    <td className="p-3 text-rose-600">(-) Nakit Efektif Vergi Oranı (%{(rawTaxRate * 100).toFixed(0)})</td>
+                    <td className="p-3 text-rose-600">{isEnglish ? `(-) Cash Effective Tax Rate (${(rawTaxRate * 100).toFixed(0)}%)` : `(-) Nakit Efektif Vergi Oranı (%${(rawTaxRate * 100).toFixed(0)})`}</td>
                     <td className="p-3 text-right font-mono text-rose-600">-{Math.round(rawEbit * rawTaxRate).toLocaleString()}</td>
                     <td className="p-3 text-right text-rose-600 font-mono">-{Math.round(deltaEbit * rawTaxRate).toLocaleString()}</td>
                     <td className="p-3 text-right font-mono text-rose-600">-{Math.round(adjEbit * rawTaxRate).toLocaleString()}</td>
@@ -862,11 +936,11 @@ export const FootnoteDetectiveLab: React.FC = () => {
 
                   {/* NOPAT */}
                   <tr className="bg-indigo-50 dark:bg-indigo-950/80 font-bold text-slate-900 dark:text-slate-100">
-                    <td className="p-3">DÜZELTİLMİŞ NOPAT (Net Operating Profit After Tax)</td>
+                    <td className="p-3">{isEnglish ? "ADJUSTED NOPAT (Net Operating Profit After Tax)" : "DÜZELTİLMİŞ NOPAT (Net Operating Profit After Tax)"}</td>
                     <td className="p-3 text-right font-mono">{Math.round(rawNopat).toLocaleString()}</td>
                     <td className="p-3 text-right text-emerald-600 font-mono font-bold">+{Math.round(deltaNopat).toLocaleString()}</td>
                     <td className="p-3 text-right font-mono font-black text-indigo-600 dark:text-indigo-400 text-sm">
-                      {Math.round(adjNopat).toLocaleString()} {currentCase.currency}
+                      {Math.round(adjNopat).toLocaleString()} {currencyLabel}
                     </td>
                   </tr>
                 </tbody>
@@ -877,55 +951,57 @@ export const FootnoteDetectiveLab: React.FC = () => {
           <div className="lg:col-span-5 space-y-4">
             <div className="p-5 rounded-3xl bg-indigo-50 dark:bg-slate-800 border border-indigo-200 dark:border-slate-700 space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-amber-500" /> NOPAT Neden Net Kârdan (Net Income) Üstündür?
+                <Sparkles className="w-4 h-4 text-amber-500" /> {isEnglish ? "Why NOPAT Outperforms Net Income:" : "NOPAT Neden Net Kârdan (Net Income) Üstündür?"}
               </h4>
               <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
-                Net Kâr (Net Income), şirketin borç faizlerini ve finansman yapısını içerir. İki özdeş fabrikadan biri %100 krediyle, diğeri %100 özkaynakla kurulduysa Net Kârları bambaşka çıkar. <strong>NOPAT ise sermaye yapısından bağımsız olarak fabrikanın salt ekonomik getirisini ölçer.</strong>
+                {isEnglish
+                  ? "Net Income is distorted by debt leverage and capital structure. Two identical factories—one 100% debt-financed and one 100% equity-financed—will show wildly different Net Income. NOPAT measures pure operational economic yield regardless of financing choices."
+                  : "Net Kâr (Net Income), şirketin borç faizlerini ve finansman yapısını içerir. İki özdeş fabrikadan biri %100 krediyle, diğeri %100 özkaynakla kurulduysa Net Kârları bambaşka çıkar. NOPAT ise sermaye yapısından bağımsız olarak fabrikanın salt ekonomik getirisini ölçer."}
               </p>
               <div className="p-3 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-indigo-100 dark:border-slate-700 font-mono text-[11px] text-indigo-800 dark:text-indigo-300">
-                NOPAT = EBIT × (1 - Efektif Vergi Oranı)
+                NOPAT = EBIT × (1 - {isEnglish ? "Effective Tax Rate" : "Efektif Vergi Oranı"})
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* TAB 3: WACC Sermaye Maliyeti Röntgeni */}
+      {/* TAB 3: WACC Cost of Capital Breakdown */}
       {activeViewTab === "wacc-calc" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-7 space-y-4">
             <h3 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
-              Ağırlıklı Ortalama Sermaye Maliyeti (WACC) Hesabı
+              {isEnglish ? "Weighted Average Cost of Capital (WACC) Calculation" : "Ağırlıklı Ortalama Sermaye Maliyeti (WACC) Hesabı"}
             </h3>
 
             <div className="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-x-auto text-xs">
               <table className="w-full min-w-[500px] text-left">
                 <thead className="bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
                   <tr>
-                    <th className="p-3">Sermaye Unsuru</th>
-                    <th className="p-3 text-right">Tutar ({currentCase.currency})</th>
-                    <th className="p-3 text-right">Ağırlık (%)</th>
-                    <th className="p-3 text-right">Maliyet (Vergi Sonrası)</th>
-                    <th className="p-3 text-right">Katkı</th>
+                    <th className="p-3">{isEnglish ? "Capital Component" : "Sermaye Unsuru"}</th>
+                    <th className="p-3 text-right">{isEnglish ? `Amount (${currencyLabel})` : `Tutar (${currencyLabel})`}</th>
+                    <th className="p-3 text-right">{isEnglish ? "Weight (%)" : "Ağırlık (%)"}</th>
+                    <th className="p-3 text-right">{isEnglish ? "Cost (After-Tax)" : "Maliyet (Vergi Sonrası)"}</th>
+                    <th className="p-3 text-right">{isEnglish ? "Contribution" : "Katkı"}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-800 dark:text-slate-200">
                   <tr>
-                    <td className="p-3 font-semibold">Özkaynak (Equity - Piyasa Değeri)</td>
+                    <td className="p-3 font-semibold">{isEnglish ? "Shareholders' Equity (Market Value)" : "Özkaynak (Equity - Piyasa Değeri)"}</td>
                     <td className="p-3 text-right font-mono">{currentCase.reportedShareholdersEquity.toLocaleString()}</td>
                     <td className="p-3 text-right font-mono">%{(weightEquityAdj * 100).toFixed(1)}</td>
                     <td className="p-3 text-right font-mono font-bold text-indigo-600">%{currentCase.costOfEquity.toFixed(1)} (Ke)</td>
                     <td className="p-3 text-right font-mono font-bold">{((weightEquityAdj * currentCase.costOfEquity)).toFixed(2)}%</td>
                   </tr>
                   <tr>
-                    <td className="p-3 font-semibold">Finansal Borç + Ek Yükümlülükler</td>
+                    <td className="p-3 font-semibold">{isEnglish ? "Financial Debt + Debt Equivalents" : "Finansal Borç + Ek Yükümlülükler"}</td>
                     <td className="p-3 text-right font-mono">{totalAdjDebt.toLocaleString()}</td>
                     <td className="p-3 text-right font-mono">%{(weightDebtAdj * 100).toFixed(1)}</td>
-                    <td className="p-3 text-right font-mono font-bold text-amber-600">%{costOfDebtAfterTaxRaw.toFixed(1)} (Kd × [1-T])</td>
+                    <td className="p-3 text-right font-mono font-bold text-amber-600">%{costOfDebtAfterTaxRaw.toFixed(1)} (Kd × [1-t])</td>
                     <td className="p-3 text-right font-mono font-bold">{((weightDebtAdj * costOfDebtAfterTaxRaw)).toFixed(2)}%</td>
                   </tr>
                   <tr className="bg-indigo-50 dark:bg-indigo-950/80 font-bold text-slate-900 dark:text-slate-100">
-                    <td className="p-3" colSpan={4}>AĞIRLIKLI SERMAYE MALİYETİ (WACC)</td>
+                    <td className="p-3" colSpan={4}>{isEnglish ? "WEIGHTED AVERAGE COST OF CAPITAL (WACC)" : "AĞIRLIKLI SERMAYE MALİYETİ (WACC)"}</td>
                     <td className="p-3 text-right font-mono text-indigo-600 dark:text-indigo-400 text-sm font-black">
                       %{adjWacc.toFixed(2)}
                     </td>
@@ -935,21 +1011,30 @@ export const FootnoteDetectiveLab: React.FC = () => {
             </div>
 
             <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 text-xs text-amber-900 dark:text-amber-200 space-y-1">
-              <strong>💡 WACC Eşiği Kuralı:</strong> Şirket yeni yatırımlardan %{adjWacc.toFixed(1)}'in üzerinde getiri (ROIC) ürettiği sürece hissedar değeri yaratır. ROIC %{adjWacc.toFixed(1)}'in altına düştüğü an şirket büyüdükçe değer yok eder!
+              <strong>{isEnglish ? "💡 WACC Hurdle Rule:" : "💡 WACC Eşiği Kuralı:"}</strong>{" "}
+              {isEnglish
+                ? `As long as the company earns ROIC above %${adjWacc.toFixed(1)}, each reinvested dollar creates positive economic value. If ROIC falls below WACC, growth destroys shareholder value!`
+                : `Şirket yeni yatırımlardan %${adjWacc.toFixed(1)}'in üzerinde getiri (ROIC) ürettiği sürece hissedar değeri yaratır. ROIC %${adjWacc.toFixed(1)}'in altına düştüğü an şirket büyüdükçe değer yok eder!`}
             </div>
           </div>
 
           <div className="lg:col-span-5 space-y-4">
             <div className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                WACC Bileşenlerinin Anlamı
+                {isEnglish ? "Understanding WACC Components" : "WACC Bileşenlerinin Anlamı"}
               </h4>
               <ul className="text-xs space-y-2 text-slate-600 dark:text-slate-300">
                 <li>
-                  <strong className="text-slate-900 dark:text-slate-100">Ke (Özkaynak Maliyeti):</strong> Hissedarların üstlendikleri hisse senedi riski karşılığında talep ettiği asgari getiri beklentisidir (CAPM modeli).
+                  <strong className="text-slate-900 dark:text-slate-100">{isEnglish ? "Ke (Cost of Equity):" : "Ke (Özkaynak Maliyeti):"}</strong>{" "}
+                  {isEnglish
+                    ? "The minimum expected return demanded by equity holders for bearing equity risk (derived via CAPM: Rf + Beta × ERP)."
+                    : "Hissedarların üstlendikleri hisse senedi riski karşılığında talep ettiği asgari getiri beklentisidir (CAPM modeli)."}
                 </li>
                 <li>
-                  <strong className="text-slate-900 dark:text-slate-100">Kd (Borçlanma Maliyeti):</strong> Şirketin banka kredisi ve tahvil faizidir. Faiz gideri vergiden düşüldüğü için <em>(1 - Vergi Oranı)</em> ile vergi kalkanı sağlanır.
+                  <strong className="text-slate-900 dark:text-slate-100">{isEnglish ? "Kd (Cost of Debt):" : "Kd (Borçlanma Maliyeti):"}</strong>{" "}
+                  {isEnglish
+                    ? "The effective borrowing interest rate. Since interest is tax-deductible, it is shielded by (1 - Tax Rate)."
+                    : "Şirketin banka kredisi ve tahvil faizidir. Faiz gideri vergiden düşüldüğü için (1 - Vergi Oranı) ile vergi kalkanı sağlanır."}
                 </li>
               </ul>
             </div>
@@ -957,28 +1042,30 @@ export const FootnoteDetectiveLab: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 4: Kendini Test Et (ROIC & WACC Sınavı) */}
+      {/* TAB 4: Quiz Yourself */}
       {activeViewTab === "quiz-detective" && (
         <div className="p-6 rounded-3xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-6">
           <div className="space-y-1">
             <h3 className="text-base font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
               <Award className="w-5 h-5 text-amber-500" />
-              Dedektif Görevi: Bu Şirketin Düzeltilmiş ROIC ve WACC Oranını Tahmin Edin
+              {isEnglish ? "Detective Challenge: Guess This Company's Adjusted ROIC & WACC" : "Dedektif Görevi: Bu Şirketin Düzeltilmiş ROIC ve WACC Oranını Tahmin Edin"}
             </h3>
             <p className="text-xs text-slate-600 dark:text-slate-400">
-              Yaptığınız dipnot düzeltmeleri neticesinde şirketin nihai ROIC ve WACC oranlarını kutucuklara yazın ve kontrol edin.
+              {isEnglish
+                ? "Based on your forensic adjustments, enter your calculated ROIC and WACC percentages to test your calibration."
+                : "Yaptığınız dipnot düzeltmeleri neticesinde şirketin nihai ROIC ve WACC oranlarını kutucuklara yazın ve kontrol edin."}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl">
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Düzeltilmiş ROIC Tahmininiz (%):
+                {isEnglish ? "Adjusted ROIC Guess (%):" : "Düzeltilmiş ROIC Tahmininiz (%):"}
               </label>
               <input
                 type="number"
                 step="0.1"
-                placeholder="Örn: 24.5"
+                placeholder={isEnglish ? "e.g. 24.5" : "Örn: 24.5"}
                 value={userRoicGuess}
                 onChange={(e) => setUserRoicGuess(e.target.value)}
                 className="w-full p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-bold text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -987,12 +1074,12 @@ export const FootnoteDetectiveLab: React.FC = () => {
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Düzeltilmiş WACC Tahmininiz (%):
+                {isEnglish ? "Adjusted WACC Guess (%):" : "Düzeltilmiş WACC Tahmininiz (%):"}
               </label>
               <input
                 type="number"
                 step="0.1"
-                placeholder="Örn: 9.2"
+                placeholder={isEnglish ? "e.g. 9.2" : "Örn: 9.2"}
                 value={userWaccGuess}
                 onChange={(e) => setUserWaccGuess(e.target.value)}
                 className="w-full p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-bold text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
@@ -1006,7 +1093,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
               className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-2 cursor-pointer shadow-xs transition-all"
             >
               <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-              <span>Tahmini Kontrol Et</span>
+              <span>{isEnglish ? "Verify Guess" : "Tahmini Kontrol Et"}</span>
             </button>
           </div>
 
@@ -1014,27 +1101,29 @@ export const FootnoteDetectiveLab: React.FC = () => {
             <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-800 space-y-3 animate-in fade-in">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase">
-                  Kontrol Raporu
+                  {isEnglish ? "Audit Verification Report" : "Kontrol Raporu"}
                 </span>
                 <span className="text-xs font-mono font-bold text-slate-500">
-                  Gerçek Değerler: ROIC %{adjRoic.toFixed(1)} | WACC %{adjWacc.toFixed(1)}
+                  {isEnglish ? "Target Values: " : "Gerçek Değerler: "}ROIC %{adjRoic.toFixed(1)} | WACC %{adjWacc.toFixed(1)}
                 </span>
               </div>
 
               <div className="text-xs space-y-2 text-slate-700 dark:text-slate-300">
                 <p>
-                  <strong>ROIC Durumu:</strong> {
-                    Math.abs(parseFloat(userRoicGuess || "0") - adjRoic) <= 1.0
-                      ? "🎯 Harika! ROIC değerini neredeyse birebir doğru hesapladınız."
-                      : `Yaklaştınız. Düzeltilmiş NOPAT (${Math.round(adjNopat).toLocaleString()}) / Düzeltilmiş Sermaye (${Math.round(adjInvestedCapital).toLocaleString()}) = %${adjRoic.toFixed(1)}.`
-                  }
+                  <strong>{isEnglish ? "ROIC Accuracy:" : "ROIC Durumu:"}</strong>{" "}
+                  {Math.abs(parseFloat(userRoicGuess || "0") - adjRoic) <= 1.0
+                    ? (isEnglish ? "🎯 Excellent! You calculated the exact economic ROIC." : "🎯 Harika! ROIC değerini neredeyse birebir doğru hesapladınız.")
+                    : (isEnglish
+                        ? `Close. Adjusted NOPAT (${Math.round(adjNopat).toLocaleString()}) / Adjusted Capital (${Math.round(adjInvestedCapital).toLocaleString()}) = %${adjRoic.toFixed(1)}.`
+                        : `Yaklaştınız. Düzeltilmiş NOPAT (${Math.round(adjNopat).toLocaleString()}) / Düzeltilmiş Sermaye (${Math.round(adjInvestedCapital).toLocaleString()}) = %${adjRoic.toFixed(1)}.`)}
                 </p>
                 <p>
-                  <strong>WACC Durumu:</strong> {
-                    Math.abs(parseFloat(userWaccGuess || "0") - adjWacc) <= 0.5
-                      ? "🎯 Kusursuz! Ağırlıklı sermaye maliyetini tam tutturdunuz."
-                      : `Ağırlıklı sermaye maliyeti %${adjWacc.toFixed(1)} olarak gerçekleşti.`
-                  }
+                  <strong>{isEnglish ? "WACC Accuracy:" : "WACC Durumu:"}</strong>{" "}
+                  {Math.abs(parseFloat(userWaccGuess || "0") - adjWacc) <= 0.5
+                    ? (isEnglish ? "🎯 Spot on! Your cost of capital calculation is perfectly accurate." : "🎯 Kusursuz! Ağırlıklı sermaye maliyetini tam tutturdunuz.")
+                    : (isEnglish
+                        ? `The weighted average cost of capital evaluates to %${adjWacc.toFixed(1)}.`
+                        : `Ağırlıklı sermaye maliyeti %${adjWacc.toFixed(1)} olarak gerçekleşti.`)}
                 </p>
               </div>
             </div>
@@ -1046,8 +1135,10 @@ export const FootnoteDetectiveLab: React.FC = () => {
       <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200/80 dark:border-indigo-800/60 flex items-start gap-3">
         <CheckCircle2 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
         <div className="space-y-1 text-xs sm:text-sm text-indigo-950 dark:text-indigo-200 leading-relaxed">
-          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">Michael Mauboussin Dipnot Analizi İlkesi:</strong>
-          {currentCase.takeaway}
+          <strong className="font-bold text-indigo-900 dark:text-indigo-300 block">
+            {isEnglish ? "Michael Mauboussin Footnote Forensic Principle:" : "Michael Mauboussin Dipnot Analizi İlkesi:"}
+          </strong>
+          {isEnglish ? currentCase.takeawayEn : currentCase.takeawayTr}
         </div>
       </div>
     </div>
