@@ -47,9 +47,11 @@ import {
 } from "../data/companyAuditData";
 import { useLanguage } from "../context/LanguageContext";
 import { isCompanyAuditDossierArray } from "../utils/companyAuditValidation";
+import { getDisplayName } from "../utils/companyAuditDisplay";
 import { MyWorkspacesView } from "./MyWorkspacesView";
 import { MauboussinMethodologyCoach } from "./MauboussinMethodologyCoach";
 import { InvestmentCommitteeModal } from "./InvestmentCommitteeModal";
+
 
 interface CompanyAuditLabProps {
   onOpenAICoachWithPrompt?: (prompt: string) => void;
@@ -149,10 +151,11 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
     });
   };
 
+  const displayCompanyName = getDisplayName(currentDossier.companyName, isEnglish);
   const companyLabel =
-    currentDossier.ticker && currentDossier.companyName.endsWith(`(${currentDossier.ticker})`)
-      ? currentDossier.companyName
-      : `${currentDossier.companyName} (${currentDossier.ticker})`;
+    currentDossier.ticker && displayCompanyName.endsWith(`(${currentDossier.ticker})`)
+      ? displayCompanyName
+      : `${displayCompanyName} (${currentDossier.ticker})`;
 
   const handleAddNewCompany = () => {
     const newId = "dossier-custom-" + Date.now();
@@ -532,7 +535,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                       }`}
                     >
                       {isMauboussin && <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
-                      <span>{doss.companyName}</span>
+                      <span>{getDisplayName(doss.companyName, isEnglish)}</span>
                       <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${isSelected ? "bg-indigo-700 text-indigo-100" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"}`}>
                         {doss.ticker}
                       </span>
@@ -661,7 +664,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">{isEnglish ? "Company Name:" : "Şirket Adı:"}</label>
                   <input
                     type="text"
-                    value={currentDossier.companyName}
+                    value={displayCompanyName}
                     onChange={(e) => handleUpdateCurrentDossier({ companyName: e.target.value })}
                     className="mt-1 w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100"
                   />
