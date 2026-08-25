@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { motion, AnimatePresence } from "motion/react";
 import { LearningModule, UserLearningState } from "./types";
 import { useLanguage } from "./context/LanguageContext";
@@ -361,6 +363,8 @@ export default function App() {
           setActiveModuleId(null);
         }}
       />
+      <SpeedInsights />
+      <Analytics />
     </div>
   );
 }

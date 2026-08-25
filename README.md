@@ -90,23 +90,23 @@ That principle is extended across the full research workflow. A strong business 
 
 ### Prerequisites
 
-Use Node.js 20 or newer and Bun. The AI coaching route is optional for local development; the application remains usable with its built-in educational fallback when no Gemini key is configured.
+Use Node.js 20 or newer and npm. The AI coaching route is optional for local development; the application remains usable with its built-in educational fallback when no Gemini key is configured.
 
 ### Installation
 
 ```bash
 git clone https://github.com/Onurinal59/themoateco.git
 cd themoateco
-bun install
+npm install --legacy-peer-deps
 cp .env.example .env
-bun run dev
+npm run dev
 ```
 
 The development server runs at [http://localhost:3000](http://localhost:3000). For a production-like local run, build the client and bundled server first:
 
 ```bash
-bun run build
-bun run start
+npm run build
+npm run start
 ```
 
 ### Environment variables
@@ -122,12 +122,12 @@ Never commit `.env` or any live API key to the repository. Use Vercel Environmen
 
 | Command | Description |
 | --- | --- |
-| `bun run dev` | Starts the Express server with Vite middleware for development. |
-| `bun run lint` | Runs TypeScript type checking without emitting files. |
-| `bun run build` | Builds the Vite frontend and bundles `server.ts` into `dist/server.cjs`. |
-| `bun run start` | Starts the compiled production server. |
-| `bun run preview` | Serves the Vite production output for frontend previewing. |
-| `bun run clean` | Removes generated build output. |
+| `npm run dev` | Starts the Express server with Vite middleware for development. |
+| `npm run lint` | Runs TypeScript type checking without emitting files. |
+| `npm run build` | Builds the Vite frontend and bundles `server.ts` into `dist/server.cjs`. |
+| `npm run start` | Starts the compiled production server. |
+| `npm run preview` | Serves the Vite production output for frontend previewing. |
+| `npm run clean` | Removes generated build output. |
 
 ## Vercel deployment
 
@@ -136,8 +136,8 @@ The repository includes a `vercel.json` with a Vite build command, the `dist` ou
 | Setting | Value |
 | --- | --- |
 | Framework preset | Vite |
-| Install command | `bun install --frozen-lockfile` |
-| Build command | `bun run build` |
+| Install command | `npm ci --legacy-peer-deps` |
+| Build command | `npm run build` |
 | Output directory | `dist` |
 | Node.js runtime | Node.js 20 or newer |
 
