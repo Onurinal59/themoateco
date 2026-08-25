@@ -153,6 +153,9 @@ export default function App() {
         onToggleDarkMode={toggleDarkMode}
       />
 
+      {/* Fixed Navbar Spacer */}
+      <div className="h-14 sm:h-16 shrink-0" aria-hidden="true" />
+
       {/* Main Content Area */}
       <main className="flex-1 min-w-0 max-w-7xl w-full mx-auto overflow-x-clip px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12">
         <AnimatePresence mode="wait">
