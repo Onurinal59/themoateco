@@ -266,6 +266,7 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
                 />
                 <button
                   type="submit"
+                  aria-label="Send message"
                   disabled={!input.trim() || isLoading}
                   className="p-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-600 text-white rounded-xl transition-all shadow-xs cursor-pointer"
                 >

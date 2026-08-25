@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { MouseEvent } from "react";
 import {
   FolderKanban,
   Plus,
@@ -480,14 +481,15 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
             return (
               <div
                 key={dossier.id}
-                className={`bg-white dark:bg-slate-900 border rounded-3xl p-6 shadow-xs flex flex-col justify-between transition-all relative group hover:shadow-md ${
+                onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
+                className={`bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between transition-all relative group hover:shadow-[0_8px_30px_rgba(99,102,241,0.1)] spotlight-card ${
                   isCurrentlyActive
-                    ? "border-indigo-500 dark:border-indigo-400 ring-2 ring-indigo-500/20"
-                    : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+                    ? "border-indigo-500/80 dark:border-indigo-400/80 ring-2 ring-indigo-500/20"
+                    : "border-slate-200/60 dark:border-slate-800/60 hover:border-indigo-300/80 dark:hover:border-slate-600/80"
                 }`}
               >
                 {/* Header Row */}
-                <div className="space-y-4">
+                <div className="space-y-4 spotlight-content">
                   <div className="flex items-start justify-between gap-3">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">

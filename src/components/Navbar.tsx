@@ -180,7 +180,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <>
       {/* Apple-style Translucent Sticky Navigation Header */}
-      <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800/70 transition-colors duration-500 ease-in-out">
+      <header className="sticky top-0 z-40 bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl border-b border-slate-200/50 dark:border-slate-800/70 transition-colors duration-500 ease-in-out shadow-sm dark:shadow-none">
         <div className="max-w-7xl mx-auto w-full px-2 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between min-h-14 sm:h-16 gap-1 sm:gap-2 lg:gap-3 w-full flex-wrap sm:flex-nowrap py-1 sm:py-0">
             
@@ -356,27 +356,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="flex items-center p-0.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-2xs gap-0.5 select-none">
                 <button
                   type="button"
-                  onClick={() => setLanguage("tr")}
-                  className={`p-1 sm:p-1.5 rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center ${
-                    language === "tr"
-                      ? "bg-white dark:bg-slate-800 shadow-xs ring-1.5 ring-indigo-500/70 dark:ring-indigo-400/80 scale-105"
-                      : "opacity-45 hover:opacity-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
-                  }`}
-                  title="Türkçe"
                   aria-label="Türkçe"
+                  title="Türkçe" aria-label="Türkçe"
                 >
                   <TurkishFlag className="w-4 h-2.5 sm:w-5 sm:h-3.5" />
                 </button>
                 <button
                   type="button"
-                  onClick={() => setLanguage("en")}
-                  className={`p-1 sm:p-1.5 rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center ${
-                    language === "en"
-                      ? "bg-white dark:bg-slate-800 shadow-xs ring-1.5 ring-indigo-500/70 dark:ring-indigo-400/80 scale-105"
-                      : "opacity-45 hover:opacity-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
-                  }`}
-                  title="English"
                   aria-label="English"
+                  title="English" aria-label="English"
                 >
                   <BritishFlag className="w-4 h-2.5 sm:w-5 sm:h-3.5" />
                 </button>
@@ -463,8 +451,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={onToggleDarkMode}
                 className="p-1.5 sm:p-2 rounded-xl bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 text-xs font-semibold transition-colors cursor-pointer shrink-0"
+                aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
                 title={isDarkMode ? (isEnglish ? "Switch to Light Mode" : "Aydınlık Moda Geç") : (isEnglish ? "Switch to Dark Mode" : "Karanlık Moda Geç")}
-                aria-label="Toggle Theme"
               >
                 {isDarkMode ? (
                   <Sun className="w-3.5 h-3.5 text-amber-400" />
@@ -487,8 +475,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Mobile Menu Drawer Toggle (Visible on < lg) */}
               <button
                 onClick={() => setIsMobileDrawerOpen(!isMobileDrawerOpen)}
+                aria-label="Toggle Mobile Menu"
                 className="lg:hidden p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 text-xs font-semibold transition-colors cursor-pointer shrink-0"
-                aria-label="Open Menu"
+                
               >
                 {isMobileDrawerOpen ? (
                   <X className="w-4 h-4" />
@@ -519,27 +508,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="flex items-center gap-1 p-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
                   <button
                     type="button"
-                    onClick={() => setLanguage("tr")}
-                    className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center ${
-                      language === "tr"
-                        ? "bg-indigo-50 dark:bg-indigo-950/80 ring-1.5 ring-indigo-500 shadow-xs scale-105"
-                        : "opacity-45 hover:opacity-100"
-                    }`}
-                    title="Türkçe"
                     aria-label="Türkçe"
+                    title="Türkçe" aria-label="Türkçe"
                   >
                     <TurkishFlag className="w-6 h-4" />
                   </button>
                   <button
                     type="button"
-                    onClick={() => setLanguage("en")}
-                    className={`p-1.5 rounded-lg transition-all cursor-pointer flex items-center justify-center ${
-                      language === "en"
-                        ? "bg-indigo-50 dark:bg-indigo-950/80 ring-1.5 ring-indigo-500 shadow-xs scale-105"
-                        : "opacity-45 hover:opacity-100"
-                    }`}
-                    title="English"
                     aria-label="English"
+                    title="English" aria-label="English"
                   >
                     <BritishFlag className="w-6 h-4" />
                   </button>

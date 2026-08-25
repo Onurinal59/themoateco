@@ -4,6 +4,7 @@ import { LearningModule, UserLearningState } from "../types";
 import { NavTab } from "./Navbar";
 import { SimTab } from "./SimulationsView";
 import { useLanguage } from "../context/LanguageContext";
+import { useRef, MouseEvent } from "react";
 import {
   CheckCircle2,
   Clock,
@@ -39,6 +40,15 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
   const completedCount = userState.completedModules.length;
   const progressPercent = Math.round((completedCount / (modules.length || 1)) * 100);
 
+  // Spotlight mouse tracking
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>, currentTarget: HTMLElement) => {
+    const rect = currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    currentTarget.style.setProperty("--mouse-x", `${x}px`);
+    currentTarget.style.setProperty("--mouse-y", `${y}px`);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -49,7 +59,26 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
       id="roadmap-view"
     >
       {/* Hero Welcome & Institutional Mastery Mission */}
-      <div className="relative rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-8 overflow-hidden shadow-xs w-full">
+      <div className="relative rounded-3xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 p-5 sm:p-8 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(99,102,241,0.15)] transition-all duration-700 w-full group">
+        
+        {/* Animated Background Gradients & Particles in Hero */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl opacity-30 dark:opacity-20 group-hover:opacity-50 transition-opacity duration-700">
+           <div className="absolute top-[-20%] right-[-10%] w-[30rem] h-[30rem] bg-indigo-500/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] animate-blob"></div>
+           <div className="absolute bottom-[-20%] left-[-10%] w-[30rem] h-[30rem] bg-emerald-500/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[80px] animate-blob-reverse animation-delay-2000"></div>
+        </div>
+        
+        {/* Floating Abstract Elements */}
+        <div className="absolute right-[5%] top-[15%] opacity-20 dark:opacity-30 pointer-events-none animate-float-up">
+           <div className="w-16 h-16 border-2 border-indigo-500 rounded-lg transform rotate-45"></div>
+        </div>
+        <div className="absolute right-[20%] bottom-[10%] opacity-20 dark:opacity-30 pointer-events-none animate-float-up animation-delay-4000">
+           <div className="w-12 h-12 border-2 border-emerald-500 rounded-full"></div>
+        </div>
+        <div className="absolute left-[10%] top-[30%] opacity-10 dark:opacity-20 pointer-events-none animate-float-up animation-delay-2000">
+           <div className="w-20 h-20 border-2 border-amber-500 rounded-lg transform rotate-[30deg]"></div>
+        </div>
+
+        
         <div className="relative z-10 w-full">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/80">
@@ -62,7 +91,7 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={onOpenGuide}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 cursor-pointer transition-colors"
+                className="animate-shimmer inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 cursor-pointer transition-colors"
               >
                 <Compass className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                 <span>{isEnglish ? "Mastery Roadmap Guide" : "Ustalık Yol Haritası Kılavuzu"}</span>
@@ -70,7 +99,7 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
             )}
           </div>
 
-          <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight leading-tight">
+          <h1 className="text-xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-indigo-700 to-slate-900 dark:from-white dark:via-indigo-300 dark:to-white tracking-tight leading-tight drop-shadow-sm">
             {isEnglish
               ? "Michael Mauboussin: Measuring Economic Moats & Forensic Accounting"
               : "Michael Mauboussin: Ekonomik Hendekleri Ölçmek & Bilanço Cerrahisi"}
@@ -254,20 +283,21 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
                 whileHover={{ y: -2, scale: 1.005 }}
                 whileTap={{ scale: 0.995 }}
                 onClick={() => onSelectModule(module)}
-                className={`group p-5 sm:p-6 rounded-2xl border transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 ${
+                onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
+                className={`group spotlight-card p-5 sm:p-6 rounded-2xl border transition-all cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 ${
                   isCompleted
-                    ? "bg-white dark:bg-slate-900 border-emerald-300 dark:border-emerald-700/60 hover:border-emerald-500 dark:hover:border-emerald-500 shadow-xs"
-                    : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-xs"
+                    ? "bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-emerald-300/80 dark:border-emerald-700/60 hover:border-emerald-500 dark:hover:border-emerald-500 shadow-xs"
+                    : "bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-slate-200/60 dark:border-slate-800/60 hover:border-indigo-300/80 dark:hover:border-indigo-700/80 hover:shadow-md"
                 }`}
               >
                 {/* Left Info */}
-                <div className="flex items-start gap-3.5 sm:gap-4 flex-1">
+                <div className="flex items-start gap-3.5 sm:gap-4 flex-1 spotlight-content">
                   {/* Step Number Badge */}
                   <div
                     className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center font-mono font-bold text-sm sm:text-base shrink-0 border transition-transform group-hover:scale-105 ${
                       isCompleted
                         ? "bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300"
-                        : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+                        : "bg-slate-50/80 dark:bg-slate-800/80 backdrop-blur-sm border-slate-200/80 dark:border-slate-700/80 text-slate-700 dark:text-slate-300"
                     }`}
                   >
                     {isCompleted ? <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" /> : `0${module.id}`}

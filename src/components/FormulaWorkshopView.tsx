@@ -226,7 +226,7 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
   return (
     <div className="space-y-8 pb-16">
       {/* Page Hero Header */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900 text-slate-800 dark:text-white border border-slate-200 dark:border-indigo-900/60 shadow-sm dark:shadow-xl relative overflow-hidden">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl text-slate-800 dark:text-white border border-slate-200/50 dark:border-indigo-900/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-xl relative overflow-hidden">
         {/* Subtle decorative glow */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
         <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
@@ -340,7 +340,7 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
             className="lg:col-span-8 space-y-6"
           >
             {/* Main Equation & Summary Card */}
-            <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-900/60 shadow-sm space-y-4">
+            <div className="p-6 sm:p-7 rounded-3xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-indigo-200/50 dark:border-indigo-900/60 shadow-sm space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-1 rounded-lg text-xs font-black bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 uppercase tracking-wider">
@@ -369,7 +369,7 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
           </div>
 
           {/* Interactive Calculator Workspace */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+          <div className="p-6 sm:p-7 rounded-3xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/50 shadow-sm space-y-6">
             <div className="flex items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
@@ -1202,7 +1202,7 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
           </div>
 
           {/* Parameters / Variables Breakdown Grid */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="p-6 sm:p-7 rounded-3xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/50 shadow-sm space-y-4">
             <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
               <Info className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
               <span>{isEnglish ? "Formula Variables & Balance Sheet Extraction" : "Formül Değişkenleri & Bilançodan Çıkarılışı"}</span>
@@ -1234,7 +1234,7 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
           </div>
 
           {/* Step by Step Numerical Case Math */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+          <div className="p-6 sm:p-7 rounded-3xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl text-slate-900 dark:text-slate-100 border border-slate-200/50 dark:border-slate-800/50 shadow-sm space-y-5">
             <div className="flex items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2 font-sans font-bold text-amber-600 dark:text-amber-400 text-xs uppercase tracking-wider">
                 <Calculator className="w-4 h-4 text-amber-600 dark:text-amber-400" />
@@ -1296,7 +1296,7 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
           </div>
 
           {/* Navigation Action Buttons */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
+          <div className="p-5 rounded-3xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/50 dark:border-slate-800/50 flex flex-wrap items-center justify-between gap-4">
             <div className="space-y-0.5">
               <div className="text-xs font-bold text-slate-900 dark:text-slate-100">
                 {isEnglish ? "Associated Academy Module" : "Bu Formülü İçeren Akademi Modülü"}

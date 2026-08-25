@@ -103,6 +103,7 @@ export const FloatingGuideWidget: React.FC<FloatingGuideWidgetProps> = ({
               {/* Close / Minimize */}
               <button
                 onClick={handleClose}
+                aria-label="Close Guide"
                 className="p-1 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                 title={isEnglish ? "Minimize" : "Küçült"}
               >
@@ -135,6 +136,7 @@ export const FloatingGuideWidget: React.FC<FloatingGuideWidgetProps> = ({
 
                 <button
                   onClick={handleClose}
+                  aria-label="Dismiss Guide"
                   className="py-2 px-3 rounded-xl text-xs font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                 >
                   {isEnglish ? "Later" : "Daha Sonra"}
@@ -155,6 +157,7 @@ export const FloatingGuideWidget: React.FC<FloatingGuideWidgetProps> = ({
           >
             <button
               onClick={() => setIsMinimized(false)}
+              aria-label="Open Guide"
               className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl bg-white dark:bg-slate-900 border border-indigo-300 dark:border-indigo-800/80 text-indigo-700 dark:text-indigo-300 text-xs font-bold shadow-xl shadow-indigo-950/15 hover:shadow-indigo-500/20 transition-all cursor-pointer group"
               title={isEnglish ? "Open Learning Guide" : "Öğrenme Rehberini Aç"}
             >

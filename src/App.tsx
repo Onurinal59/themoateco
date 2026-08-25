@@ -15,6 +15,7 @@ import { OnboardingGuideModal } from "./components/OnboardingGuideModal";
 import { FloatingGuideWidget } from "./components/FloatingGuideWidget";
 import { FormulaDeepDiveModal } from "./components/FormulaDeepDiveModal";
 import { Footer } from "./components/Footer";
+import { GlobalClickEffect } from "./components/GlobalClickEffect";
 import type { SimTab } from "./components/SimulationsView";
 
 const RoadmapView = React.lazy(() => import("./components/RoadmapView").then(m => ({ default: m.RoadmapView })));
@@ -166,7 +167,22 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-indigo-200 font-sans overflow-x-clip">
+    <div className="min-h-screen relative text-slate-800 dark:text-slate-100 flex flex-col selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-indigo-200 font-sans overflow-x-clip z-0">
+      
+      {/* Global Interactive Click Ripple */}
+      <GlobalClickEffect />
+
+      {/* Ambient Moving Background */}
+      <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none flex items-center justify-center bg-[#F8FAFC] dark:bg-slate-950">
+        {/* Abstract Blobs */}
+        <div className="absolute top-[10%] left-[10%] w-[45rem] h-[45rem] bg-indigo-400/25 dark:bg-indigo-500/15 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] animate-blob"></div>
+        <div className="absolute top-[20%] right-[5%] w-[40rem] h-[40rem] bg-rose-300/25 dark:bg-rose-800/15 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] animate-blob-reverse animation-delay-2000"></div>
+        <div className="absolute -bottom-[10%] left-[20%] w-[50rem] h-[50rem] bg-amber-300/25 dark:bg-blue-600/15 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] animate-blob animation-delay-4000"></div>
+        
+        {/* Subtle Grid Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_20%,transparent_100%)] animate-pan-grid"></div>
+      </div>
+
       {/* Top Navbar */}
       <Navbar
         activeTab={activeTab}

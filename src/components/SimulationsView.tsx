@@ -1,17 +1,29 @@
 import React, { useState } from "react";
+const RoicWaccSim = React.lazy(() => import("./simulators/RoicWaccSim").then(m => ({ default: m.RoicWaccSim })));
+const DickinsonLifecycleSim = React.lazy(() => import("./simulators/DickinsonLifecycleSim").then(m => ({ default: m.DickinsonLifecycleSim })));
+const ValueStickSim = React.lazy(() => import("./simulators/ValueStickSim").then(m => ({ default: m.ValueStickSim })));
+const ProfitPoolSim = React.lazy(() => import("./simulators/ProfitPoolSim").then(m => ({ default: m.ProfitPoolSim })));
+const FootnoteDetectiveLab = React.lazy(() => import("./simulators/FootnoteDetectiveLab").then(m => ({ default: m.FootnoteDetectiveLab })));
+const PrisonersDilemmaSim = React.lazy(() => import("./simulators/PrisonersDilemmaSim").then(m => ({ default: m.PrisonersDilemmaSim })));
+const ColonelBlottoSim = React.lazy(() => import("./simulators/ColonelBlottoSim").then(m => ({ default: m.ColonelBlottoSim })));
+const DuPontSim = React.lazy(() => import("./simulators/DuPontSim").then(m => ({ default: m.DuPontSim })));
+const CashConversionSim = React.lazy(() => import("./simulators/CashConversionSim").then(m => ({ default: m.CashConversionSim })));
+const ReverseDCFSim = React.lazy(() => import("./simulators/ReverseDCFSim").then(m => ({ default: m.ReverseDCFSim })));
+const MoatChecklistSim = React.lazy(() => import("./simulators/MoatChecklistSim").then(m => ({ default: m.MoatChecklistSim })));
+
 import { motion, AnimatePresence } from "motion/react";
 import { useLanguage } from "../context/LanguageContext";
-import { RoicWaccSim } from "./simulators/RoicWaccSim";
-import { DickinsonLifecycleSim } from "./simulators/DickinsonLifecycleSim";
-import { ValueStickSim } from "./simulators/ValueStickSim";
-import { ProfitPoolSim } from "./simulators/ProfitPoolSim";
-import { FootnoteDetectiveLab } from "./simulators/FootnoteDetectiveLab";
-import { PrisonersDilemmaSim } from "./simulators/PrisonersDilemmaSim";
-import { ColonelBlottoSim } from "./simulators/ColonelBlottoSim";
-import { DuPontSim } from "./simulators/DuPontSim";
-import { CashConversionSim } from "./simulators/CashConversionSim";
-import { ReverseDCFSim } from "./simulators/ReverseDCFSim";
-import { MoatChecklistSim } from "./simulators/MoatChecklistSim";
+
+
+
+
+
+
+
+
+
+
+
 import {
   Shield,
   Activity,
@@ -101,7 +113,7 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
       id="simulations-view"
     >
       {/* Header */}
-      <div className="p-5 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="p-5 sm:p-8 rounded-3xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl border border-slate-200/50 dark:border-slate-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
         <div className="flex flex-wrap items-center gap-2 mb-2">
           <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
@@ -137,7 +149,7 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
               className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 isActive
                   ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/25 ring-1 ring-indigo-500/50 font-bold"
-                  : "bg-white dark:bg-slate-900/90 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+                  : "bg-white/60 dark:bg-slate-900/60 backdrop-blur-md text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-white/90 dark:hover:bg-slate-800 border border-slate-200/50 dark:border-slate-800/50 hover:border-slate-300 dark:hover:border-slate-700"
               }`}
             >
               <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -166,6 +178,7 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
           transition={{ duration: 0.2, ease: "easeOut" }}
           className="w-full"
         >
+        <React.Suspense fallback={<div className="h-64 flex items-center justify-center text-slate-500 font-medium">Yükleniyor...</div>}>
           {activeSim === "roic-wacc" && <RoicWaccSim isEnglish={isEnglish} />}
           {activeSim === "dickinson" && <DickinsonLifecycleSim isEnglish={isEnglish} />}
           {activeSim === "value-stick" && <ValueStickSim isEnglish={isEnglish} />}
@@ -184,6 +197,7 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
             />
           )}
           {activeSim === "checklist" && <MoatChecklistSim isEnglish={isEnglish} />}
+        </React.Suspense>
         </motion.div>
       </AnimatePresence>
     </motion.div>
