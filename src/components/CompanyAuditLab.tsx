@@ -46,12 +46,9 @@ import {
   translateCategory
 } from "../data/companyAuditData";
 import { useLanguage } from "../context/LanguageContext";
-import { isCompanyAuditDossierArray } from "../utils/companyAuditValidation";
-import { getDisplayName } from "../utils/companyAuditDisplay";
 import { MyWorkspacesView } from "./MyWorkspacesView";
 import { MauboussinMethodologyCoach } from "./MauboussinMethodologyCoach";
 import { InvestmentCommitteeModal } from "./InvestmentCommitteeModal";
-
 
 interface CompanyAuditLabProps {
   onOpenAICoachWithPrompt?: (prompt: string) => void;
@@ -68,7 +65,7 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (isCompanyAuditDossierArray(parsed)) {
+        if (Array.isArray(parsed) && parsed.length > 0) {
           return parsed;
         }
       } catch (e) {
@@ -151,17 +148,11 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
     });
   };
 
-  const displayCompanyName = getDisplayName(currentDossier.companyName, isEnglish);
-  const companyLabel =
-    currentDossier.ticker && displayCompanyName.endsWith(`(${currentDossier.ticker})`)
-      ? displayCompanyName
-      : `${displayCompanyName} (${currentDossier.ticker})`;
-
   const handleAddNewCompany = () => {
     const newId = "dossier-custom-" + Date.now();
     const newDossier: CompanyAuditDossier = {
       id: newId,
-      companyName: isEnglish ? "New Analyzed Company (TICKER)" : "Yeni Analiz Edilen Şirket (TICKER)",
+      companyName: isEnglish ? "New Analyzed Company" : "Yeni Analiz Edilen Şirket",
       ticker: "TICKER",
       industry: isEnglish ? "Specify Industry" : "Sektör Belirtiniz",
       description: isEnglish ? "Company's core business model and value proposition." : "Şirketin ana iş modeli ve değer önerisi.",
@@ -241,15 +232,6 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
   };
 
   const handleImportDossiers = (imported: CompanyAuditDossier[]) => {
-    if (!isCompanyAuditDossierArray(imported)) {
-      alert(
-        isEnglish
-          ? "No valid studies were found in the import file."
-          : "İçe aktarma dosyasında geçerli bir çalışma bulunamadı."
-      );
-      return;
-    }
-
     const existingIds = new Set(dossiers.map((d) => d.id));
     const newUnique = imported.filter((item) => !existingIds.has(item.id));
     if (newUnique.length > 0) {
@@ -272,7 +254,7 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
 
   const copyReportToClipboard = () => {
     const reportText = `
-=== ${companyLabel} MAUBOUSSIN MOAT AUDIT REPORT ===
+=== ${currentDossier.companyName} (${currentDossier.ticker}) MAUBOUSSIN MOAT AUDIT REPORT ===
 ${isEnglish ? "Industry" : "Sektör"}: ${currentDossier.industry}
 ${isEnglish ? "Date" : "Tarih"}: ${currentDossier.updatedAt}
 
@@ -322,7 +304,7 @@ ${isEnglish ? "Notes" : "Notlar"}: ${currentDossier.notes || (isEnglish ? "No no
     const prompt = isEnglish
       ? `Can you evaluate this company according to Michael Mauboussin's 'Measuring the Moat' methodology?
 
-Company: ${companyLabel}
+Company: ${currentDossier.companyName} (${currentDossier.ticker})
 Industry: ${currentDossier.industry}
 ROIC: %${finCalc.roicPercent} (WACC: %${currentDossier.financials.wacc}, Spread: %${finCalc.spread})
 NOPAT Margin: %${finCalc.nopatMarginPercent}, Capital Turnover: ${finCalc.capitalTurnover}x
@@ -334,7 +316,7 @@ Key Vulnerability: ${currentDossier.sustainability.keyVulnerability}
 What are the critical moat risks and competitive longevity for this business?`
       : `Michael Mauboussin'in "Measuring the Moat" metodolojisine göre bu şirketi değerlendirir misin?
 
-Şirket: ${companyLabel}
+Şirket: ${currentDossier.companyName} (${currentDossier.ticker})
 Sektör: ${currentDossier.industry}
 ROIC: %${finCalc.roicPercent} (WACC: %${currentDossier.financials.wacc}, Fark: %${finCalc.spread})
 NOPAT Marjı: %${finCalc.nopatMarginPercent}, Sermaye Devir Hızı: ${finCalc.capitalTurnover}x
@@ -458,7 +440,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                     <ArrowLeft className="w-3.5 h-3.5" /> {isEnglish ? "All Workspaces" : "Tüm Çalışmalarım"}
                   </button>
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-                    {isEnglish ? "Active File: " : "Aktif Dosya: "} {companyLabel}
+                    {isEnglish ? "Active File: " : "Aktif Dosya: "} {currentDossier.companyName} ({currentDossier.ticker})
                   </span>
                   {currentDossier.isCustom && (
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 flex items-center gap-1">
@@ -467,7 +449,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   )}
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-                  {companyLabel} — {isEnglish ? "Moat Diagnosis" : "Hendek Teşhisi"}
+                  {currentDossier.companyName} ({currentDossier.ticker}) — {isEnglish ? "Moat Diagnosis" : "Hendek Teşhisi"}
                 </h1>
                 <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
                   {isEnglish
@@ -516,7 +498,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
             </div>
 
             {/* Company Quick-Switch Horizontal Bar */}
-            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 overflow-x-auto no-scrollbar pb-2">
+            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 overflow-x-auto pb-2 scrollbar-thin">
               <div className="flex items-center gap-2 shrink-0">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1 shrink-0">
                   {isEnglish ? "Switch Dossier:" : "Dosya Değiştir:"}
@@ -535,7 +517,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                       }`}
                     >
                       {isMauboussin && <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
-                      <span>{getDisplayName(doss.companyName, isEnglish)}</span>
+                      <span>{doss.companyName}</span>
                       <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${isSelected ? "bg-indigo-700 text-indigo-100" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"}`}>
                         {doss.ticker}
                       </span>
@@ -587,9 +569,9 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
           )}
 
           {/* Main Audit Workspace Form & Diagnostics */}
-          <div className="w-full min-w-0 grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left Column: Interactive 5-Step Process (8 cols) */}
-            <div className="w-full min-w-0 lg:col-span-8 space-y-6">
+            <div className="lg:col-span-8 space-y-6">
               {/* Step Navigation Tabs */}
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-2 flex items-center justify-between gap-1 sm:gap-2 shadow-xs overflow-x-auto scrollbar-thin">
                 {[
@@ -636,11 +618,11 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="w-full max-w-full min-w-0 box-border bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs"
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs"
                   >
-              <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
-                <div className="min-w-0">
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex flex-wrap items-center gap-2 break-words">
+              <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                     <Calculator className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                     {isEnglish ? "Step 1: Financial X-Ray & Balance Sheet Inputs" : "Adım 1: Finansal Röntgen & Bilanço Girdileri"}
                   </h3>
@@ -652,19 +634,19 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                 </div>
                 <button
                   onClick={() => setIsGuideModalOpen(true)}
-                  className="shrink-0 whitespace-nowrap text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
+                  className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <HelpCircle className="w-3.5 h-3.5" /> {isEnglish ? "Where to Find?" : "Nereden Bulurum?"}
                 </button>
               </div>
 
               {/* Company Info Header */}
-              <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">{isEnglish ? "Company Name:" : "Şirket Adı:"}</label>
                   <input
                     type="text"
-                    value={displayCompanyName}
+                    value={currentDossier.companyName}
                     onChange={(e) => handleUpdateCurrentDossier({ companyName: e.target.value })}
                     className="mt-1 w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-slate-100"
                   />
@@ -690,121 +672,121 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
               </div>
 
               {/* Number Inputs Grid */}
-              <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="w-full max-w-full min-w-0 box-border p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
-                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 min-w-0">
-                    <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {isEnglish ? "1. Annual Revenue" : "1. Yıllık Gelir (Hasılat / Revenue)"}
                     </label>
-                    <span className="shrink-0 whitespace-nowrap text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
                   </div>
                   <input
                     type="number"
                     value={currentDossier.financials.revenue}
                     onChange={(e) => handleFinancialChange("revenue", Number(e.target.value))}
-                    className="w-full max-w-full box-border px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
                     {isEnglish ? "Top line on the Income Statement (Total Revenue)." : "Gelir Tablosu'ndaki 'Hasılat' (Total Revenue) satırı."}
                   </p>
                 </div>
 
-                <div className="w-full max-w-full min-w-0 box-border p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
-                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 min-w-0">
-                    <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {isEnglish ? "2. Operating Income (EBIT)" : "2. Esas Faaliyet Kârı (EBIT)"}
                     </label>
-                    <span className="shrink-0 whitespace-nowrap text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
                   </div>
                   <input
                     type="number"
                     value={currentDossier.financials.operatingIncome}
                     onChange={(e) => handleFinancialChange("operatingIncome", Number(e.target.value))}
-                    className="w-full max-w-full box-border px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
                     {isEnglish ? "Operating profit before financing costs and taxes (Operating Income)." : "Finansman ve vergiden önceki operasyonel kâr (Operating Income)."}
                   </p>
                 </div>
 
-                <div className="w-full max-w-full min-w-0 box-border p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
-                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 min-w-0">
-                    <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {isEnglish ? "3. Effective Tax Rate (%)" : "3. Efektif Vergi Oranı (%)"}
                     </label>
-                    <span className="shrink-0 whitespace-nowrap text-[10px] text-slate-400 font-mono">%</span>
+                    <span className="text-[10px] text-slate-400 font-mono">%</span>
                   </div>
                   <input
                     type="number"
                     value={currentDossier.financials.effectiveTaxRate}
                     onChange={(e) => handleFinancialChange("effectiveTaxRate", Number(e.target.value))}
-                    className="w-full max-w-full box-border px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
                     {isEnglish ? "Tax Expense / Pre-Tax Income (standard 15-25%)." : "Vergi Gideri / Vergi Öncesi Kâr (Türkiye için standart %25-30, ABD için %15-21)."}
                   </p>
                 </div>
 
-                <div className="w-full max-w-full min-w-0 box-border p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
-                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 min-w-0">
-                    <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {isEnglish ? "4. Total Assets" : "4. Toplam Varlıklar (Total Assets)"}
                     </label>
-                    <span className="shrink-0 whitespace-nowrap text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
                   </div>
                   <input
                     type="number"
                     value={currentDossier.financials.totalAssets}
                     onChange={(e) => handleFinancialChange("totalAssets", Number(e.target.value))}
-                    className="w-full max-w-full box-border px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
                     {isEnglish ? "Total assets on the balance sheet (Current + Non-Current)." : "Bilanço aktif toplamı (Dönen + Duran Varlıklar)."}
                   </p>
                 </div>
 
-                <div className="w-full max-w-full min-w-0 box-border p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
-                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 min-w-0">
-                    <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {isEnglish ? "5. Cash & Cash Equivalents" : "5. Nakit ve Nakit Benzerleri"}
                     </label>
-                    <span className="shrink-0 whitespace-nowrap text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
                   </div>
                   <input
                     type="number"
                     value={currentDossier.financials.cashAndEquivalents}
                     onChange={(e) => handleFinancialChange("cashAndEquivalents", Number(e.target.value))}
-                    className="w-full max-w-full box-border px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
                     {isEnglish ? "Excess idle cash and short-term marketable investments." : "Kasada duran atıl nakit ve kısa vadeli finansal yatırımlar."}
                   </p>
                 </div>
 
-                <div className="w-full max-w-full min-w-0 box-border p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
-                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 min-w-0">
-                    <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {isEnglish ? "6. Non-Interest Bearing Current Liabilities" : "6. Ticari Borçlar & Faizsiz Kısa Borçlar"}
                     </label>
-                    <span className="shrink-0 whitespace-nowrap text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">{isEnglish ? "Million USD / Local" : "Milyon TL / $"}</span>
                   </div>
                   <input
                     type="number"
                     value={currentDossier.financials.nonInterestCurrentLiabilities}
                     onChange={(e) => handleFinancialChange("nonInterestCurrentLiabilities", Number(e.target.value))}
-                    className="w-full max-w-full box-border px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
+                    className="w-full px-3 py-2 text-sm font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100"
                   />
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
                     {isEnglish ? "Accounts payable to suppliers (Interest-free working capital financing)." : "Tedarikçilere olan borçlar (Accounts Payable - Faizsiz sermaye)."}
                   </p>
                 </div>
 
-                <div className="w-full max-w-full min-w-0 box-border sm:col-span-2 p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/50 space-y-1">
-                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 min-w-0">
-                    <label className="min-w-0 break-words text-xs font-bold text-indigo-900 dark:text-indigo-200">
+                <div className="sm:col-span-2 p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/50 space-y-1">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-indigo-900 dark:text-indigo-200">
                       {isEnglish ? "7. Cost of Capital (WACC - Hurdle Rate)" : "7. Sermaye Maliyeti (WACC - Hurdle Rate)"}
                     </label>
-                    <span className="shrink-0 whitespace-nowrap text-xs font-mono font-bold text-indigo-700 dark:text-indigo-400">%{currentDossier.financials.wacc}</span>
+                    <span className="text-xs font-mono font-bold text-indigo-700 dark:text-indigo-400">%{currentDossier.financials.wacc}</span>
                   </div>
                   <input
                     type="range"
@@ -823,12 +805,12 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
               </div>
 
               {/* Next Step Action */}
-              <div className="pt-4 flex flex-col sm:flex-row justify-end gap-3">
+              <div className="pt-4 flex justify-end">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(2)}
-                  className="w-full sm:w-auto max-w-full px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
                   {isEnglish ? "Proceed to Step 2: Industry Structure" : "Adım 2'ye Geç: Sektör Yapısı"} <ArrowRight className="w-4 h-4" />
                 </motion.button>
@@ -895,7 +877,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   return (
                     <div key={item.key} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
-                        <div className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">{item.label}</div>
+                        <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{item.label}</div>
                         <div className="text-[11px] text-slate-500 dark:text-slate-400">{item.desc}</div>
                       </div>
                       <div className="flex gap-2 shrink-0">
@@ -936,7 +918,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                 })}
 
                 <div className="pt-2">
-                  <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                     {isEnglish ? "Industry Profit Pool Position:" : "Sektör Kâr Havuzu Konumu (Profit Pool):"}
                   </label>
                   <textarea
@@ -969,7 +951,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(3)}
-                  className="w-full sm:w-auto max-w-full px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
                   {isEnglish ? "Proceed to Step 3: Moat Drivers" : "Adım 3'e Geç: Hendek Motorları"} <ArrowRight className="w-4 h-4" />
                 </motion.button>
@@ -1001,7 +983,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
 
               {/* Primary Advantage Radio */}
               <div className="space-y-2">
-                <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   {isEnglish ? "Primary Competitive Advantage Archetype:" : "Temel Rekabet Üstünlüğü Türü:"}
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -1050,7 +1032,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
 
               {/* Moat Sub-driver checkboxes */}
               <div className="space-y-2 pt-2">
-                <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   {isEnglish ? "Active Moat Sub-Drivers (Select all that apply):" : "Şirkette Bulunan Hendek Alt Motorları (Birden fazla seçebilirsiniz):"}
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -1099,7 +1081,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
               {/* Evidence Text areas */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div>
-                  <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                     {isEnglish ? "Pricing Power Evidence:" : "Fiyat Gücü Kanıtı (Pricing Power):"}
                   </label>
                   <textarea
@@ -1119,7 +1101,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                 </div>
 
                 <div>
-                  <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                     {isEnglish ? "Cost / Process Advantage Evidence:" : "Birim Maliyet / Süreç Kanıtı:"}
                   </label>
                   <textarea
@@ -1152,7 +1134,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(4)}
-                  className="w-full sm:w-auto max-w-full px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
                   {isEnglish ? "Proceed to Step 4: Game Theory" : "Adım 4'e Geç: Oyun Teorisi"} <ArrowRight className="w-4 h-4" />
                 </motion.button>
@@ -1185,7 +1167,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
               <div className="space-y-4">
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <div className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {isEnglish ? "1. Capacity Discipline" : "1. Kapasite Disiplini"}
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -1227,7 +1209,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <div className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {isEnglish ? "2. Price War Risk (Prisoner's Dilemma)" : "2. Fiyat Kırma & Fiyat Savaşı Riski (Mahkumlar İkilemi)"}
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -1269,7 +1251,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
 
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <div className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {isEnglish ? "3. Management Capital Allocation Skill" : "3. Yönetimin Sermaye Tahsis Becerisi (Capital Allocation)"}
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -1323,7 +1305,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setActiveStep(5)}
-                  className="w-full sm:w-auto max-w-full px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-2 cursor-pointer shadow-xs"
                 >
                   {isEnglish ? "Final Step: Generate Report" : "Son Adım: Raporu Oluştur"} <ArrowRight className="w-4 h-4" />
                 </motion.button>
@@ -1379,11 +1361,11 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   </div>
                   <div className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mt-1 flex items-center gap-2">
                     {isEnglish
-                      ? moatScore.diagnosedMoat === "Geniş Hendek (Wide)"
-                        ? "Wide Moat"
-                        : moatScore.diagnosedMoat === "Dar Hendek (Narrow)"
-                        ? "Narrow Moat"
-                        : "No Moat"
+                      ? moatScore.scorePercent >= 75
+                        ? "Wide Moat (Geniş Hendek)"
+                        : moatScore.scorePercent >= 45
+                        ? "Narrow Moat (Dar Hendek)"
+                        : "No Moat (Hendeksiz)"
                       : moatScore.diagnosedMoat}
                   </div>
                   <div className="flex flex-wrap gap-1.5 mt-2">
@@ -1410,8 +1392,8 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
               {/* Sustainability Controls */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-2">
-                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 min-w-0">
-                    <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                       {isEnglish ? "Estimated Competitive Advantage Period (CAP)" : "Tahmini Rekabetçi Avantaj Dönemi (CAP)"}
                     </label>
                     <span className="text-sm font-mono font-bold text-indigo-600 dark:text-indigo-400">
@@ -1440,8 +1422,8 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   </p>
                 </div>
 
-                <div className="w-full max-w-full min-w-0 box-border p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
-                  <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 space-y-1">
+                  <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                     {isEnglish ? "Key Moat Threat / Vulnerability:" : "Hendeği Tehdit Eden En Büyük Kırılganlık:"}
                   </label>
                   <input
@@ -1463,7 +1445,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
 
               {/* Final Notes */}
               <div>
-                <label className="min-w-0 break-words text-xs font-bold text-slate-800 dark:text-slate-200">
+                <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                   {isEnglish ? "Personal Investment Thesis & Audit Notes:" : "Kişisel Analiz Özeti ve Notlarınız:"}
                 </label>
                 <textarea
@@ -1519,15 +1501,15 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
         </div>
 
         {/* Right Column: Live Diagnostic Dashboard & DuPont Card (4 cols) */}
-        <div className="w-full min-w-0 lg:col-span-4 space-y-6">
+        <div className="lg:col-span-4 space-y-6">
           {/* Main Financial Health Card */}
-          <div className="w-full max-w-full min-w-0 box-border bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-xs space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="min-w-0 break-words text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-xs space-y-5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 {isEnglish ? "Live ROIC Diagnosis" : "Canlı ROIC Röntgeni"}
               </span>
               <span
-                className={`shrink-0 whitespace-nowrap px-2.5 py-0.5 rounded-full text-xs font-bold font-mono ${
+                className={`px-2.5 py-0.5 rounded-full text-xs font-bold font-mono ${
                   finCalc.isCreatingValue
                     ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
                     : "bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800"
@@ -1538,7 +1520,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
             </div>
 
             {/* Big ROIC vs WACC Spread */}
-            <div className="w-full max-w-full min-w-0 box-border p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-center space-y-1">
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-center space-y-1">
               <div className="text-xs text-slate-500 dark:text-slate-400">{isEnglish ? "ROIC (Return on Invested Capital)" : "ROIC (Yatırılan Sermaye Getirisi)"}</div>
               <div
                 className={`text-3xl sm:text-4xl font-mono font-black ${
@@ -1549,7 +1531,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
               >
                 %{finCalc.roicPercent}
               </div>
-              <div className="max-w-full break-words whitespace-normal text-xs text-slate-600 dark:text-slate-300 font-mono">
+              <div className="text-xs text-slate-600 dark:text-slate-300 font-mono">
                 WACC: %{currentDossier.financials.wacc} | {isEnglish ? "Spread" : "Fark (Spread)"}:{" "}
                 <strong className={finCalc.spread >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}>
                   {finCalc.spread > 0 ? `+${finCalc.spread}%` : `${finCalc.spread}%`}
@@ -1562,14 +1544,14 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
               <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 {isEnglish ? "Mauboussin DuPont Decomposition:" : "Mauboussin DuPont Ayrıştırması:"}
               </div>
-              <div className="w-full min-w-0 grid grid-cols-2 gap-2 text-xs font-mono">
-                <div className="w-full max-w-full min-w-0 box-border p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
                   <div className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">{isEnglish ? "NOPAT Margin (Profitability)" : "NOPAT Marjı (Kârlılık)"}</div>
                   <div className="text-base font-bold text-slate-900 dark:text-slate-100 mt-0.5">
                     %{finCalc.nopatMarginPercent}
                   </div>
                 </div>
-                <div className="w-full max-w-full min-w-0 box-border p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
                   <div className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">{isEnglish ? "Capital Turnover (Efficiency)" : "Sermaye Devir Hızı (Verimlilik)"}</div>
                   <div className="text-base font-bold text-slate-900 dark:text-slate-100 mt-0.5">
                     {finCalc.capitalTurnover}x
@@ -1583,15 +1565,15 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
 
             {/* Financial Intermediate Details */}
             <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs font-mono">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 min-w-0 text-slate-600 dark:text-slate-300">
+              <div className="flex justify-between text-slate-600 dark:text-slate-300">
                 <span>{isEnglish ? "NOPAT (Net Operating Profit):" : "NOPAT (Net Faaliyet Kârı):"}</span>
                 <span className="font-bold text-slate-900 dark:text-slate-100">{finCalc.nopat} {isEnglish ? "Million" : "Milyon"}</span>
               </div>
-              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 min-w-0 text-slate-600 dark:text-slate-300">
+              <div className="flex justify-between text-slate-600 dark:text-slate-300">
                 <span>{isEnglish ? "Invested Capital (IC):" : "Yatırılan Sermaye (IC):"}</span>
                 <span className="font-bold text-slate-900 dark:text-slate-100">{finCalc.investedCapital} {isEnglish ? "Million" : "Milyon"}</span>
               </div>
-              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 min-w-0 text-slate-600 dark:text-slate-300">
+              <div className="flex justify-between text-slate-600 dark:text-slate-300">
                 <span>{isEnglish ? "Annual Economic Profit:" : "Yıllık Ekonomik Kâr:"}</span>
                 <span className={`font-bold ${finCalc.economicProfit >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
                   {finCalc.economicProfit >= 0 ? `+${finCalc.economicProfit}` : finCalc.economicProfit} {isEnglish ? "Million" : "Milyon"}

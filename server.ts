@@ -1,14 +1,18 @@
 import express from "express";
 import path from "path";
+import { fileURLToPath } from "url";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const app = express();
-const PORT = Number(process.env.PORT || 3000);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-app.use(express.json({ limit: "64kb" }));
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());
 
 // Lazy-initialized Gemini client
 let aiClient: GoogleGenAI | null = null;
@@ -168,16 +172,9 @@ ${topic ? `📘 **Konu:** ${topic}` : ""}
 
 app.post("/api/ask-coach", async (req, res) => {
   try {
-    const body = req.body as { question?: unknown; currentTopic?: unknown; studentLevel?: unknown };
-    const question = typeof body.question === "string" ? body.question.trim() : "";
-    const currentTopic = typeof body.currentTopic === "string" ? body.currentTopic.trim().slice(0, 240) : undefined;
-    const studentLevel = typeof body.studentLevel === "string" ? body.studentLevel.trim().slice(0, 80) : undefined;
-
+    const { question, currentTopic, studentLevel } = req.body;
     if (!question) {
       return res.status(400).json({ error: "Soru metni gereklidir." });
-    }
-    if (question.length > 4000) {
-      return res.status(413).json({ error: "Soru metni en fazla 4.000 karakter olabilir." });
     }
 
     const systemPrompt = `Sen Michael Mauboussin ve Dan Callahan'ın dünyaca ünlü "Measuring the Moat: Assessing the Magnitude and Sustainability of Value Creation" (Morgan Stanley, 2024) makalesini sıfırdan finans/işletme bilmeyen öğrencilere öğreten, aynı zamanda Borsa İstanbul (BIST) ve küresel hisse piyasalarında (10-K/KAP) gerçek şirketleri analiz etmelerini sağlayan kıdemli bir Sokratik Yatırım & Hendek Analiz Koçusun.
@@ -190,8 +187,7 @@ Temel Görevin:
 3. Formülleri mantığıyla açıkla: ROIC = "İşe bağlanan her 100 TL net kaç TL nakit kâr üretiyor?", Spread = "ROIC ile WACC arasındaki fark - değer yaratımı".
 4. Yanıtının sonunda öğrencinin analiz ettiği şirketi sahada test edebilmesi için 1 somut düşündürücü soru sor (örn: "Şirketin son 3 yıldaki brüt kâr marjına baktın mı, enflasyonda fiyat artırabilmiş mi?").
 5. Samimi, teşvik edici, Türkçe ve son derece pedagojik bir ton kullan.
-Şu anki bağlam/konu: ${currentTopic || "Canlı Şirket Hendek Analizi ve Bilanço Röntgeni"}.
-Öğrenci seviyesi: ${studentLevel || "başlangıç"}.`;
+Şu anki bağlam/konu: ${currentTopic || "Canlı Şirket Hendek Analizi ve Bilanço Röntgeni"}.`;
 
     try {
       const reply = await generateWithRetry(question, systemPrompt);
@@ -207,7 +203,7 @@ Temel Görevin:
     console.error("AI Coach Hatası:", error);
     res.status(500).json({
       error: "Yapay zeka asistanına bağlanırken bir sorun oluştu.",
-      ...(process.env.NODE_ENV !== "production" && { details: error?.message }),
+      details: error.message,
     });
   }
 });
@@ -229,7 +225,7 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Sunucu ${PORT} portunda başarıyla çalışıyor: http://localhost:${PORT}`);
+    console.log(`Sunucu 3000 portunda başarıyla çalışıyor: http://localhost:${PORT}`);
   });
 }
 

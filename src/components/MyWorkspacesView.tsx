@@ -28,8 +28,6 @@ import {
 } from "lucide-react";
 import { CompanyAuditDossier } from "../types";
 import { calculateFinancialOutputs, computeMoatScore, MAUBOUSSIN_GUIDED_TEMPLATE, translateMoatDriver, translateMoatType } from "../data/companyAuditData";
-import { isCompanyAuditDossier, isCompanyAuditDossierArray } from "../utils/companyAuditValidation";
-import { getDisplayName } from "../utils/companyAuditDisplay";
 
 interface MyWorkspacesViewProps {
   dossiers: CompanyAuditDossier[];
@@ -105,10 +103,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
       fin,
       moat,
       isValueCreating: fin.isCreatingValue,
-      isWideMoat:
-        moat.diagnosedMoat.includes("Geniş") ||
-        d.sustainability.moatWidth.toLowerCase().includes("geniş") ||
-        d.sustainability.moatWidth.toLowerCase().includes("wide"),
+      isWideMoat: moat.scorePercent >= 75 || d.sustainability.moatWidth.toLowerCase().includes("geniş") || d.sustainability.moatWidth.toLowerCase().includes("wide"),
     };
   });
 
@@ -118,7 +113,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
   // Filter list
   const filteredList = analyzedStats.filter(({ dossier, isValueCreating, isWideMoat }) => {
     const matchesSearch =
-      getDisplayName(dossier.companyName, isEnglish).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      dossier.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       dossier.ticker.toLowerCase().includes(searchQuery.toLowerCase()) ||
       dossier.industry.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -144,7 +139,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
       return b.moat.scorePercent - a.moat.scorePercent;
     }
     if (sortBy === "name") {
-      return getDisplayName(a.dossier.companyName, isEnglish).localeCompare(getDisplayName(b.dossier.companyName, isEnglish), isEnglish ? "en" : "tr");
+      return a.dossier.companyName.localeCompare(b.dossier.companyName, isEnglish ? "en" : "tr");
     }
     return 0;
   });
@@ -159,7 +154,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
     link.download = `${dossier.ticker.replace(/[^a-zA-Z0-9]/g, "_")}_moat_analysis.json`;
     link.click();
     URL.revokeObjectURL(url);
-    showToast(isEnglish ? `"${getDisplayName(dossier.companyName, isEnglish)}" exported as JSON.` : `"${getDisplayName(dossier.companyName, isEnglish)}" JSON formatında indirildi.`);
+    showToast(isEnglish ? `"${dossier.companyName}" exported as JSON.` : `"${dossier.companyName}" JSON formatında indirildi.`);
   };
 
   // Export all studies
@@ -185,18 +180,16 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
     reader.onload = (event) => {
       try {
         const parsed = JSON.parse(event.target?.result as string);
-        if (isCompanyAuditDossierArray(parsed)) {
+        if (Array.isArray(parsed)) {
+          // Multiple dossiers
           onImportDossiers(parsed);
           showToast(isEnglish ? `${parsed.length} studies imported successfully!` : `${parsed.length} adet analiz başarıyla içe aktarıldı!`);
-        } else if (isCompanyAuditDossier(parsed)) {
+        } else if (parsed && parsed.companyName && parsed.financials) {
+          // Single dossier
           onImportDossiers([parsed]);
-          showToast(isEnglish ? `"${getDisplayName(parsed.companyName, isEnglish)}" study imported!` : `"${getDisplayName(parsed.companyName, isEnglish)}" analizi içe aktarıldı!`);
+          showToast(isEnglish ? `"${parsed.companyName}" study imported!` : `"${parsed.companyName}" analizi içe aktarıldı!`);
         } else {
-          alert(
-            isEnglish
-              ? "Invalid or empty format. Please select a valid Moat Analysis JSON file containing at least one complete study."
-              : "Geçersiz veya boş dosya. En az bir tam Hendek Analizi içeren geçerli bir JSON dosyası seçin."
-          );
+          alert(isEnglish ? "Invalid format. Please select a valid Moat Analysis JSON file." : "Geçersiz dosya formatı. Lütfen geçerli bir Hendek Analizi JSON dosyası seçin.");
         }
       } catch (err) {
         console.error("Import error:", err);
@@ -512,7 +505,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                         )}
                       </div>
                       <h3 className="text-lg font-extrabold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                        {getDisplayName(dossier.companyName, isEnglish)}
+                        {dossier.companyName}
                       </h3>
                       <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
                         {dossier.industry}
@@ -603,7 +596,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                     <button
                       onClick={() => {
                         onDuplicateDossier(dossier);
-                        showToast(isEnglish ? `Duplicate of "${getDisplayName(dossier.companyName, isEnglish)}" created.` : `"${getDisplayName(dossier.companyName, isEnglish)}" çalışmasının kopyası oluşturuldu.`);
+                        showToast(isEnglish ? `Duplicate of "${dossier.companyName}" created.` : `"${dossier.companyName}" çalışmasının kopyası oluşturuldu.`);
                       }}
                       className="p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                       title={isEnglish ? "Duplicate this audit as a template" : "Bu çalışmanın kopyasını oluştur (Şablon olarak kullan)"}
@@ -626,7 +619,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                         if (deleteConfirmId === dossier.id) {
                           onDeleteDossier(dossier.id);
                           setDeleteConfirmId(null);
-                          showToast(isEnglish ? `"${getDisplayName(dossier.companyName, isEnglish)}" deleted.` : `"${getDisplayName(dossier.companyName, isEnglish)}" silindi.`);
+                          showToast(isEnglish ? `"${dossier.companyName}" deleted.` : `"${dossier.companyName}" silindi.`);
                         } else {
                           setDeleteConfirmId(dossier.id);
                           setTimeout(() => setDeleteConfirmId(null), 4000);

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 import { motion, AnimatePresence } from "motion/react";
 import { LearningModule, UserLearningState } from "./types";
 import { useLanguage } from "./context/LanguageContext";
@@ -24,7 +22,6 @@ import { FloatingGuideWidget } from "./components/FloatingGuideWidget";
 import { FormulaDeepDiveModal } from "./components/FormulaDeepDiveModal";
 import { FormulaWorkshopView } from "./components/FormulaWorkshopView";
 import { Footer } from "./components/Footer";
-import { isCompanyAuditDossierArray } from "./utils/companyAuditValidation";
 
 export default function App() {
   const { getModules, isEnglish } = useLanguage();
@@ -54,7 +51,7 @@ export default function App() {
       const saved = localStorage.getItem("moat_dossiers");
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (isCompanyAuditDossierArray(parsed)) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch (e) {
       // ignore
@@ -131,14 +128,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-indigo-200 font-sans transition-colors duration-500 ease-in-out">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-indigo-200 font-sans transition-colors duration-500 ease-in-out overflow-x-hidden">
       {/* Top Navbar */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={(tab) => {
           setActiveTab(tab);
           setActiveModuleId(null);
-          window.scrollTo({ top: 0, behavior: "smooth" });
         }}
         userState={userState}
         onOpenAICoach={() => setIsAICoachOpen(true)}
@@ -153,11 +149,8 @@ export default function App() {
         onToggleDarkMode={toggleDarkMode}
       />
 
-      {/* Fixed Navbar Spacer */}
-      <div className="h-14 sm:h-16 shrink-0" aria-hidden="true" />
-
       {/* Main Content Area */}
-      <main className="flex-1 min-w-0 max-w-7xl w-full mx-auto overflow-x-clip px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12">
         <AnimatePresence mode="wait">
           {activeModule ? (
             <motion.div
@@ -367,8 +360,6 @@ export default function App() {
           setActiveModuleId(null);
         }}
       />
-      <SpeedInsights />
-      <Analytics />
     </div>
   );
 }

@@ -72,17 +72,17 @@ export const MoatChecklistSim: React.FC = () => {
   const [checkedState, setCheckedState] = useState<Record<string, boolean>>({});
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
-  const totalItems = checklistItems.length;
   const categories = [
-    { id: "all", label: isEnglish ? `All ${totalItems} Items` : `Tüm Maddeler (${totalItems})` },
+    { id: "all", label: isEnglish ? "All 22 Items" : "Tüm Maddeler (22)" },
     ...Array.from(new Set(checklistItems.map((item) => item.category))).map((cat) => ({
       id: cat,
       label: cat,
     })),
   ];
 
-  const checkedCount = checklistItems.filter((item) => checkedState[item.id]).length;
-  const scorePercent = totalItems > 0 ? Math.round((checkedCount / totalItems) * 100) : 0;
+  const totalItems = checklistItems.length;
+  const checkedCount = Object.values(checkedState).filter(Boolean).length;
+  const scorePercent = Math.round((checkedCount / totalItems) * 100);
 
   let moatVerdict = isEnglish ? "No Moat (Capital Destroyer)" : "Hendek Yok (Değer Yok Eden)";
   let verdictBadge = "bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-800";
@@ -139,16 +139,16 @@ export const MoatChecklistSim: React.FC = () => {
               {isEnglish ? "Module 1-8 Comprehensive Diagnostic" : "Modül 1-8 Kapsamlı Hendek Testi"}
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-              {isEnglish ? `${totalItems}-Point Moat Checklist (Pat Dorsey / Morningstar)` : `${totalItems} Maddelik Hendek Kontrol Listesi`}
+              {isEnglish ? "22-Point Moat Checklist (Pat Dorsey / Morningstar)" : "22 Maddelik Hendek Kontrol Listesi"}
             </span>
           </div>
           <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-            {isEnglish ? `${totalItems}-Point Economic Moat Audit Checklist` : `${totalItems} Maddelik Ekonomik Hendek Denetim Testi`}
+            {isEnglish ? "22-Point Economic Moat Audit Checklist" : "22 Maddelik Ekonomik Hendek Denetim Testi"}
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
             {isEnglish
-              ? `Audit any target company against ${totalItems} criteria across 7 strategic dimensions. Watch real-time category scores update on the right.`
-              : `Herhangi bir hedef şirketi 7 stratejik boyutta ${totalItems} kritere göre denetleyin. Sağdaki terminalde kategori bazlı hendek skorunu canlı izleyin.`}
+              ? "Audit any target company against 22 criteria across 5 structural dimensions. Watch real-time category scores update on the right."
+              : "Herhangi bir hedef şirketi 5 yapısal boyutta 22 stratejik kritere göre denetleyin. Sağdaki terminalde kategori bazlı hendek skorunu canlı izleyin."}
           </p>
         </div>
 
@@ -216,8 +216,9 @@ export const MoatChecklistSim: React.FC = () => {
             {filteredItems.map((item) => {
               const isChecked = !!checkedState[item.id];
               return (
-                <label
+                <div
                   key={item.id}
+                  onClick={() => handleToggle(item.id)}
                   className={`p-3 rounded-xl border transition-all cursor-pointer flex items-start gap-2.5 ${
                     isChecked
                       ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 shadow-2xs"
@@ -225,11 +226,9 @@ export const MoatChecklistSim: React.FC = () => {
                   }`}
                 >
                   <input
-                    id={`checklist-${item.id}`}
                     type="checkbox"
                     checked={isChecked}
-                    onChange={() => handleToggle(item.id)}
-                    aria-label={item.question}
+                    onChange={() => {}}
                     className="mt-0.5 h-4 w-4 rounded accent-emerald-600 cursor-pointer"
                   />
                   <div className="space-y-0.5 text-xs">
@@ -240,7 +239,7 @@ export const MoatChecklistSim: React.FC = () => {
                       {item.explanation}
                     </span>
                   </div>
-                </label>
+                </div>
               );
             })}
           </div>

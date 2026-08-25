@@ -175,7 +175,7 @@ export const RoicWaccSim: React.FC = () => {
 
   return (
     <div
-      className="w-full max-w-7xl mx-auto min-w-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs"
+      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs"
       id="roic-wacc-sim"
     >
       {/* Top Header & Reset */}
@@ -239,9 +239,9 @@ export const RoicWaccSim: React.FC = () => {
       </div>
 
       {/* 2-COLUMN TERMINAL LAYOUT */}
-      <div className="w-full min-w-0 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         {/* LEFT COLUMN: Control Panel & Pedagogical Prompts (lg:col-span-6) */}
-        <div className="w-full min-w-0 lg:col-span-6 space-y-5">
+        <div className="lg:col-span-6 space-y-5">
           <div className="flex items-center justify-between pb-1 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <Sliders className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
@@ -269,7 +269,6 @@ export const RoicWaccSim: React.FC = () => {
                   onClick={() => setInvestedCapital((v) => Math.max(500, v - 2500))}
                   className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center justify-center text-xs font-bold cursor-pointer"
                   title="-2500"
-                  aria-label={isEnglish ? "Decrease invested capital by $2,500M" : "Yatırılan sermayeyi 2.500M $ azalt"}
                 >
                   <Minus className="w-3 h-3" />
                 </button>
@@ -281,7 +280,6 @@ export const RoicWaccSim: React.FC = () => {
                   onClick={() => setInvestedCapital((v) => Math.min(150000, v + 2500))}
                   className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center justify-center text-xs font-bold cursor-pointer"
                   title="+2500"
-                  aria-label={isEnglish ? "Increase invested capital by $2,500M" : "Yatırılan sermayeyi 2.500M $ artır"}
                 >
                   <Plus className="w-3 h-3" />
                 </button>
@@ -320,7 +318,6 @@ export const RoicWaccSim: React.FC = () => {
                   onClick={() => setNopat((v) => Math.max(100, v - 500))}
                   className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center justify-center text-xs font-bold cursor-pointer"
                   title="-500"
-                  aria-label={isEnglish ? "Decrease annual NOPAT by $500M" : "Yıllık NOPAT’ı 500M $ azalt"}
                 >
                   <Minus className="w-3 h-3" />
                 </button>
@@ -332,7 +329,6 @@ export const RoicWaccSim: React.FC = () => {
                   onClick={() => setNopat((v) => Math.min(40000, v + 500))}
                   className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center justify-center text-xs font-bold cursor-pointer"
                   title="+500"
-                  aria-label={isEnglish ? "Increase annual NOPAT by $500M" : "Yıllık NOPAT’ı 500M $ artır"}
                 >
                   <Plus className="w-3 h-3" />
                 </button>
@@ -371,7 +367,6 @@ export const RoicWaccSim: React.FC = () => {
                   onClick={() => setWacc((v) => Math.max(4.0, Number((v - 0.5).toFixed(1))))}
                   className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center justify-center text-xs font-bold cursor-pointer"
                   title="-0.5%"
-                  aria-label={isEnglish ? "Decrease WACC by 0.5 percentage points" : "WACC’ı 0,5 puan azalt"}
                 >
                   <Minus className="w-3 h-3" />
                 </button>
@@ -383,7 +378,6 @@ export const RoicWaccSim: React.FC = () => {
                   onClick={() => setWacc((v) => Math.min(22.0, Number((v + 0.5).toFixed(1))))}
                   className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 flex items-center justify-center text-xs font-bold cursor-pointer"
                   title="+0.5%"
-                  aria-label={isEnglish ? "Increase WACC by 0.5 percentage points" : "WACC’ı 0,5 puan artır"}
                 >
                   <Plus className="w-3 h-3" />
                 </button>
@@ -399,9 +393,9 @@ export const RoicWaccSim: React.FC = () => {
               className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600"
             />
             <div className="flex justify-between text-[10px] font-mono text-slate-600 dark:text-slate-300">
-              <span>{isEnglish ? "%4.0 (Very Low)" : "%4.0 (Çok Düşük)"}</span>
+              <span>%4.0 (Çok Düşük)</span>
               <span>%13.0</span>
-              <span>{isEnglish ? "%22.0 (High Risk)" : "%22.0 (Yüksek Risk)"}</span>
+              <span>%22.0 (Yüksek Risk)</span>
             </div>
           </div>
 
@@ -429,7 +423,7 @@ export const RoicWaccSim: React.FC = () => {
         </div>
 
         {/* RIGHT COLUMN: Interactive Recharts Visualization & Dynamic Spread Result Card (lg:col-span-6) */}
-        <div className="w-full min-w-0 lg:col-span-6 space-y-5">
+        <div className="lg:col-span-6 space-y-5">
           {/* Chart Header & View Mode Switcher */}
           <div className="flex items-center justify-between pb-1 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
@@ -614,8 +608,8 @@ export const RoicWaccSim: React.FC = () => {
                 : "bg-rose-50/90 dark:bg-rose-950/40 border-rose-300/80 dark:border-rose-700/60 shadow-lg shadow-rose-500/15 ring-1 ring-rose-400/30"
             }`}
           >
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 min-w-0">
-              <div className="flex items-center gap-3.5 min-w-0 flex-1 w-full">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
                 <div
                   className={`w-14 h-14 rounded-2xl flex flex-col items-center justify-center font-mono font-black text-lg shrink-0 shadow-md ${
                     isValueCreating
@@ -627,7 +621,7 @@ export const RoicWaccSim: React.FC = () => {
                   <span>%{roic.toFixed(1)}</span>
                 </div>
 
-                <div className="space-y-0.5 min-w-0 flex-1">
+                <div className="space-y-0.5">
                   <div className="flex items-center gap-1.5">
                     <span
                       className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
@@ -642,7 +636,7 @@ export const RoicWaccSim: React.FC = () => {
                     </span>
                   </div>
 
-                  <h4 className="text-sm sm:text-lg font-black tracking-tight text-slate-900 dark:text-slate-100 break-words">
+                  <h4 className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-slate-100">
                     {isValueCreating
                       ? isEnglish
                         ? `+${spread.toFixed(2)}% Spread (+$${Math.round(economicProfit).toLocaleString()}M / Year)`
@@ -655,7 +649,7 @@ export const RoicWaccSim: React.FC = () => {
               </div>
 
               {/* Economic Formula Breakdown Tag */}
-              <div className="text-left sm:text-right font-mono text-[11px] text-slate-600 dark:text-slate-300 bg-white/60 dark:bg-slate-900/60 px-3 py-2 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shrink-0 w-full sm:w-auto max-w-full overflow-x-auto">
+              <div className="text-left sm:text-right font-mono text-[11px] text-slate-600 dark:text-slate-300 bg-white/60 dark:bg-slate-900/60 px-3 py-2 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shrink-0">
                 <div className="font-bold text-slate-900 dark:text-slate-100">
                   Spread = %{roic.toFixed(1)} - %{wacc.toFixed(1)} = {spread >= 0 ? `+${spread.toFixed(1)}%` : `${spread.toFixed(1)}%`}
                 </div>
