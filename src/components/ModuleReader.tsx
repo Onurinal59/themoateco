@@ -409,20 +409,20 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
         {module.sections.map((section, idx) => (
           <div
             key={section.id}
-            className={`w-full min-w-0 p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-5 ${section.interactiveWidgetId ? "max-w-none" : "max-w-5xl mx-auto"}`}
+            className="w-full max-w-5xl mx-auto min-w-0 box-border p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs space-y-5"
           >
-            <div className="flex items-center gap-2.5 pb-2 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex flex-wrap items-center gap-2.5 pb-2 border-b border-slate-100 dark:border-slate-800">
               <span className="w-6 h-6 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-mono font-bold text-xs flex items-center justify-center">
                 {idx + 1}
               </span>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
+              <h2 className="min-w-0 break-words text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
                 {section.title}
               </h2>
             </div>
 
             {/* Everyday Analogy Box */}
             {(section.analogyBox || section.everydayAnalogy) && (
-              <div className="p-4 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 space-y-1.5">
+              <div className="w-full max-w-4xl mx-auto min-w-0 box-border p-4 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 space-y-1.5">
                 <div className="flex items-center gap-2 text-xs font-bold text-indigo-900 dark:text-indigo-300">
                   <Layers className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                   <span>
@@ -437,7 +437,7 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
             {/* Structured Formula Box */}
             {section.formulaBox && (
-              <div className="w-full max-w-full min-w-0 box-border rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 text-slate-800 dark:text-slate-100 shadow-sm dark:shadow-xl">
+              <div className="w-full max-w-4xl mx-auto min-w-0 box-border rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 text-slate-800 dark:text-slate-100 shadow-sm dark:shadow-xl">
                 {/* Header */}
                 <div className="px-4 sm:px-5 py-3 bg-slate-100 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4 min-w-0">
                   <div className="flex flex-wrap items-center gap-2 min-w-0">
@@ -508,7 +508,7 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
             {/* Step-by-Step Math or Breakdown */}
             {section.stepByStepMath && (
-              <div className="w-full min-w-0 max-w-full box-border p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-800 space-y-3 font-mono text-xs shadow-xs overflow-hidden">
+              <div className="w-full max-w-4xl mx-auto min-w-0 box-border p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-800 space-y-3 font-mono text-xs shadow-xs overflow-hidden">
                 <div className="flex items-center gap-2 font-sans font-bold text-indigo-700 dark:text-amber-400 text-xs uppercase tracking-wider">
                   <Calculator className="w-4 h-4 text-indigo-600 dark:text-amber-400" />
                   <span>{isEnglish ? "Step-by-Step Diagnostic Breakdown" : "Adım Adım Hesaplama Röntgeni"}</span>
@@ -541,7 +541,7 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
             )}
 
             {/* Main Content Paragraphs & Structured Cards */}
-            <div className="prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-3">
+            <div className="w-full max-w-4xl mx-auto min-w-0 box-border prose dark:prose-invert max-w-none text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-3">
               {(Array.isArray(section.content)
                 ? section.content
                 : typeof section.content === "string"
@@ -689,7 +689,7 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
             {/* Interactive Widget if bound to section */}
             {section.interactiveWidgetId && (
-              <div className="w-full min-w-0 max-w-none p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
+              <div className="w-full max-w-5xl mx-auto min-w-0 box-border p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
                 <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5" /> {isEnglish ? "Live Interactive Simulation" : "Canlı Etkileşimli Simülasyon"}
                 </div>
