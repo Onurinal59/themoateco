@@ -290,7 +290,7 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="max-w-4xl mx-auto space-y-6 sm:space-y-8 pb-16 px-1 sm:px-0"
+      className={`w-full min-w-0 ${module.id === 1 ? "max-w-7xl" : "max-w-4xl"} mx-auto space-y-6 sm:space-y-8 pb-16 px-1 sm:px-0`}
       id="module-reader"
     >
       {/* Top Breadcrumb & Actions */}
@@ -687,7 +687,7 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
             {/* Interactive Widget if bound to section */}
             {section.interactiveWidgetId && (
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
+              <div className="w-full min-w-0 max-w-none p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
                 <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5" /> {isEnglish ? "Live Interactive Simulation" : "Canlı Etkileşimli Simülasyon"}
                 </div>
