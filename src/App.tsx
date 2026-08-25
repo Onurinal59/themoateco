@@ -131,7 +131,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-indigo-200 font-sans transition-colors duration-500 ease-in-out overflow-x-clip">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-indigo-200 font-sans transition-colors duration-500 ease-in-out">
       {/* Top Navbar */}
       <Navbar
         activeTab={activeTab}
@@ -154,7 +154,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12">
+      <main className="flex-1 min-w-0 max-w-7xl w-full mx-auto overflow-x-clip px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12">
         <AnimatePresence mode="wait">
           {activeModule ? (
             <motion.div
