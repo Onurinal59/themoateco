@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { CompanyAuditDossier } from "../types";
 import { calculateFinancialOutputs, computeMoatScore, MAUBOUSSIN_GUIDED_TEMPLATE, translateMoatDriver, translateMoatType } from "../data/companyAuditData";
+import { isCompanyAuditDossier, isCompanyAuditDossierArray } from "../utils/companyAuditValidation";
 
 interface MyWorkspacesViewProps {
   dossiers: CompanyAuditDossier[];
@@ -103,7 +104,10 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
       fin,
       moat,
       isValueCreating: fin.isCreatingValue,
-      isWideMoat: moat.scorePercent >= 75 || d.sustainability.moatWidth.toLowerCase().includes("geniş") || d.sustainability.moatWidth.toLowerCase().includes("wide"),
+      isWideMoat:
+        moat.diagnosedMoat.includes("Geniş") ||
+        d.sustainability.moatWidth.toLowerCase().includes("geniş") ||
+        d.sustainability.moatWidth.toLowerCase().includes("wide"),
     };
   });
 
@@ -180,16 +184,18 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
     reader.onload = (event) => {
       try {
         const parsed = JSON.parse(event.target?.result as string);
-        if (Array.isArray(parsed)) {
-          // Multiple dossiers
+        if (isCompanyAuditDossierArray(parsed)) {
           onImportDossiers(parsed);
           showToast(isEnglish ? `${parsed.length} studies imported successfully!` : `${parsed.length} adet analiz başarıyla içe aktarıldı!`);
-        } else if (parsed && parsed.companyName && parsed.financials) {
-          // Single dossier
+        } else if (isCompanyAuditDossier(parsed)) {
           onImportDossiers([parsed]);
           showToast(isEnglish ? `"${parsed.companyName}" study imported!` : `"${parsed.companyName}" analizi içe aktarıldı!`);
         } else {
-          alert(isEnglish ? "Invalid format. Please select a valid Moat Analysis JSON file." : "Geçersiz dosya formatı. Lütfen geçerli bir Hendek Analizi JSON dosyası seçin.");
+          alert(
+            isEnglish
+              ? "Invalid or empty format. Please select a valid Moat Analysis JSON file containing at least one complete study."
+              : "Geçersiz veya boş dosya. En az bir tam Hendek Analizi içeren geçerli bir JSON dosyası seçin."
+          );
         }
       } catch (err) {
         console.error("Import error:", err);

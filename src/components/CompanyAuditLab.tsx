@@ -46,6 +46,7 @@ import {
   translateCategory
 } from "../data/companyAuditData";
 import { useLanguage } from "../context/LanguageContext";
+import { isCompanyAuditDossierArray } from "../utils/companyAuditValidation";
 import { MyWorkspacesView } from "./MyWorkspacesView";
 import { MauboussinMethodologyCoach } from "./MauboussinMethodologyCoach";
 import { InvestmentCommitteeModal } from "./InvestmentCommitteeModal";
@@ -65,7 +66,7 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (isCompanyAuditDossierArray(parsed)) {
           return parsed;
         }
       } catch (e) {
@@ -232,6 +233,15 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
   };
 
   const handleImportDossiers = (imported: CompanyAuditDossier[]) => {
+    if (!isCompanyAuditDossierArray(imported)) {
+      alert(
+        isEnglish
+          ? "No valid studies were found in the import file."
+          : "İçe aktarma dosyasında geçerli bir çalışma bulunamadı."
+      );
+      return;
+    }
+
     const existingIds = new Set(dossiers.map((d) => d.id));
     const newUnique = imported.filter((item) => !existingIds.has(item.id));
     if (newUnique.length > 0) {
@@ -498,7 +508,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
             </div>
 
             {/* Company Quick-Switch Horizontal Bar */}
-            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 overflow-x-auto pb-2 scrollbar-thin">
+            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 overflow-x-auto no-scrollbar pb-2">
               <div className="flex items-center gap-2 shrink-0">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1 shrink-0">
                   {isEnglish ? "Switch Dossier:" : "Dosya Değiştir:"}
@@ -1361,11 +1371,11 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   </div>
                   <div className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mt-1 flex items-center gap-2">
                     {isEnglish
-                      ? moatScore.scorePercent >= 75
-                        ? "Wide Moat (Geniş Hendek)"
-                        : moatScore.scorePercent >= 45
-                        ? "Narrow Moat (Dar Hendek)"
-                        : "No Moat (Hendeksiz)"
+                      ? moatScore.diagnosedMoat === "Geniş Hendek (Wide)"
+                        ? "Wide Moat"
+                        : moatScore.diagnosedMoat === "Dar Hendek (Narrow)"
+                        ? "Narrow Moat"
+                        : "No Moat"
                       : moatScore.diagnosedMoat}
                   </div>
                   <div className="flex flex-wrap gap-1.5 mt-2">

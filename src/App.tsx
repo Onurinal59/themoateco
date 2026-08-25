@@ -22,6 +22,7 @@ import { FloatingGuideWidget } from "./components/FloatingGuideWidget";
 import { FormulaDeepDiveModal } from "./components/FormulaDeepDiveModal";
 import { FormulaWorkshopView } from "./components/FormulaWorkshopView";
 import { Footer } from "./components/Footer";
+import { isCompanyAuditDossierArray } from "./utils/companyAuditValidation";
 
 export default function App() {
   const { getModules, isEnglish } = useLanguage();
@@ -51,7 +52,7 @@ export default function App() {
       const saved = localStorage.getItem("moat_dossiers");
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (isCompanyAuditDossierArray(parsed)) return parsed;
       }
     } catch (e) {
       // ignore

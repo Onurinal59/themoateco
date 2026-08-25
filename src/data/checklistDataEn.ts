@@ -156,4 +156,40 @@ export const CHECKLIST_ITEMS_EN: ChecklistItem[] = [
     highScoreIndicator: "Net cash position or low debt (Net Debt / EBITDA < 1.5x) with long maturities",
     lowScoreIndicator: "Highly leveraged (>4x EBITDA) with floating debt maturing during tight credit",
   },
+
+  // 6. Value Stick & Firm Analysis
+  {
+    id: "chk-19",
+    category: "6. Value Stick & Firm Analysis",
+    question: "Which clear strategic vector dominates the DuPont ROIC decomposition?",
+    explanation: "Does the company create ROIC through differentiation and high NOPAT margin, or through cost leadership and high capital turnover?",
+    highScoreIndicator: "Focused, coherent strategy (e.g., Apple’s premium margins or Costco’s asset velocity)",
+    lowScoreIndicator: "Stuck in the middle with neither cost leadership nor premium differentiation",
+  },
+  {
+    id: "chk-20",
+    category: "6. Value Stick & Firm Analysis",
+    question: "Is the Cash Conversion Cycle (CCC) and working capital engine optimized?",
+    explanation: "Does the company fund growth with supplier credit through a negative CCC, collecting cash before paying vendors?",
+    highScoreIndicator: "Negative or minimal CCC; customers pay upfront and suppliers are paid on terms",
+    lowScoreIndicator: "Working capital tied up in slow inventory and overdue receivables",
+  },
+
+  // 7. Game Theory & Brand Moat
+  {
+    id: "chk-21",
+    category: "7. Game Theory & Brand Moat",
+    question: "Can the firm execute Linking & Leveraging into adjacent markets at near-zero marginal cost?",
+    explanation: "Can the company leverage core infrastructure, capabilities, or distribution to dominate secondary verticals, like Amazon AWS?",
+    highScoreIndicator: "Core platform infrastructure scales effortlessly into large, profitable adjacencies",
+    lowScoreIndicator: "Trapped in a single stagnant vertical with no cross-leverage",
+  },
+  {
+    id: "chk-22",
+    category: "7. Game Theory & Brand Moat",
+    question: "Does brand equity reduce customer search costs or perceived risk enough to generate a WTP premium?",
+    explanation: "A trusted brand can reduce uncertainty and search effort, allowing customers to pay more for a comparable product.",
+    highScoreIndicator: "Brand creates measurable pricing power and ingrained customer habit (e.g., Coca-Cola, Tiffany)",
+    lowScoreIndicator: "Brand is merely a logo with no pricing flexibility or trust premium",
+  },
 ];
