@@ -175,7 +175,7 @@ export const RoicWaccSim: React.FC = () => {
 
   return (
     <div
-      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs"
+      className="w-full max-w-7xl mx-auto min-w-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs"
       id="roic-wacc-sim"
     >
       {/* Top Header & Reset */}
@@ -239,9 +239,9 @@ export const RoicWaccSim: React.FC = () => {
       </div>
 
       {/* 2-COLUMN TERMINAL LAYOUT */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <div className="w-full min-w-0 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         {/* LEFT COLUMN: Control Panel & Pedagogical Prompts (lg:col-span-6) */}
-        <div className="lg:col-span-6 space-y-5">
+        <div className="w-full min-w-0 lg:col-span-6 space-y-5">
           <div className="flex items-center justify-between pb-1 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <Sliders className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
@@ -429,7 +429,7 @@ export const RoicWaccSim: React.FC = () => {
         </div>
 
         {/* RIGHT COLUMN: Interactive Recharts Visualization & Dynamic Spread Result Card (lg:col-span-6) */}
-        <div className="lg:col-span-6 space-y-5">
+        <div className="w-full min-w-0 lg:col-span-6 space-y-5">
           {/* Chart Header & View Mode Switcher */}
           <div className="flex items-center justify-between pb-1 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">

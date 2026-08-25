@@ -149,11 +149,16 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
     });
   };
 
+  const companyLabel =
+    currentDossier.ticker && currentDossier.companyName.endsWith(`(${currentDossier.ticker})`)
+      ? currentDossier.companyName
+      : `${currentDossier.companyName} (${currentDossier.ticker})`;
+
   const handleAddNewCompany = () => {
     const newId = "dossier-custom-" + Date.now();
     const newDossier: CompanyAuditDossier = {
       id: newId,
-      companyName: isEnglish ? "New Analyzed Company" : "Yeni Analiz Edilen Şirket",
+      companyName: isEnglish ? "New Analyzed Company (TICKER)" : "Yeni Analiz Edilen Şirket (TICKER)",
       ticker: "TICKER",
       industry: isEnglish ? "Specify Industry" : "Sektör Belirtiniz",
       description: isEnglish ? "Company's core business model and value proposition." : "Şirketin ana iş modeli ve değer önerisi.",
@@ -264,7 +269,7 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
 
   const copyReportToClipboard = () => {
     const reportText = `
-=== ${currentDossier.companyName} (${currentDossier.ticker}) MAUBOUSSIN MOAT AUDIT REPORT ===
+=== ${companyLabel} MAUBOUSSIN MOAT AUDIT REPORT ===
 ${isEnglish ? "Industry" : "Sektör"}: ${currentDossier.industry}
 ${isEnglish ? "Date" : "Tarih"}: ${currentDossier.updatedAt}
 
@@ -314,7 +319,7 @@ ${isEnglish ? "Notes" : "Notlar"}: ${currentDossier.notes || (isEnglish ? "No no
     const prompt = isEnglish
       ? `Can you evaluate this company according to Michael Mauboussin's 'Measuring the Moat' methodology?
 
-Company: ${currentDossier.companyName} (${currentDossier.ticker})
+Company: ${companyLabel}
 Industry: ${currentDossier.industry}
 ROIC: %${finCalc.roicPercent} (WACC: %${currentDossier.financials.wacc}, Spread: %${finCalc.spread})
 NOPAT Margin: %${finCalc.nopatMarginPercent}, Capital Turnover: ${finCalc.capitalTurnover}x
@@ -326,7 +331,7 @@ Key Vulnerability: ${currentDossier.sustainability.keyVulnerability}
 What are the critical moat risks and competitive longevity for this business?`
       : `Michael Mauboussin'in "Measuring the Moat" metodolojisine göre bu şirketi değerlendirir misin?
 
-Şirket: ${currentDossier.companyName} (${currentDossier.ticker})
+Şirket: ${companyLabel}
 Sektör: ${currentDossier.industry}
 ROIC: %${finCalc.roicPercent} (WACC: %${currentDossier.financials.wacc}, Fark: %${finCalc.spread})
 NOPAT Marjı: %${finCalc.nopatMarginPercent}, Sermaye Devir Hızı: ${finCalc.capitalTurnover}x
@@ -450,7 +455,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                     <ArrowLeft className="w-3.5 h-3.5" /> {isEnglish ? "All Workspaces" : "Tüm Çalışmalarım"}
                   </button>
                   <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-                    {isEnglish ? "Active File: " : "Aktif Dosya: "} {currentDossier.companyName} ({currentDossier.ticker})
+                    {isEnglish ? "Active File: " : "Aktif Dosya: "} {companyLabel}
                   </span>
                   {currentDossier.isCustom && (
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/50 flex items-center gap-1">
@@ -459,7 +464,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   )}
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-                  {currentDossier.companyName} ({currentDossier.ticker}) — {isEnglish ? "Moat Diagnosis" : "Hendek Teşhisi"}
+                  {companyLabel} — {isEnglish ? "Moat Diagnosis" : "Hendek Teşhisi"}
                 </h1>
                 <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
                   {isEnglish

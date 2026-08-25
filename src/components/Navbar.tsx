@@ -180,7 +180,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <>
       {/* Apple-style Translucent Sticky Navigation Header */}
-      <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800/70 transition-colors duration-500 ease-in-out">
+      <header className="sticky top-0 z-50 bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800/70 transition-colors duration-500 ease-in-out">
         <div className="max-w-7xl mx-auto w-full px-2 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between min-h-14 sm:h-16 gap-1 sm:gap-2 lg:gap-3 w-full flex-wrap sm:flex-nowrap py-1 sm:py-0">
             
