@@ -97,7 +97,7 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="max-w-5xl mx-auto space-y-6 sm:space-y-8 pb-16 px-1 sm:px-0"
+      className="w-full max-w-7xl min-w-0 mx-auto space-y-6 sm:space-y-8 pb-16 px-1 sm:px-0"
       id="simulations-view"
     >
       {/* Header */}
@@ -157,14 +157,14 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
       </div>
 
       {/* Active Simulator Component with Fade Transition */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence initial={false} mode="sync">
         <motion.div
           key={activeSim}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className="w-full"
+          className="w-full min-w-0"
         >
           {activeSim === "roic-wacc" && <RoicWaccSim />}
           {activeSim === "dickinson" && <DickinsonLifecycleSim />}

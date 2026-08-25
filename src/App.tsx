@@ -138,6 +138,7 @@ export default function App() {
         setActiveTab={(tab) => {
           setActiveTab(tab);
           setActiveModuleId(null);
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }}
         userState={userState}
         onOpenAICoach={() => setIsAICoachOpen(true)}
