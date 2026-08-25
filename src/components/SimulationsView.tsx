@@ -123,8 +123,8 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
         </p>
       </div>
 
-      {/* Simulator Selector Tabs (Horizontally scrollable and responsive) */}
-      <div className="flex gap-2 overflow-x-auto pb-2 border-b border-slate-200 dark:border-slate-800 scrollbar-thin">
+      {/* Simulator Selector Tabs (Wrapped responsive pill buttons, no hidden overflow) */}
+      <div className="flex flex-wrap gap-2 justify-start sm:justify-center border-b border-slate-200/80 dark:border-slate-800/80 py-2.5">
         {SIMS.map((s) => {
           const Icon = s.icon;
           const isActive = activeSim === s.id;
@@ -134,17 +134,19 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
               whileHover={{ scale: 1.02, y: -1 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => handleSelectSim(s.id as SimTab)}
-              className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 isActive
-                  ? "bg-indigo-600 text-white shadow-xs"
-                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/25 ring-1 ring-indigo-500/50 font-bold"
+                  : "bg-white dark:bg-slate-900/90 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
               }`}
             >
               <Icon className="w-3.5 h-3.5 shrink-0" />
               <span>{s.label}</span>
               <span
-                className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${
-                  isActive ? "bg-indigo-700 text-indigo-100" : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
+                className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${
+                  isActive
+                    ? "bg-indigo-700/80 text-indigo-100"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
                 }`}
               >
                 {s.badge}

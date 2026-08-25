@@ -1,6 +1,27 @@
 import React, { useState } from "react";
-import { Swords, RotateCcw, Trophy, ShieldAlert, Sparkles, Award, CheckCircle2, HelpCircle } from "lucide-react";
+import {
+  Swords,
+  RotateCcw,
+  Trophy,
+  ShieldAlert,
+  Sparkles,
+  Award,
+  CheckCircle2,
+  TrendingUp,
+  BarChart3,
+} from "lucide-react";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Legend,
+} from "recharts";
 import { useLanguage } from "../../context/LanguageContext";
+import { CustomChartTooltip } from "../ChartTooltip";
 
 type StrategyType = "tit-for-tat" | "aggressive" | "cooperative";
 
@@ -10,10 +31,12 @@ interface RoundResult {
   botChoice: 220 | 200;
   playerPayoff: number;
   botPayoff: number;
+  playerCum: number;
+  botCum: number;
 }
 
 export const PrisonersDilemmaSim: React.FC = () => {
-  const { isEnglish, t } = useLanguage();
+  const { isEnglish } = useLanguage();
   const [botStrategy, setBotStrategy] = useState<StrategyType>("tit-for-tat");
   const [history, setHistory] = useState<RoundResult[]>([]);
   const [currentRound, setCurrentRound] = useState<number>(1);
@@ -23,12 +46,12 @@ export const PrisonersDilemmaSim: React.FC = () => {
   const totalBotScore = history.reduce((sum, r) => sum + r.botPayoff, 0);
 
   const getBotChoice = (strat: StrategyType, hist: RoundResult[]): 220 | 200 => {
-    if (strat === "aggressive") return 200; // Always price-cuts
-    if (strat === "cooperative") return 220; // Always cooperates
+    if (strat === "aggressive") return 200;
+    if (strat === "cooperative") return 220;
     // Tit-for-tat
-    if (hist.length === 0) return 220; // Starts cooperative
+    if (hist.length === 0) return 220;
     const lastRound = hist[hist.length - 1];
-    return lastRound.playerChoice; // Copies opponent's previous move
+    return lastRound.playerChoice;
   };
 
   const handlePlay = (playerChoice: 220 | 200) => {
@@ -53,12 +76,17 @@ export const PrisonersDilemmaSim: React.FC = () => {
       botPayoff = 200;
     }
 
+    const prevPlayerCum = history.length > 0 ? history[history.length - 1].playerCum : 0;
+    const prevBotCum = history.length > 0 ? history[history.length - 1].botCum : 0;
+
     const newResult: RoundResult = {
       round: currentRound,
       playerChoice,
       botChoice,
       playerPayoff,
       botPayoff,
+      playerCum: prevPlayerCum + playerPayoff,
+      botCum: prevBotCum + botPayoff,
     };
 
     setHistory((prev) => [...prev, newResult]);
@@ -70,47 +98,59 @@ export const PrisonersDilemmaSim: React.FC = () => {
     setCurrentRound(1);
   };
 
+  // Recharts Line Data (Round 1 to 5)
+  const chartData = [
+    { round: "Start", player: 0, bot: 0 },
+    ...history.map((h) => ({
+      round: `R${h.round}`,
+      player: h.playerCum,
+      bot: h.botCum,
+      playerMove: `$${h.playerChoice}`,
+      botMove: `$${h.botChoice}`,
+    })),
+  ];
+
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs animate-in fade-in duration-200" id="game-theory-sim">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs" id="game-theory-sim">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-              {isEnglish ? "Module 6: Game Theory & Pricing" : "Modül 6: Oyun Teorisi & Fiyatlama"}
+              {isEnglish ? "Step 6 Interactive Terminal" : "6. Adım İnteraktif Terminal"}
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-              {isEnglish ? "Prisoner's Dilemma Duopoly Arena" : "Tutsak İkilemi İkili Tekel Arenası"}
+              {isEnglish ? "Game Theory & Nash Equilibrium" : "Oyun Teorisi & Nash Dengesi"}
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-            {isEnglish ? "Airline Duopoly Price War Simulation" : "Havayolu Fiyat Savaşı & Oyun Teorisi Simülatörü"}
+          <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+            {isEnglish ? "Airline Duopoly Price War Simulation" : "Havayolu İkili Tekel Fiyat Savaşı Simülatörü"}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed max-w-4xl">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
             {isEnglish
-              ? "Compete against rival Airline B on the NY-London route across 5 seasonal quarters. Maintain ticket price at $220 or slash to $200?"
-              : "New York - Londra hattında rakip B Havayolu ile 5 sezon boyunca yarışın. Bilet fiyatını 220$'da mı tutacaksınız yoksa 200$'a kırıp pazar mı kapmaya çalışacaksınız?"}
+              ? "Compete against rival Airline B on the NY-London route across 5 seasonal quarters. Make your pricing move on the left, monitor real-time cumulative profit curves on the right."
+              : "New York - Londra hattında rakip B Havayolu ile 5 sezon boyunca yarışın. Soldan fiyat hamlenizi yapın; sağdaki grafikte kümülatif kâr eğrilerinin nasıl ayrıştığını canlı izleyin."}
           </p>
         </div>
 
         <button
           onClick={handleReset}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer shrink-0 self-start md:self-center"
+          className="self-start md:self-auto flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors cursor-pointer"
         >
-          <RotateCcw className="w-3.5 h-3.5" /> {isEnglish ? "Reset Game" : "Yeniden Başlat"}
+          <RotateCcw className="w-3.5 h-3.5" /> {isEnglish ? "Reset Arena" : "Arenayı Sıfırla"}
         </button>
       </div>
 
       {/* Opponent Strategy Selection */}
       <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
         <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-          {isEnglish ? "Opponent (Rival B) Strategy:" : "Rakip (B Havayolu) Stratejisi:"}
+          {isEnglish ? "Opponent AI Strategy:" : "Rakip (B Havayolu) Karakteri:"}
         </span>
         <div className="flex flex-wrap gap-1.5">
           {[
             { id: "tit-for-tat", labelTr: "Kısasa Kısas (Tit-for-Tat)", labelEn: "Tit-for-Tat (Reciprocal)" },
-            { id: "aggressive", labelTr: "Sürekli Fiyat Kıran (Agresif)", labelEn: "Always Price Cut (Aggressive)" },
-            { id: "cooperative", labelTr: "Daima İşbirlikçi (Barışçıl)", labelEn: "Always Cooperate (Peaceful)" },
+            { id: "aggressive", labelTr: "Daima Fiyat Kıran (Agresif)", labelEn: "Always Price Cut (Aggressive)" },
+            { id: "cooperative", labelTr: "Daima Barışçıl (İşbirlikçi)", labelEn: "Always Cooperate (Peaceful)" },
           ].map((strat) => (
             <button
               key={strat.id}
@@ -118,9 +158,9 @@ export const PrisonersDilemmaSim: React.FC = () => {
                 setBotStrategy(strat.id as StrategyType);
                 handleReset();
               }}
-              className={`px-3 py-1 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 botStrategy === strat.id
-                  ? "bg-indigo-600 text-white shadow-2xs font-bold"
+                  ? "bg-indigo-600 text-white shadow-xs font-bold"
                   : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
               }`}
             >
@@ -130,176 +170,190 @@ export const PrisonersDilemmaSim: React.FC = () => {
         </div>
       </div>
 
-      {/* 2x2 Payoff Matrix Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-center border-collapse border border-slate-200 dark:border-slate-700 text-xs rounded-2xl overflow-hidden">
-          <thead>
-            <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
-              <th className="p-2.5 border border-slate-200 dark:border-slate-700">
-                {isEnglish ? "Payoff Matrix (Quarterly Profit)" : "Kâr Matrisi (Sezonluk Milyon $)"}
-              </th>
-              <th className="p-2.5 border border-slate-200 dark:border-slate-700 text-indigo-700 dark:text-indigo-400">
-                {isEnglish ? "Rival B: Keeps High ($220)" : "Rakip B: Yüksek Fiyat ($220)"}
-              </th>
-              <th className="p-2.5 border border-slate-200 dark:border-slate-700 text-rose-600 dark:text-rose-400">
-                {isEnglish ? "Rival B: Slashes Price ($200)" : "Rakip B: Fiyat Kırar ($200)"}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="p-2.5 font-bold bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-indigo-700 dark:text-indigo-400">
-                {isEnglish ? "You: Keep High ($220)" : "Siz: Yüksek Fiyat ($220)"}
-              </td>
-              <td className="p-3 border border-slate-200 dark:border-slate-700 bg-emerald-50/50 dark:bg-emerald-950/30 font-bold text-emerald-800 dark:text-emerald-300">
-                {isEnglish ? "Win-Win: $300M / $300M" : "Kazan-Kazan: 300M$ / 300M$"}
-              </td>
-              <td className="p-3 border border-slate-200 dark:border-slate-700 bg-rose-50/50 dark:bg-rose-950/30 text-slate-700 dark:text-slate-300">
-                {isEnglish ? "You: $120M / Rival: $320M" : "Siz: 120M$ / Rakip: 320M$"}
-              </td>
-            </tr>
-            <tr>
-              <td className="p-2.5 font-bold bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-rose-600 dark:text-rose-400">
-                {isEnglish ? "You: Slash Price ($200)" : "Siz: Fiyat Kır ($200)"}
-              </td>
-              <td className="p-3 border border-slate-200 dark:border-slate-700 bg-amber-50/50 dark:bg-amber-950/30 text-slate-700 dark:text-slate-300">
-                {isEnglish ? "You: $320M / Rival: $120M" : "Siz: 320M$ / Rakip: 120M$"}
-              </td>
-              <td className="p-3 border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 font-bold text-rose-600 dark:text-rose-400">
-                {isEnglish ? "Nash Trap: $200M / $200M" : "Nash Tuzağı: 200M$ / 200M$"}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {/* Action Buttons for Current Round */}
-      {currentRound <= maxRounds ? (
-        <div className="p-5 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/60 space-y-3">
+      {/* 2-Column Terminal Architecture (grid lg:grid-cols-12) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column: Interactive Moves & Payoff Matrix (5 cols) */}
+        <div className="lg:col-span-5 space-y-4 bg-slate-50 dark:bg-slate-800/40 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-black uppercase tracking-wider text-indigo-700 dark:text-indigo-400">
-              {isEnglish ? `Season ${currentRound} of ${maxRounds}` : `${currentRound}. Sezon Hamleniz (Toplam ${maxRounds} Sezon)`}
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Swords className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+              {isEnglish ? `Season ${Math.min(currentRound, 5)} / 5 Action:` : `${Math.min(currentRound, 5)}. Sezon Hamleniz:`}
+            </h3>
+            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
+              {currentRound > maxRounds ? (isEnglish ? "Finished" : "Tamamlandı") : `${currentRound}. Tur`}
             </span>
-            <span className="text-xs text-slate-500 dark:text-slate-400">
-              {isEnglish ? "Select your price policy:" : "Fiyat politikanızı seçin:"}
-            </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button
-              onClick={() => handlePlay(220)}
-              className="p-4 rounded-xl bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 border border-slate-200 dark:border-slate-700 hover:border-emerald-400 text-left transition-all cursor-pointer group shadow-xs"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-emerald-700 dark:group-hover:text-emerald-300">
-                  {isEnglish ? "Maintain Premium ($220)" : "Fiyatı Koru ($220)"}
-                </span>
-                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-300">
-                  {isEnglish ? "Discipline" : "İşbirliği"}
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                {isEnglish
-                  ? "Cooperate with the market; target $300M profit if rival also cooperates."
-                  : "Pazarda disiplini koru; rakip de uyarsa 300M$ kâr hedeflenir."}
-              </p>
-            </button>
-
-            <button
-              onClick={() => handlePlay(200)}
-              className="p-4 rounded-xl bg-white dark:bg-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-slate-200 dark:border-slate-700 hover:border-rose-400 text-left transition-all cursor-pointer group shadow-xs"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-rose-700 dark:group-hover:text-rose-300">
-                  {isEnglish ? "Slash Price ($200)" : "Fiyat Kır ($200)"}
-                </span>
-                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-900 text-rose-800 dark:text-rose-300">
-                  {isEnglish ? "Price War" : "Fiyat Savaşı"}
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                {isEnglish
-                  ? "Steal volume from competitor; risk triggering a mutually destructive price war."
-                  : "Rakibin müşterisini çal; ancak yıkıcı bir fiyat savaşını tetikleme riski taşırsın."}
-              </p>
-            </button>
-          </div>
-        </div>
-      ) : (
-        /* Game Over Scorecard */
-        <div className="p-5 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3 text-center sm:text-left">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div>
-              <div className="text-xs font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-                {isEnglish ? "Simulation Completed (5 Seasons)" : "Simülasyon Tamamlandı (5 Sezon)"}
-              </div>
-              <h3 className="text-lg font-extrabold text-slate-900 dark:text-slate-100">
-                {isEnglish
-                  ? `Final Earnings: You $${totalPlayerScore}M vs Rival $${totalBotScore}M`
-                  : `Toplam Kâr: Siz ${totalPlayerScore}M$ - Rakip B ${totalBotScore}M$`}
-              </h3>
-            </div>
-            <button
-              onClick={handleReset}
-              className="px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-700 transition-colors cursor-pointer"
-            >
-              {isEnglish ? "Play Again" : "Tekrar Oyna"}
-            </button>
-          </div>
-
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            {totalPlayerScore >= 1400
-              ? isEnglish
-                ? "🏆 Exemplary Discipline: By maintaining mutual pricing power, both airlines maximized total profit pool without destroying economic value."
-                : "🏆 Muazzam Koordinasyon: Her iki havayolu da disiplinli kalarak kâr havuzunu buharlaştırmadan maksimum refah üretti."
-              : isEnglish
-              ? "⚠️ Price War Trap: Frequent price slashing destroyed industry profit margins, shifting economic surplus entirely to passengers."
-              : "⚠️ Fiyat Savaşı Tuzağı: Fiyat kırmalar yüzünden sektörün toplam kârı buharlaştı ve tüm artı değer yolculara aktı."}
-          </p>
-        </div>
-      )}
-
-      {/* History Log */}
-      {history.length > 0 && (
-        <div className="space-y-2">
-          <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
-            {isEnglish ? "Quarterly Match History:" : "Geçmiş Sezon Kararları:"}
-          </div>
-          <div className="space-y-1.5">
-            {history.map((h) => (
-              <div
-                key={h.round}
-                className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 text-xs font-mono"
+          {/* Action Buttons */}
+          {currentRound <= maxRounds ? (
+            <div className="space-y-2">
+              <button
+                onClick={() => handlePlay(220)}
+                className="w-full p-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-left font-bold text-xs transition-all shadow-sm cursor-pointer space-y-1"
               >
-                <span>
-                  {isEnglish ? `Season ${h.round}:` : `${h.round}. Sezon:`}
-                </span>
-                <span className={h.playerChoice === 220 ? "text-emerald-700 dark:text-emerald-400 font-bold" : "text-rose-600 dark:text-rose-400 font-bold"}>
-                  {isEnglish ? `You: $${h.playerChoice}` : `Siz: ${h.playerChoice}$`}
-                </span>
-                <span className={h.botChoice === 220 ? "text-emerald-700 dark:text-emerald-400 font-bold" : "text-rose-600 dark:text-rose-400 font-bold"}>
-                  {isEnglish ? `Rival B: $${h.botChoice}` : `Rakip B: ${h.botChoice}$`}
-                </span>
-                <span className="text-slate-900 dark:text-slate-100 font-bold font-sans">
-                  {isEnglish ? `Gain: +$${h.playerPayoff}M` : `Kazancınız: +${h.playerPayoff}M$`}
-                </span>
+                <div className="flex justify-between items-center">
+                  <span>🕊️ {isEnglish ? "Maintain High Price ($220)" : "Yüksek Fiyatı Koru ($220)"}</span>
+                  <span className="font-mono text-emerald-100 text-[11px]">+300M$ (İşbirliği)</span>
+                </div>
+                <p className="text-[11px] text-emerald-100 font-normal">
+                  {isEnglish ? "Cooperative strategy aiming for shared monopoly profit." : "Rakiple zımni anlaşma sağlayarak ortak kârı maksimize etmeye çalışır."}
+                </p>
+              </button>
+
+              <button
+                onClick={() => handlePlay(200)}
+                className="w-full p-3.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-left font-bold text-xs transition-all shadow-sm cursor-pointer space-y-1"
+              >
+                <div className="flex justify-between items-center">
+                  <span>⚔️ {isEnglish ? "Slash Price ($200 War)" : "Fiyat Kır ($200 Savaş)"}</span>
+                  <span className="font-mono text-rose-100 text-[11px]">+320M$ (Tek Taraflı)</span>
+                </div>
+                <p className="text-[11px] text-rose-100 font-normal">
+                  {isEnglish ? "Undercut rival to grab volume; risks retaliatory price war." : "Rakibin pazarını kapmak için fiyat kırar; misilleme riskini başlatır."}
+                </p>
+              </button>
+            </div>
+          ) : (
+            <div className="p-4 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-center space-y-2">
+              <Trophy className="w-6 h-6 text-amber-500 mx-auto" />
+              <div className="font-bold text-xs text-indigo-950 dark:text-indigo-200">
+                {isEnglish ? "5-Season Tournament Completed!" : "5 Sezonluk Turnuva Tamamlandı!"}
               </div>
-            ))}
+              <button
+                onClick={handleReset}
+                className="px-4 py-1.5 rounded-full bg-indigo-600 text-white text-xs font-bold shadow-xs hover:bg-indigo-700 cursor-pointer"
+              >
+                {isEnglish ? "Play Again" : "Yeniden Oyna"}
+              </button>
+            </div>
+          )}
+
+          {/* Payoff Matrix Table */}
+          <div className="p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 text-[11px] space-y-2">
+            <span className="font-bold text-slate-700 dark:text-slate-300 block">
+              {isEnglish ? "Payoff Matrix ($M Profit):" : "Kâr Matrisi (Milyon $):"}
+            </span>
+            <div className="grid grid-cols-2 gap-1.5 text-center font-mono">
+              <div className="p-2 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300">
+                <span className="block text-[9px] font-sans text-slate-400">
+                  {isEnglish ? "Both $220 (Coop)" : "İki Taraf $220"}
+                </span>
+                300M$ / 300M$
+              </div>
+              <div className="p-2 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300">
+                <span className="block text-[9px] font-sans text-slate-400">
+                  {isEnglish ? "You $200 / Rival $220" : "Sen $200 / Rakip $220"}
+                </span>
+                320M$ / 120M$
+              </div>
+              <div className="p-2 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300">
+                <span className="block text-[9px] font-sans text-slate-400">
+                  {isEnglish ? "You $220 / Rival $200" : "Sen $220 / Rakip $200"}
+                </span>
+                120M$ / 320M$
+              </div>
+              <div className="p-2 rounded bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300">
+                <span className="block text-[9px] font-sans text-slate-400">
+                  {isEnglish ? "Both $200 (Nash)" : "İki Taraf $200"}
+                </span>
+                200M$ / 200M$
+              </div>
+            </div>
+          </div>
+
+          {/* Action-Oriented Pedagogical Directive */}
+          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-900 dark:text-amber-200">
+            <strong className="block font-bold text-amber-800 dark:text-amber-300 mb-1">
+              💡 {isEnglish ? "Action-Oriented Game Theory Experiment:" : "Eyleme Dönük Oyun Teorisi Deneyi:"}
+            </strong>
+            {isEnglish
+              ? "Click 'Slash Price ($200)'. Notice on the right chart how your profit spikes in Round 1, but Tit-for-Tat immediately retaliates in Round 2, locking both airlines into the low-margin $200M Nash Trap."
+              : "Soldaki 'Fiyat Kır ($200)' butonuna basın. Sağdaki grafikte 1. turda kârınızın sıçradığını, fakat 2. turdan itibaren rakibin misilleme yaparak her iki havayolunu da 200M$'lık düşük kâr kapanına (Nash Dengesi) kilitlediğini izleyin."}
           </div>
         </div>
-      )}
 
-      {/* Takeaway */}
-      <div className="p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 space-y-1.5">
-        <div className="flex items-center gap-2 text-xs font-bold text-amber-900 dark:text-amber-300">
-          <HelpCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-          <span>{isEnglish ? "Core Strategic Lesson: Nash Equilibrium vs Industry Moat" : "Temel Stratejik Ders: Nash Dengesi ve Hendek"}</span>
+        {/* Right Column: Recharts Cumulative Curve & Game Log (7 cols) */}
+        <div className="lg:col-span-7 space-y-4">
+          {/* Recharts Area */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/60 pb-2">
+              <div className="flex items-center gap-1.5">
+                <BarChart3 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  {isEnglish ? "Cumulative Earnings Over 5 Seasons ($M)" : "5 Sezonluk Kümülatif Kâr Eğrisi (Milyon $)"}
+                </span>
+              </div>
+              <div className="flex items-center gap-3 text-xs font-mono font-bold">
+                <span className="text-emerald-600">
+                  {isEnglish ? "You" : "Sen"}: ${totalPlayerScore}M
+                </span>
+                <span className="text-rose-600">
+                  {isEnglish ? "Rival" : "Rakip"}: ${totalBotScore}M
+                </span>
+              </div>
+            </div>
+
+            <div className="h-56 sm:h-60 w-full pt-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 10, right: 20, left: -20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+                  <XAxis dataKey="round" tick={{ fontSize: 10, fill: "#94A3B8" }} />
+                  <YAxis tick={{ fontSize: 10, fill: "#94A3B8" }} unit="M" />
+                  <Tooltip
+                    content={
+                      <CustomChartTooltip
+                        valueFormatter={(val, name) => [
+                          `$${val}M`,
+                          name === "player"
+                            ? isEnglish
+                              ? "Your Airline"
+                              : "Sizin Havayolunuz"
+                            : isEnglish
+                            ? "Rival Airline B"
+                            : "Rakip B",
+                        ]}
+                      />
+                    }
+                  />
+                  <Legend
+                    wrapperStyle={{ fontSize: "11px", paddingTop: "6px" }}
+                    formatter={(value) => (value === "player" ? (isEnglish ? "Your Firm" : "Sizin Şirketiniz") : (isEnglish ? "Rival B" : "Rakip B"))}
+                  />
+                  <Line type="monotone" dataKey="player" stroke="#10B981" strokeWidth={3} dot={{ r: 4 }} />
+                  <Line type="monotone" dataKey="bot" stroke="#F43F5E" strokeWidth={3} dot={{ r: 4 }} strokeDasharray="4 4" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Dynamic History Log */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              {isEnglish ? "Round-by-Round Breakdown:" : "Sezonluk Karşılaşma Dökümü:"}
+            </h4>
+
+            {history.length === 0 ? (
+              <div className="p-4 text-center text-xs text-slate-400 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+                {isEnglish ? "Click a price button on the left to start Round 1." : "1. Sezonu başlatmak için soldaki fiyat butonlarından birine tıklayın."}
+              </div>
+            ) : (
+              <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                {history.map((r, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 text-xs font-mono">
+                    <span className="font-bold text-slate-700 dark:text-slate-300">
+                      R{r.round}: {isEnglish ? `You ($${r.playerChoice}) vs Rival ($${r.botChoice})` : `Sen ($${r.playerChoice}) vs Rakip ($${r.botChoice})`}
+                    </span>
+                    <div className="flex gap-2">
+                      <span className="text-emerald-600 font-bold">+{r.playerPayoff}M$</span>
+                      <span className="text-slate-400">/</span>
+                      <span className="text-rose-600 font-bold">+{r.botPayoff}M$</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <p className="text-xs text-amber-950 dark:text-amber-200 leading-relaxed">
-          {isEnglish
-            ? "When barriers to entry are low and products are undifferentiated, price-cutting is a dominant strategy for individual players, leading inevitably to the Nash trap where ROIC collapses below WACC for the entire sector."
-            : "Giriş engellerinin düşük ve ürünün farksız olduğu sektörlerde fiyat kırmak bireysel olarak cazip görünse de, tüm sektörün ROIC'sini WACC altına çekip kâr havuzunu yok eder."}
-        </p>
       </div>
     </div>
   );

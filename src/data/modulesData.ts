@@ -39,14 +39,15 @@ export const MODULES_DATA: LearningModule[] = [
       },
       {
         id: "m1-s2",
-        title: "2. ROIC ve WACC: Gerçek Değer Yaratmanın Matematiği",
+        title: "2. ROIC ve WACC: Gerçek Değer Yaratmanın Matematiği & Terminal Deneyi",
         summary: "ROIC > WACC ise şirket gerçek bir değer üretir. Aksi halde şirket büyüdükçe hissedar servetini eritir.",
         content: [
-          "ROIC (Return on Invested Capital - Yatırılan Sermayenin Getirisi): Şirketin fabrikalarına, mağazalarına, makinelerine ve stoklarına bağladığı her 100 TL'lik sermaye ile yılda kaç TL net faaliyet kârı (NOPAT) ürettiğidir.",
-          "WACC (Weighted Average Cost of Capital - Sermaye Maliyeti): Şirketin bu parayı bulmasının (hissedarların beklediği getiri + banka kredi faizi) yıllık fırsat maliyetidir.",
-          "Örnek Hesap: Eğer bir şirketin sermaye maliyeti %13.9 (WACC) ise ve yatırdığı sermayeden %18.0 (ROIC) kazanıyorsa, aradaki +%4.1'lik fark (Ekonomik Yayılım / Economic Spread) şirketin hissedarlarına yarattığı gerçek refahtır.",
-          "Tersine Durum: Bir şirket %20 büyüyebilir, cirosunu ikiye katlayabilir; ancak ROIC'si %7 ve WACC'si %10 ise, büyüdükçe daha fazla parayı yakıyor demektir (Value Destruction)."
+          "ROIC (Return on Invested Capital - Yatırılan Sermayenin Getirisi): Şirketin fabrikalarına, mağazalarına, makinelerine ve işletme sermayesine bağladığı her 100 TL ile yılda kaç TL net faaliyet kârı (NOPAT) ürettiğidir.",
+          "WACC (Sermaye Maliyeti): Şirketin bu fonları bulmasının (özsermaye fırsat maliyeti + net borç faizi) ağırlıklı yıllık taban maliyetidir.",
+          "Terminalde Eyleme Geçin: Aşağıdaki simülatörde soldaki NOPAT sürgüsünü yukarı çekin; sağdaki grafikte yeşil Ekonomik Yayılım (Spread) çubuğunun nasıl büyüdüğünü ve yıllık refah üretiminin katlandığını canlı izleyin.",
+          "Sermaye Tuzağını Keşfedin: WACC sürgüsünü ROIC'nin üzerine çıkarın. Şirket milyarlarca TL muhasebe kârı açıklasa bile sağdaki göstergenin kırmızıya dönüştüğünü ve büyüdükçe servet erittiğini (Value Destruction) anında teşhis edin."
         ],
+        interactiveWidgetId: "roic-wacc",
         formulaBox: {
           title: "WACC & ROIC ve Ekonomik Yayılım (Spread) Eşitliği",
           equation: "WACC = (E/V × Ke) + (D/V × Kd × (1 - t))\nROIC = NOPAT / Yatırılan Sermaye\nEkonomik Yayılım (Spread) = ROIC - WACC",
@@ -62,7 +63,7 @@ export const MODULES_DATA: LearningModule[] = [
         stepByStepMath: "Adım 1: Özsermaye Maliyeti = %10 Risksiz Faiz + (1.2 Beta × %5 Risk Primi) = %16.0\nAdım 2: Net Borçlanma = %12 Faiz × (1 - 0.25 Vergi) = %9.0\nAdım 3: Ağırlıklı Ortalama = (0.70 × %16.0) + (0.30 × %9.0) = %13.9 WACC\nAdım 4: ROIC (%18.0) > WACC (%13.9) -> Yıllık +%4.1 Pozitif Ekonomik Yayılım",
         formulaDeepDiveId: "wacc",
         analogyBox: {
-          title: "🍋 Limonata Standı Örneği",
+          title: "🍋 Limonata Standı Örneği & Simülasyon",
           description:
             "Standı kurmak için ailenizden %10 faizle (WACC = %10) 1.000 TL borç aldınız. Yaz sonunda 180 TL net kâr ettiniz (ROIC = %18). Ailenize 100 TL faiz ödedikten sonra cebinize 80 TL net refah kalır. Ama sadece 60 TL kâr etseydiniz (%6 ROIC), borcun faizini bile karşılayamazdınız!"
         },
@@ -76,8 +77,8 @@ export const MODULES_DATA: LearningModule[] = [
         content: [
           "Yalnızca tek bir yıl yüksek ROIC kazanmak yetmez. İkinci ve çok daha kritik boyut, bu yüksek getiri oranını kaç yıl boyunca rakiplere kaptırmadan koruyabileceğinizdir (Competitive Advantage Period - CAP).",
           "Ortalamaya Dönüş (Regression to the Mean): Mauboussin'in binlerce şirketi incelediği veriler, en yüksek kârlılığa sahip ilk %20'lik şirketlerin bile 5-10 yıl içinde kârlarının piyasa ortalamasına doğru hızla gerilediğini göstermektedir.",
-          "Bunun istisnası olan nadir şirketlere 'Compounder' (Bileşik Büyüyenler) denir. Coca-Cola, Apple, Microsoft gibi şirketler 20+ yıl boyunca ROIC > WACC farkını koruyabilmiştir.",
-          "Mauboussin araştırması: Borsa hisse fiyatlarının ortalama %67'si mevcut durumu, %33'ü ise gelecekte yaratılması beklenen bu katma değeri yansıtır."
+          "Terminalde Dönüşüm Eğrisini İnceleyin: Sağ üstteki '10 Yıllık Dönüşüm' sekmesine geçin. Rekabet akıncıları geldikçe yeşil alanın WACC çizgisine doğru nasıl söndüğünü gözlemleyin.",
+          "Bunun istisnası olan nadir şirketlere 'Compounder' (Bileşik Büyüyenler) denir. Apple ve Coca-Cola gibi şirketler 20+ yıl boyunca bu yeşil alanı açık tutabilmiştir."
         ],
         formulaDeepDiveId: "roic",
         analogyBox: {
@@ -177,8 +178,10 @@ export const MODULES_DATA: LearningModule[] = [
           "2. Büyüme (Growth) [CFO: (+), CFI: (-), CFF: (+)]: Artık kendi işinden nakit üretir ama o kadar hızlı büyür ki hem kendi nakdini hem dış kaynakları yatırıma gömer. (Ortalama ROIC: +%10.6)",
           "3. Olgunluk (Maturity) [CFO: (+), CFI: (-), CFF: (-)]: Şirket nakit basma makinesine dönmüştür! İşten devasa nakit girer, yatırımlarını kendi karşılar ve üstüne borç öder ya da temettü dağıtır. (Ortalama ROIC: +%11.2 - İDEAL HENDEK EVRESİ)",
           "4. Sarsıntı (Shake-Out) [Karışık Akışlar]: Sektörde büyüme yavaşlar, zayıf şirketler elenir, kârlar dalgalanır. (Ortalama ROIC: +%3.8)",
-          "5. Düşüş (Decline) [CFO: (-), CFI: (+), CFF: (+/-)]: İşten para gelmez, şirket varlıklarını ve fabrikalarını satarak nakit yaratmaya çalışır (CFI +). (Ortalama ROIC: -%12.0)"
+          "5. Düşüş (Decline) [CFO: (-), CFI: (+), CFF: (+/-)]: İşten para gelmez, şirket varlıklarını ve fabrikalarını satarak nakit yaratmaya çalışır (CFI +). (Ortalama ROIC: -%12.0)",
+          "Terminalde Eyleme Geçin: Aşağıdaki simülatörde soldaki kontrol panelinde hazır şirket profillerine (Apple, Erken Aşama Girişim, Düşüşteki Şirket) tıklayın veya CFO/CFI/CFF işaretlerini manuel değiştirin. Sağdaki Recharts dağılım grafiğinde şirketin ömür evresini ve nakit profilini anında doğrulayın."
         ],
+        interactiveWidgetId: "dickinson",
         interactiveVisualId: "dickinson-lifecycle",
         formulaBox: {
           title: "Victoria Dickinson Nakit Akışı Yaşam Döngüsü Modeli",
@@ -257,7 +260,8 @@ export const MODULES_DATA: LearningModule[] = [
           "1. WTP (Willingness to Pay - Ödemeye İsteklilik): Müşterinin o ürün için cebinden çıkarmaya razı olduğu en yüksek tavan fiyattır. (Algılanan değer ve fayda).",
           "2. Fiyat (Price): Şirketin kasada müşteriden fiilen talep ettiği etiket fiyatı.",
           "3. Maliyet (Cost): Şirketin o ürünü üretmek, taşımak ve sunmak için harcadığı toplam kaynak tutarı.",
-          "4. WTS (Willingness to Sell - Satmaya İsteklilik): Tedarikçinin veya çalışanın o girdi/emek için kabul edeceği asgari dip taban fiyat (fırsat maliyeti)."
+          "4. WTS (Willingness to Sell - Satmaya İsteklilik): Tedarikçinin veya çalışanın o girdi/emek için kabul edeceği asgari dip taban fiyat (fırsat maliyeti).",
+          "Terminalde Eyleme Geçin: Aşağıdaki simülatörde soldaki kontrol panelinde WTP, Fiyat, Maliyet ve WTS sürgülerini oynatın veya Apple/Costco hazır butonlarına tıklayın. Sağdaki Değer Çubuğu Recharts grafiğinde Tüketici Rantı (mavi), Şirket Kârı (yeşil) ve Tedarikçi Rantının (mor) anlık olarak nasıl genişleyip daraldığını gözlemleyin."
         ],
         interactiveVisualId: "value-stick",
         formulaBox: {
@@ -363,7 +367,8 @@ export const MODULES_DATA: LearningModule[] = [
         content: [
           "Kâr Havuzu, X ekseninde yatırılan sermaye payını (%0-%100), Y ekseninde ise ekonomik getiri oranını (ROIC - WACC) gösterir.",
           "Kutunun Alanı = Şirketin Toplam Ekonomik Kârı veya Zararıdır. Formül: Ekonomik Kâr = Yatırılan Sermaye × (ROIC - WACC).",
-          "Havacılık Şoku: Havacılık sektörünün toplam ekonomik kârında sermayenin %75'inden fazlasını havayolları bağlamış ve zarar etmiştir. Buna karşın az sermaye bağlayan Jet Yakıtı üreticileri ve Bilet Sistemleri (GDS/Amadeus) dev kârlar elde etmiştir."
+          "Havacılık Şoku: Havacılık sektörünün toplam ekonomik kârında sermayenin %75'inden fazlasını havayolları bağlamış ve zarar etmiştir. Buna karşın az sermaye bağlayan Jet Yakıtı üreticileri ve Bilet Sistemleri (GDS/Amadeus) dev kârlar elde etmiştir.",
+          "Terminalde Eyleme Geçin: Aşağıdaki simülatörde sol paneldeki sektör segmentleri listesinden Havayolları, Uçak Üreticileri ve Rezervasyon Sistemleri (GDS) kartlarına tıklayın veya ROIC/WACC oranlarını manuel değiştirin. Sağdaki Recharts Havuz grafiğinde sermaye payı genişliği (X) ile getiri yayılımı (Y) alanının net dolar kârına nasıl dönüştüğünü anında görün."
         ],
         formulaBox: {
           title: "Ekonomik Kâr Havuzu (Profit Pool) Geometrisi",
@@ -496,8 +501,10 @@ export const MODULES_DATA: LearningModule[] = [
         content: [
           "GAAP/IFRS muhasebesi, bir yazılım veya biyoteknoloji şirketinin geleceği inşa eden Ar-Ge bütçesini cari yılda gider yazar. Bu da şirketi zararda gösterir ve bilançodaki gerçek sermayeyi gizler.",
           "Mauboussin Düzeltmesi: Ar-Ge harcamasını EBIT'e geri ekleyin ve 3-5 yıllık faydalı ömrü boyunca amorti edin. Net Ar-Ge varlığını bilançonun 'Yatırılan Sermaye' tabanına ekleyin.",
-          "Faaliyet Kiralamaları: Şirketin kiraladığı mağaza ve uçakların gelecek kira ödemelerinin bugünkü değerini (PV) bularak hem borçlara hem duran varlıklara ekleyin."
+          "Faaliyet Kiralamaları: Şirketin kiraladığı mağaza ve uçakların gelecek kira ödemelerinin bugünkü değerini (PV) bularak hem borçlara hem duran varlıklara ekleyin.",
+          "Terminalde Eyleme Geçin: Aşağıdaki simülatörde sol paneldeki 10-K vaka senaryolarından (Örn: Biyoteknoloji & Yazılım Şirketi) birini seçin veya Ar-Ge giderini ve itfa süresini manuel ayarlayın. Sağdaki grafikte düzeltilmemiş muhasebe kârı ile düzeltilmiş gerçek ROIC arasındaki muazzam farkı anında teşhis edin."
         ],
+        interactiveWidgetId: "footnote-detective",
         formulaBox: {
           title: "10-K Bilanço Düzeltmeleri & Ar-Ge / Faaliyet Kiralaması",
           equation: "Düzeltilmiş NOPAT = [ Raporlanan EBIT + Cari Ar-Ge - Yıllık Ar-Ge İtfası + Faiz Bileşeni ] × (1 - t)\nDüzeltilmiş Sermaye = Raporlanan Sermaye + Net Ar-Ge Varlığı + Kiralama PV'si - Fazla Nakit",
@@ -602,7 +609,8 @@ export const MODULES_DATA: LearningModule[] = [
         content: [
           "İki rakip havayolu aynı rotada yarışır. İkisi de yüksek fiyatta kalırsa (İşbirliği) yüksek kâr eder. Biri fiyat kırıp diğerini gafil avlarsa kısa vadede pazar çalar.",
           "Ancak diğeri de fiyat kırınca ikisi de maliyetin altına düşüp zarar eder (Nash Dengesi Tuzağı).",
-          "Robert Axelrod turnuvasında kanıtlanan en kârlı strateji 'Tit-for-Tat'tır: 1. İlk turda işbirliğiyle (yüksek fiyat) başla, 2. Rakip fiyat kırarsa derhal misilleme yap, 3. Rakip tekrar fiyatı yükseltirse anında affet ve işbirliğine dön."
+          "Robert Axelrod turnuvasında kanıtlanan en kârlı strateji 'Tit-for-Tat'tır: 1. İlk turda işbirliğiyle (yüksek fiyat) başla, 2. Rakip fiyat kırarsa derhal misilleme yap, 3. Rakip tekrar fiyatı yükseltirse anında affet ve işbirliğine dön.",
+          "Terminalde Eyleme Geçin: Aşağıdaki simülatörde sol paneldeki strateji menüsünden Tit-for-Tat veya Agresif Fiyat Kırıcı'yı seçin; 'Adım Adım Oyna' butonuna basarak turları ilerletin. Sağdaki Recharts Kümülatif Kâr Grafiğinde misillemeli işbirliğinin yıkıcı fiyat savaşlarını uzun vadede nasıl ezdiğini gözlerinizle görün."
         ],
         interactiveWidgetId: "game-theory",
         analogyBox: {
@@ -688,7 +696,8 @@ export const MODULES_DATA: LearningModule[] = [
           "Bu matematiksel formülde Satışlar sadeleşir: (NOPAT / Satışlar) × (Satışlar / Sermaye) = NOPAT / Sermaye = ROIC.",
           "Farklılaşma Yolu (Yüksek Marj / Düşük Devir): Coca-Cola (%26 marj, 0.6x devir = %16 ROIC), Apple, Ferrari.",
           "Maliyet Liderliği Yolu (Düşük Marj / Yüksek Devir): Costco (%3.8 marj, 4.2x devir = %16 ROIC), Walmart.",
-          "Görüldüğü gibi Costco ve Coca-Cola tamamen aynı %16 ROIC'e sahiptir ama biri marjla, diğeri süratle kazanır!"
+          "Görüldüğü gibi Costco ve Coca-Cola tamamen aynı %16 ROIC'e sahiptir ama biri marjla, diğeri süratle kazanır!",
+          "Terminalde Eyleme Geçin: Aşağıdaki simülatörde sol paneldeki hazır profillerden Coca-Cola (Marj) ve Costco (Devir Hızı) butonlarına tıklayın; veya marj ve devir sürgülerini kendiniz ayarlayın. Sağdaki grafikte DuPont saçılım matrisinde şirketinizin hangi eksende kâr motorunu çalıştırdığını anında keşfedin."
         ],
         formulaBox: {
           title: "DuPont ROIC Ayrıştırma Eşitliği",
@@ -718,7 +727,8 @@ export const MODULES_DATA: LearningModule[] = [
           "Nakit Dönüşüm Süresi (CCC) = Stokta Kalma Süresi (DIO) + Tahsilat Süresi (DSO) - Tedarikçiye Ödeme Süresi (DPO).",
           "1999 Barnes & Noble: Kitabı 149 gün rafta tuttu, parayı 6 günde tahsil etti, toptancıya 75 günde ödedi. CCC = 149 + 6 - 75 = +80 Gün! (Parası 80 gün boyunca raflarda kilitli kaldı).",
           "1999 Amazon: Kitabı 29 günde sattı, parayı karttan 2 günde aldı, yayıncıya 60 günde ödedi. CCC = 29 + 2 - 60 = -29 Gün!",
-          "Bu ne anlama gelir? Amazon sattığı kitabın parasını 58 gün boyunca bankada faizsiz işletme sermayesi olarak tuttu ve tek kuruş kredi çekmeden devasa büyümesini finanse etti!"
+          "Bu ne anlama gelir? Amazon sattığı kitabın parasını 58 gün boyunca bankada faizsiz işletme sermayesi olarak tuttu ve tek kuruş kredi çekmeden devasa büyümesini finanse etti!",
+          "Terminalde Eyleme Geçin: Aşağıdaki simülatörde sol paneldeki şirket profillerinden Amazon vs Barnes & Noble butonlarını test edin veya DIO, DSO, DPO sürgülerini kendiniz değiştirin. Sağdaki Recharts Waterfall grafiğinde nakit dönüşüm günlerinin sıfırın altına inerek nasıl dev bir faizsiz likidite kalkanı yarattığını canlı izleyin."
         ],
         formulaBox: {
           title: "Nakit Dönüşüm Döngüsü (Cash Conversion Cycle - CCC)",
@@ -792,8 +802,10 @@ export const MODULES_DATA: LearningModule[] = [
           "Geleneksel DCF modelinde analist 10 yıl sonrasını tahmin etmeye çalışır ve genellikle yanılır.",
           "Mauboussin'in Tersine DCF Yöntemi: Soru tersine çevrilir: 'Mevcut hisse fiyatının haklı çıkması için bu şirketin kaç yıl boyunca WACC'nin üzerinde ROIC kazanması gerekiyor?' (Competitive Advantage Period - CAP).",
           "Hisse Fiyatı = Sıfır Büyüme Değeri (Steady-State Value) + Gelecekteki Değer Yaratma (CAP Yılları).",
-          "Eğer piyasa bir şirket için 25 yıllık hendek (CAP) fiyatlıyorsa ve sektör hızla değişiyorsa hisse aşırı pahalıdır. Eğer piyasa sadece 4 yıllık hendek fiyatlıyor ama şirketin 15 yıllık patenti varsa hisse muazzam bir fırsattır."
+          "Eğer piyasa bir şirket için 25 yıllık hendek (CAP) fiyatlıyorsa ve sektör hızla değişiyorsa hisse aşırı pahalıdır. Eğer piyasa sadece 4 yıllık hendek fiyatlıyor ama şirketin 15 yıllık patenti varsa hisse muazzam bir fırsattır.",
+          "Terminalde Eyleme Geçin: Aşağıdaki simülatörde sol panelde Hisse Fiyatı, Mevcut NOPAT, Büyüme Hızı ve WACC sürgüleriyle oynayın veya Apple/Coca-Cola/Pahalı Teknoloji hazır senaryolarına tıklayın. Sağdaki grafikte Sıfır Büyüme Değeri ile PVGO Gelecek Değer Yaratımının hisse fiyatı içindeki payını ve piyasanın ima ettiği CAP (Hendek) süresini canlı tespit edin."
         ],
+        interactiveWidgetId: "reverse-dcf",
         formulaBox: {
           title: "Michael Mauboussin Tersine DCF & İma Edilen CAP",
           equation: "Hisse Fiyatı ($) = Sıfır Büyüme Değeri (NOPAT / WACC) + Gelecek Büyüme Beklentisi (PVGO)\nİma Edilen CAP Yılı = f( Piyasa Fiyatı, ROIC, WACC, Büyüme Hızı )",
@@ -839,7 +851,8 @@ export const MODULES_DATA: LearningModule[] = [
           "2. Giriş Engelleri ve Ölçek Avantajları (MES, Wright Yasası, Ağ Etkisi)",
           "3. Tüketici Avantajları ve Geçiş Maliyetleri (WTP tavanı, Lock-in)",
           "4. Yönetimin Sermaye Tahsisi Disiplini (Gereksiz satın almalardan kaçınma, hisse geri alımı)",
-          "5. Hendek Sürdürülebilirliği ve Yıkım Tehdidi (CAP süresi, teknolojik ikameler)"
+          "5. Hendek Sürdürülebilirliği ve Yıkım Tehdidi (CAP süresi, teknolojik ikameler)",
+          "Terminalde Eyleme Geçin: Aşağıdaki simülatörde sol paneldeki kontrol listesi maddelerini tek tek işaretleyin veya hazır şirket profillerini (Apple Inc., Costco, Ortalama Havayolu) yükleyin. Sağdaki Recharts Stratejik Boyut Dağılımında ve Hendek Hükmü Kartında şirketin kalemi yoksa sermaye tuzağı mı olduğunu anında test edin."
         ],
         interactiveWidgetId: "checklist",
         analogyBox: {

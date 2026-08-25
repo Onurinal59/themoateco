@@ -1,11 +1,34 @@
 import React, { useState } from "react";
-import { TrendingUp, AlertTriangle, CheckCircle, RotateCcw, CheckCircle2, HelpCircle } from "lucide-react";
+import {
+  TrendingUp,
+  RotateCcw,
+  Sparkles,
+  Zap,
+  Award,
+  Layers,
+  BarChart3,
+  HelpCircle,
+  Shield,
+} from "lucide-react";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Cell,
+  Legend,
+  ReferenceLine,
+} from "recharts";
 import { useLanguage } from "../../context/LanguageContext";
+import { CustomChartTooltip } from "../ChartTooltip";
 
 interface CompanyBenchmark {
   name: string;
-  strategyTr: "Farklılaşma (Yüksek Marj)" | "Maliyet Liderliği (Yüksek Devir)" | "Süperstar (Her İkisi)" | "Kırılgan / Değer Yok Eden";
-  strategyEn: "Differentiation (High Margin)" | "Cost Leadership (High Turnover)" | "Superstar (Both Engines)" | "Vulnerable / Value Destroyer";
+  strategyTr: string;
+  strategyEn: string;
   margin: number;
   turnover: number;
   roic: number;
@@ -20,7 +43,7 @@ const BENCHMARKS: CompanyBenchmark[] = [
     strategyEn: "Differentiation (High Margin)",
     margin: 26,
     turnover: 0.6,
-    roic: 16,
+    roic: 15.6,
     descTr: "Güçlü marka ve gizli formül ile %26 NOPAT marjı üretir.",
     descEn: "Generates a 26% NOPAT margin via pricing power and brand equity.",
   },
@@ -30,17 +53,17 @@ const BENCHMARKS: CompanyBenchmark[] = [
     strategyEn: "Cost Leadership (High Turnover)",
     margin: 4,
     turnover: 4.3,
-    roic: 16,
-    descTr: "Yalnızca %4 ince kâr marjıyla çalışır ama depodaki malları 4.3 kat hızla döndürür.",
+    roic: 17.2,
+    descTr: "Yalnızca %4 ince kâr marjıyla çalışır ama depodaki sermayeyi 4.3 kat hızla döndürür.",
     descEn: "Operates with a lean 4% operating margin but turns over invested capital 4.3x annually.",
   },
   {
     name: "Apple Inc.",
-    strategyTr: "Süperstar (Her İkisi)",
+    strategyTr: "Süperstar (Çifte Motor)",
     strategyEn: "Superstar (Both Engines)",
     margin: 28,
     turnover: 1.6,
-    roic: 45,
+    roic: 44.8,
     descTr: "Hem %28'lik devasa bir lüks marjına hem de 1.6x yüksek sermaye dönüşüm hızına sahiptir.",
     descEn: "Commands both luxury 28% NOPAT margins and a high 1.6x capital velocity.",
   },
@@ -50,24 +73,24 @@ const BENCHMARKS: CompanyBenchmark[] = [
     strategyEn: "Cost Leadership (High Turnover)",
     margin: 8,
     turnover: 2.3,
-    roic: 18,
+    roic: 18.4,
     descTr: "Rafineri ölçeği ve yüksek varlık verimliliği ile 2.3x devir hızına ulaşır.",
     descEn: "Reaches 2.3x asset velocity driven by refinery scale and operational throughput.",
   },
   {
-    name: "Devon Energy",
-    strategyTr: "Farklılaşma (Yüksek Marj)",
-    strategyEn: "Differentiation (High Margin)",
-    margin: 26,
-    turnover: 0.7,
-    roic: 18,
-    descTr: "Düşük maliyetli kaya petrolü sahaları sayesinde yüksek marj üretir.",
-    descEn: "Captures high margins enabled by prime low-cost shale reserves.",
+    name: "Standart Emtia Şirketi",
+    strategyTr: "Ortada Sıkışmış (Kırılgan)",
+    strategyEn: "Stuck in the Middle (Vulnerable)",
+    margin: 6,
+    turnover: 0.8,
+    roic: 4.8,
+    descTr: "Ne fiyatlama gücü vardır ne de sermaye hızı; sermaye maliyetinin altında kalır.",
+    descEn: "Neither commands pricing power nor asset velocity; falls below WACC.",
   },
 ];
 
 export const DuPontSim: React.FC = () => {
-  const { isEnglish, t } = useLanguage();
+  const { isEnglish } = useLanguage();
   const [nopatMargin, setNopatMargin] = useState<number>(26);
   const [capitalTurnover, setCapitalTurnover] = useState<number>(0.6);
 
@@ -101,16 +124,16 @@ export const DuPontSim: React.FC = () => {
     }
     if (capitalTurnover >= 2.5) {
       return {
-        titleTr: "⚡ Maliyet Lideri (Yüksek Devir Hızı)",
+        titleTr: "⚡ Maliyet & Hız Lideri (Yüksek Devir Hızı)",
         titleEn: "⚡ Cost & Velocity Leader (High Turnover)",
         color: "text-emerald-600 dark:text-emerald-400",
         badge: "bg-emerald-100 dark:bg-emerald-950/60 border-emerald-300 text-emerald-800 dark:text-emerald-300",
-        descTr: "Düşük kâr marjıyla çalışır ama sermayeyi yılda defalarca döndürerek aynı yüksek ROIC'e ulaşır (Örn: Costco, Walmart).",
+        descTr: "Düşük kâr marjıyla çalışır ama sermayeyi yılda defalarca döndürerek aynı yüksek ROIC'e ulaşır (Örn: Costco).",
         descEn: "Operates with slim margins but achieves identical superior ROIC through rapid capital velocity (e.g. Costco).",
       };
     }
     return {
-      titleTr: "⚠️ Ortada Sıkışmış (Stuck in the Middle)",
+      titleTr: "⚠️ Ortada Sıkışmış (Emtia Tuzağı)",
       titleEn: "⚠️ Stuck in the Middle (Commodity Trap)",
       color: "text-rose-600 dark:text-rose-400",
       badge: "bg-rose-100 dark:bg-rose-950/60 border-rose-300 text-rose-800 dark:text-rose-300",
@@ -121,129 +144,260 @@ export const DuPontSim: React.FC = () => {
 
   const archetype = getStrategicArchetype();
 
+  // Recharts Data: Benchmark Comparison vs Active Setup
+  const comparisonData = [
+    {
+      name: isEnglish ? "Active Scenario" : "Aktif Senaryonuz",
+      roic: calculatedRoic,
+      margin: nopatMargin,
+      turnover: capitalTurnover,
+      fill: calculatedRoic >= 15 ? "#10B981" : calculatedRoic >= 9 ? "#F59E0B" : "#F43F5E",
+    },
+    ...BENCHMARKS.slice(0, 4).map((b) => ({
+      name: b.name.split(" ")[0],
+      roic: b.roic,
+      margin: b.margin,
+      turnover: b.turnover,
+      fill: "#6366F1",
+    })),
+  ];
+
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs animate-in fade-in duration-200" id="dupont-sim">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl p-4 sm:p-7 space-y-6 text-slate-800 dark:text-slate-100 shadow-xs" id="dupont-sim">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50">
-              {isEnglish ? "Module 7: DuPont ROIC Decomposition" : "Modül 7: DuPont ROIC Ayrıştırması"}
+              {isEnglish ? "Step 7 Interactive Terminal" : "7. Adım İnteraktif Terminal"}
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-              {isEnglish ? "ROIC = NOPAT Margin × Capital Turnover" : "ROIC = NOPAT Marjı × Sermaye Devir Hızı"}
+              {isEnglish ? "DuPont ROIC Decomposition" : "DuPont ROIC Ayrıştırması"}
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
-            {isEnglish ? "DuPont Strategic Vector Decomposition" : "DuPont Stratejik İkiz Motor Röntgeni"}
+          <h2 className="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+            {isEnglish ? "DuPont Strategic Twin Engines: Margin × Velocity" : "DuPont Stratejik İkiz Motor Röntgeni: Marj × Hız"}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed max-w-4xl">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
             {isEnglish
-              ? "Two distinct companies can earn identical 16% ROIC via completely different paths: Coca-Cola (High Margin) vs Costco (High Velocity)."
-              : "İki farklı şirket aynı %16 ROIC'e bambaşka yollardan ulaşabilir: Biri yüksek marjla (Coca-Cola), diğeri yüksek sermaye devir hızıyla (Costco)."}
+              ? "ROIC = NOPAT Margin (%) × Capital Turnover (x). Discover how high margin and high asset velocity are two distinct mathematical paths to the same superior ROIC."
+              : "ROIC = NOPAT Marjı (%) × Sermaye Devir Hızı (x). Yüksek kâr marjı ile yüksek devir hızının aynı üstün ROIC'e giden iki farklı stratejik yol olduğunu keşfedin."}
           </p>
         </div>
 
         <button
-          onClick={() => {
-            setNopatMargin(26);
-            setCapitalTurnover(0.6);
-          }}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors cursor-pointer shrink-0 self-start md:self-center"
+          onClick={() => handleSelectBenchmark(BENCHMARKS[0])}
+          className="self-start md:self-auto flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors cursor-pointer"
         >
-          <RotateCcw className="w-3.5 h-3.5" /> {isEnglish ? "Reset" : "Sıfırla"}
+          <RotateCcw className="w-3.5 h-3.5" /> {isEnglish ? "Reset (Coca-Cola)" : "Sıfırla (Coca-Cola)"}
         </button>
       </div>
 
-      {/* Preset Profiles */}
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-          {isEnglish ? "Mauboussin Case Studies:" : "Mauboussin Vaka Örnekleri:"}
-        </span>
-        {BENCHMARKS.map((b, idx) => (
-          <button
-            key={idx}
-            onClick={() => handleSelectBenchmark(b)}
-            className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-slate-700 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-300 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors cursor-pointer"
-          >
-            {b.name}
-          </button>
-        ))}
-      </div>
-
-      {/* Sliders Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* NOPAT Margin */}
-        <div className="p-5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900/50 space-y-3">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-indigo-900 dark:text-indigo-300">
-              {isEnglish ? "1. NOPAT Operating Margin (%):" : "1. NOPAT Faaliyet Marjı (%):"}
-            </span>
-            <span className="font-mono font-black text-indigo-600 dark:text-indigo-400 text-base">
-              %{nopatMargin}
-            </span>
-          </div>
-          <input
-            type="range"
-            min={1}
-            max={50}
-            step={0.5}
-            value={nopatMargin}
-            onChange={(e) => setNopatMargin(Number(e.target.value))}
-            className="w-full h-2 bg-indigo-200 dark:bg-indigo-800 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-          />
-          <p className="text-[11px] text-slate-600 dark:text-slate-400">
-            {isEnglish
-              ? "NOPAT / Sales: Pricing power, branding, and operational cost control."
-              : "NOPAT / Ciro: Fiyatlama gücü, marka sadakati ve maliyet disiplini."}
-          </p>
-        </div>
-
-        {/* Capital Turnover */}
-        <div className="p-5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/50 space-y-3">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-emerald-900 dark:text-emerald-300">
-              {isEnglish ? "2. Capital Turnover Velocity (x):" : "2. Sermaye Devir Hızı (x):"}
-            </span>
-            <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 text-base">
-              {capitalTurnover}x
-            </span>
-          </div>
-          <input
-            type="range"
-            min={0.2}
-            max={6.0}
-            step={0.1}
-            value={capitalTurnover}
-            onChange={(e) => setCapitalTurnover(Number(e.target.value))}
-            className="w-full h-2 bg-emerald-200 dark:bg-emerald-800 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-          />
-          <p className="text-[11px] text-slate-600 dark:text-slate-400">
-            {isEnglish
-              ? "Sales / Invested Capital: Working capital velocity and asset efficiency."
-              : "Ciro / Yatırılan Sermaye: Varlıkların ve stokların yılda kaç kez döndürüldüğü."}
-          </p>
+      {/* Corporate Benchmarks */}
+      <div>
+        <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
+          {isEnglish ? "Preset Corporate Benchmarks:" : "Kurumsal Strateji Şablonları:"}
+        </label>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+          {BENCHMARKS.map((b, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleSelectBenchmark(b)}
+              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 text-left text-xs transition-all cursor-pointer hover:border-indigo-300"
+            >
+              <span className="font-bold text-slate-900 dark:text-slate-100 block">
+                {b.name}
+              </span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+                {isEnglish ? b.strategyEn : b.strategyTr}
+              </span>
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Result Hero Card */}
-      <div className={`p-6 rounded-3xl border ${archetype.badge} flex flex-col sm:flex-row items-center justify-between gap-5`}>
-        <div className="flex items-center gap-4 text-center sm:text-left">
-          <div className="w-16 h-16 rounded-2xl bg-white dark:bg-slate-900 flex items-center justify-center font-mono font-black text-xl text-slate-900 dark:text-slate-100 border border-slate-200 dark:border-slate-800 shadow-xs shrink-0">
-            %{calculatedRoic}
-          </div>
-          <div>
-            <div className="text-xs font-black uppercase tracking-wider opacity-80">
-              {isEnglish ? "Calculated Return on Invested Capital" : "Hesaplanan Yatırılan Sermaye Getirisi (ROIC)"}
-            </div>
-            <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-100">
-              {isEnglish ? archetype.titleEn : archetype.titleTr}
+      {/* 2-Column Terminal Architecture (grid lg:grid-cols-12) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column: DuPont Sliders & Controls (5 cols) */}
+        <div className="lg:col-span-5 space-y-4 bg-slate-50 dark:bg-slate-800/40 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Zap className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              {isEnglish ? "Twin Engine Levers:" : "İkiz Motor Kontrolleri:"}
             </h3>
+            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300">
+              ROIC: %{calculatedRoic}
+            </span>
+          </div>
+
+          {/* 1. NOPAT Margin Slider */}
+          <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 space-y-2 shadow-2xs">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-bold text-indigo-600 dark:text-indigo-400">
+                1. NOPAT Marjı (Kârlılık Motoru)
+              </span>
+              <div className="flex items-center gap-1 font-mono font-black text-sm">
+                <button
+                  onClick={() => setNopatMargin(Math.max(1, nopatMargin - 1))}
+                  className="w-5 h-5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center text-xs hover:bg-slate-200"
+                >
+                  -
+                </button>
+                <span>%{nopatMargin}</span>
+                <button
+                  onClick={() => setNopatMargin(Math.min(50, nopatMargin + 1))}
+                  className="w-5 h-5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center text-xs hover:bg-slate-200"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              {isEnglish ? "Net Operating Profit per $100 Revenue" : "Her 100 TL Cirodan Kalan Net Faaliyet Kârı"}
+            </p>
+            <input
+              type="range"
+              min={1}
+              max={50}
+              step={1}
+              value={nopatMargin}
+              onChange={(e) => setNopatMargin(Number(e.target.value))}
+              className="w-full accent-indigo-600 cursor-pointer h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg"
+            />
+          </div>
+
+          {/* 2. Capital Turnover Slider */}
+          <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 space-y-2 shadow-2xs">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                2. Sermaye Devir Hızı (Hız Motoru)
+              </span>
+              <div className="flex items-center gap-1 font-mono font-black text-sm">
+                <button
+                  onClick={() => setCapitalTurnover(Math.max(0.1, Math.round((capitalTurnover - 0.1) * 10) / 10))}
+                  className="w-5 h-5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center text-xs hover:bg-slate-200"
+                >
+                  -
+                </button>
+                <span>{capitalTurnover.toFixed(1)}x</span>
+                <button
+                  onClick={() => setCapitalTurnover(Math.min(6.0, Math.round((capitalTurnover + 0.1) * 10) / 10))}
+                  className="w-5 h-5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center text-xs hover:bg-slate-200"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              {isEnglish ? "Revenue generated per $1 of Invested Capital" : "Yatırılan Her 1 TL Sermaye ile Üretilen Yıllık Ciro"}
+            </p>
+            <input
+              type="range"
+              min={0.1}
+              max={6.0}
+              step={0.1}
+              value={capitalTurnover}
+              onChange={(e) => setCapitalTurnover(Number(e.target.value))}
+              className="w-full accent-emerald-600 cursor-pointer h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg"
+            />
+          </div>
+
+          {/* Action-Oriented Pedagogical Directive */}
+          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-900 dark:text-amber-200">
+            <strong className="block font-bold text-amber-800 dark:text-amber-300 mb-1">
+              💡 {isEnglish ? "Action-Oriented Experiment:" : "Eyleme Dönük DuPont Deneyi:"}
+            </strong>
+            {isEnglish
+              ? "Lower NOPAT margin to 4% and push Capital Turnover to 4.3x; watch the right chart prove how Costco matches Coca-Cola's 16% ROIC purely through asset velocity!"
+              : "NOPAT marjını %4'e indirin ve Sermaye Devir Hızını 4.3x'e çıkarın; sağdaki grafikte Costco'nun incecik kâr marjıyla bile Coca-Cola ile aynı %16-%17 ROIC seviyesine sırf hızla nasıl ulaştığını canlı görün!"}
           </div>
         </div>
 
-        <div className="text-xs max-w-md text-center sm:text-right font-medium text-slate-700 dark:text-slate-300">
-          {isEnglish ? archetype.descEn : archetype.descTr}
+        {/* Right Column: Recharts Benchmark Chart & Glassmorphic Diagnosis (7 cols) */}
+        <div className="lg:col-span-7 space-y-4">
+          {/* Recharts Area */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/60 pb-2">
+              <div className="flex items-center gap-1.5">
+                <BarChart3 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                  {isEnglish ? "ROIC Comparison vs Benchmarks (%)" : "ROIC Karşılaştırma Grafiği (%)"}
+                </span>
+              </div>
+              <span className="text-xs font-mono font-bold text-slate-500">
+                Formula: {nopatMargin}% × {capitalTurnover.toFixed(1)}x = %{calculatedRoic}
+              </span>
+            </div>
+
+            <div className="h-56 sm:h-60 w-full pt-1">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={comparisonData} margin={{ top: 10, right: 15, left: -20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+                  <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#94A3B8" }} />
+                  <YAxis tick={{ fontSize: 10, fill: "#94A3B8" }} unit="%" />
+                  <Tooltip
+                    content={
+                      <CustomChartTooltip
+                        valueFormatter={(val, name, item) => {
+                          const margin = item?.payload?.margin;
+                          const turnover = item?.payload?.turnover;
+                          const extra = margin !== undefined && turnover !== undefined
+                            ? ` (${isEnglish ? "Margin" : "Marj"}: %${margin}, ${isEnglish ? "Velocity" : "Hız"}: ${turnover}x)`
+                            : "";
+                          return [
+                            `ROIC %${val}${extra}`,
+                            isEnglish ? "Return" : "Getiri",
+                          ];
+                        }}
+                      />
+                    }
+                  />
+                  <ReferenceLine y={10} stroke="#94A3B8" strokeDasharray="3 3" label={{ value: "WACC (~%10)", fill: "#94A3B8", fontSize: 10 }} />
+                  <Bar dataKey="roic" radius={[6, 6, 0, 0]}>
+                    {comparisonData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Dynamic Diagnosis Archetype Card */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                  {isEnglish ? "Strategic Archetype Diagnostic" : "Stratejik Model Teşhisi"}
+                </span>
+                <h4 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100">
+                  {isEnglish ? archetype.titleEn : archetype.titleTr}
+                </h4>
+              </div>
+              <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${archetype.badge}`}>
+                {calculatedRoic >= 15 ? "Wide Moat" : calculatedRoic >= 9 ? "Narrow Moat" : "No Moat"}
+              </span>
+            </div>
+
+            <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+              {isEnglish ? archetype.descEn : archetype.descTr}
+            </p>
+
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs font-mono">
+              <div className="p-2 rounded bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-100 dark:border-indigo-900 text-indigo-900 dark:text-indigo-200">
+                <span className="block text-[10px] text-slate-400 font-sans">
+                  {isEnglish ? "Profit Margin Engine" : "Kâr Marjı Katkısı"}
+                </span>
+                %{nopatMargin} {isEnglish ? "NOPAT / Revenue" : "NOPAT / Ciro"}
+              </div>
+              <div className="p-2 rounded bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900 text-emerald-900 dark:text-emerald-200">
+                <span className="block text-[10px] text-slate-400 font-sans">
+                  {isEnglish ? "Capital Velocity Engine" : "Sermaye Hızı Katkısı"}
+                </span>
+                {capitalTurnover.toFixed(1)}x {isEnglish ? "Revenue / Capital" : "Ciro / Sermaye"}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -119,16 +119,16 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
             />
           </div>
 
-          {/* Category Pills */}
-          <div className="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-thin">
+          {/* Category Pills - Modern Pill design with no scrollbar */}
+          <div className="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   selectedCategory === cat.id
-                    ? "bg-indigo-600 text-white shadow-xs"
-                    : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
+                    ? "bg-indigo-600 text-white shadow-sm shadow-indigo-500/20 font-bold"
+                    : "bg-transparent border border-transparent hover:border-slate-200 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800"
                 }`}
               >
                 {cat.label}

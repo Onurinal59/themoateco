@@ -182,16 +182,16 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
               </button>
             </div>
 
-            {/* Preset Fast Prompt Chips */}
-            <div className="p-3 bg-slate-50/50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 flex gap-2 overflow-x-auto scrollbar-thin">
+            {/* Preset Fast Prompt Chips - Modern Pill design with no scrollbar */}
+            <div className="p-2.5 bg-slate-50/50 dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800/80 flex gap-1.5 overflow-x-auto no-scrollbar">
               {presetQuestions.map((q, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSend(q)}
-                  className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/40 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600 text-[11px] text-slate-600 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-300 whitespace-nowrap transition-colors flex items-center gap-1 shrink-0 shadow-xs cursor-pointer"
+                  className="px-3 py-1 rounded-full bg-white dark:bg-slate-800 hover:bg-indigo-50/80 dark:hover:bg-indigo-950/60 border border-slate-200/80 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600 text-[11px] font-medium text-slate-700 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-300 whitespace-nowrap transition-all flex items-center gap-1 shrink-0 shadow-2xs cursor-pointer"
                 >
-                  <Lightbulb className="w-3 h-3 text-amber-500" />
-                  {q}
+                  <Lightbulb className="w-3 h-3 text-amber-500 shrink-0" />
+                  <span>{q}</span>
                 </button>
               ))}
             </div>

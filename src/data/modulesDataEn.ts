@@ -39,14 +39,15 @@ export const MODULES_DATA_EN: LearningModule[] = [
       },
       {
         id: "m1-s2",
-        title: "2. ROIC and WACC: The Mathematics of True Value Creation",
+        title: "2. ROIC and WACC: The Mathematics of True Value Creation & Terminal Lab",
         summary: "When ROIC > WACC, a company creates real economic value. Otherwise, growth destroys shareholder wealth.",
         content: [
-          "ROIC (Return on Invested Capital): How much net operating profit after tax (NOPAT) a business generates for every $100 tied up in factories, stores, inventory, and equipment.",
-          "WACC (Weighted Average Cost of Capital): The blended annual opportunity cost of capital (shareholder required returns + bank debt interest).",
-          "Example Calculation: If a company's WACC is 9.05% and it earns 18.0% ROIC on its capital, the +8.95% spread (Economic Spread) represents genuine compounding wealth creation.",
-          "The Trap: A company can double sales and grow 20% annually; if its ROIC is 6% and WACC is 9%, rapid growth only accelerates shareholder wealth destruction (Value Destruction)."
+          "ROIC (Return on Invested Capital): How much net operating profit after tax (NOPAT) a business generates for every $100 tied up in working capital, equipment, and stores.",
+          "WACC (Weighted Average Cost of Capital): The blended annual opportunity cost of capital (shareholder equity required returns + after-tax debt interest).",
+          "Action in Terminal: In the simulator below, drag the left NOPAT slider upward; watch the green Economic Spread bar expand immediately on the right-hand terminal as annual wealth compounding surges.",
+          "Diagnose the Capital Trap: Push the WACC slider above ROIC. Notice how the visual bar flips to Crimson Red—proving high revenue without economic spread actively destroys shareholder wealth."
         ],
+        interactiveWidgetId: "roic-wacc",
         formulaBox: {
           title: "WACC & ROIC and Economic Spread Equation",
           equation: "WACC = (E/V × Ke) + (D/V × Kd × (1 - t))\nROIC = NOPAT / Invested Capital\nEconomic Spread = ROIC - WACC",
@@ -62,7 +63,7 @@ export const MODULES_DATA_EN: LearningModule[] = [
         stepByStepMath: "Step 1: Cost of Equity = 10% Risk-Free + (1.2 Beta × 5% ERP) = 16.0%\nStep 2: After-Tax Debt = 12% Interest × (1 - 0.25 Tax) = 9.0%\nStep 3: Blended WACC = (0.70 × 16.0%) + (0.30 × 9.0%) = 13.9%\nStep 4: ROIC (18.0%) > WACC (13.9%) -> Positive +4.1% Annual Economic Spread",
         formulaDeepDiveId: "wacc",
         analogyBox: {
-          title: "🍋 Lemonade Stand Example",
+          title: "🍋 Lemonade Stand Example & Simulation",
           description:
             "You borrow $1,000 from family at 10% interest (WACC = 10%). By summer end, you net $180 operational profit (ROIC = 18%). After paying $100 interest, $80 pure wealth remains. But if you made only $60 (6% ROIC), you couldn't even cover the interest!"
         },
@@ -76,8 +77,8 @@ export const MODULES_DATA_EN: LearningModule[] = [
         content: [
           "Generating high ROIC for a single year is not enough. The second and far more critical dimension is how many years you can sustain that spread before competitors erode it (Competitive Advantage Period - CAP).",
           "Regression to the Mean: Mauboussin's empirical data across thousands of companies reveals that even top-quintile ROIC firms experience rapid margin decay toward market averages within 5-10 years.",
-          "The rare exceptions are called 'Compounders'—businesses like Apple, Costco, and Microsoft capable of sustaining ROIC > WACC for 20+ consecutive years.",
-          "Mauboussin's finding: On average, ~67% of a stock's price reflects the steady-state present value, while ~33% reflects expectations of future value creation."
+          "Inspect the Decay Curve in Terminal: Switch to the '10-Yr Moat Decay' view on the right. See how competitive assault compresses the green spread zone back down to the baseline WACC line over time.",
+          "The rare exceptions are called 'Compounders'—businesses like Apple, Costco, and Microsoft capable of sustaining ROIC > WACC for 20+ consecutive years."
         ],
         formulaDeepDiveId: "roic",
         analogyBox: {
@@ -174,8 +175,10 @@ export const MODULES_DATA_EN: LearningModule[] = [
           "2. Growth (Büyüme) [CFO: (+), CFI: (-), CFF: (+)]: The business generates positive cash from operations, but expands so aggressively that internal cash plus external financing are poured into expansion CAPEX. (Average ROIC: +10.6%)",
           "3. Maturity (Olgunluk) [CFO: (+), CFI: (-), CFF: (-)]: The company has become a cash-printing fortress! Massive operating cash flows in, easily funding maintenance CAPEX, while surplus cash is returned to shareholders via buybacks and dividends. (Average ROIC: +11.2% - IDEAL MOAT STAGE)",
           "4. Shake-Out (Sarsıntı) [CFO: (+/-), CFI: (+/-), CFF: (+/-)]: Sector growth decelerates, price wars intensify, weaker players are eliminated, and profitability fluctuates. (Average ROIC: +3.8%)",
-          "5. Decline (Düşüş) [CFO: (-), CFI: (+), CFF: (+/-)]: Core operations burn cash. To survive, the firm sells off factories and equipment to raise liquidity (CFI +). (Average ROIC: -12.0%)"
+          "5. Decline (Düşüş) [CFO: (-), CFI: (+), CFF: (+/-)]: Core operations burn cash. To survive, the firm sells off factories and equipment to raise liquidity (CFI +). (Average ROIC: -12.0%)",
+          "Action in Terminal: In the simulator below, use the left control panel to select preset company profiles (Apple, Early Startup, Declining Firm) or manually toggle CFO/CFI/CFF signs. Verify the corporate life cycle stage and cash distribution on the Recharts breakdown on the right."
         ],
+        interactiveWidgetId: "dickinson",
         interactiveVisualId: "dickinson-lifecycle",
         formulaBox: {
           title: "Victoria Dickinson Cash Flow Life Cycle Model",
@@ -254,7 +257,8 @@ export const MODULES_DATA_EN: LearningModule[] = [
           "1. WTP (Willingness to Pay): The absolute maximum ceiling price a customer is willing to pay based on perceived value, delight, and utility.",
           "2. Price: The actual dollar figure charged at checkout or on the invoice.",
           "3. Cost: The total accounting resources incurred by the firm to manufacture, distribute, and support the product.",
-          "4. WTS (Willingness to Sell): The minimum reservation price acceptable to suppliers or employees to provide their inputs/labor (opportunity cost)."
+          "4. WTS (Willingness to Sell): The minimum reservation price acceptable to suppliers or employees to provide their inputs/labor (opportunity cost).",
+          "Action in Terminal: In the simulator below, adjust the WTP, Price, Cost, and WTS sliders or click the Apple/Costco preset buttons. Watch how Consumer Surplus (blue), Firm Profit (green), and Supplier Surplus (purple) expand dynamically on the Recharts Value Stick on the right."
         ],
         interactiveVisualId: "value-stick",
         formulaBox: {
@@ -365,7 +369,8 @@ export const MODULES_DATA_EN: LearningModule[] = [
         content: [
           "A Profit Pool plots Invested Capital Share (0-100%) on the X-axis and Economic Spread (ROIC - WACC) on the Y-axis.",
           "Box Area = Total Economic Profit / Loss ($). Formula: Economic Profit = Invested Capital × (ROIC - WACC).",
-          "Aviation Insight: Airlines committed >75% of the sector's total capital but generated deep cumulative economic losses (-$69B). Meanwhile, asset-light GDS reservation systems (Amadeus) and Jet Fuel refiners captured massive positive economic profit."
+          "Aviation Insight: Airlines committed >75% of the sector's total capital but generated deep cumulative economic losses (-$69B). Meanwhile, asset-light GDS reservation systems (Amadeus) and Jet Fuel refiners captured massive positive economic profit.",
+          "Action in Terminal: In the simulator below, select Airlines, Plane Manufacturers, or Booking Systems (GDS) from the left control panel. Observe on the Recharts Profit Pool chart on the right how capital share width (X) multiplied by return spread height (Y) translates directly into economic dollars created or destroyed."
         ],
         formulaBox: {
           title: "Economic Profit Pool Geometry",
@@ -498,7 +503,8 @@ export const MODULES_DATA_EN: LearningModule[] = [
         content: [
           "GAAP/IFRS rules immediately expense R&D budgets in the current year. For tech and biotech firms, this depresses reported operating earnings and conceals the true invested capital base.",
           "Mauboussin Forensic Adjustment: Add current R&D back to EBIT, amortize past R&D over 3-5 years, and add the net unamortized R&D asset to Invested Capital.",
-          "Operating Leases: Calculate the present value (PV) of future minimum lease commitments (stores/aircraft) and add to both debt and fixed assets."
+          "Operating Leases: Calculate the present value (PV) of future minimum lease commitments (stores/aircraft) and add to both debt and fixed assets.",
+          "Action in Terminal: In the simulator below, pick a 10-K scenario (e.g., Biotech & SaaS Firm) on the left panel or adjust R&D expenses and amortization life. Observe the stark difference between unadjusted reported earnings and true adjusted ROIC on the right."
         ],
         formulaBox: {
           title: "10-K Balance Sheet Adjustments & R&D / Lease Capitalization",
@@ -605,7 +611,8 @@ export const MODULES_DATA_EN: LearningModule[] = [
         content: [
           "Two rival airlines compete on the same route. If both maintain premium fares (Cooperation), both earn robust profits. If one slashes fares, it temporarily steals share.",
           "When both cut fares, prices drop below cost and both suffer severe losses (Nash Equilibrium Trap).",
-          "Robert Axelrod proved the optimal repeated-game strategy is 'Tit-for-Tat': 1. Start with Cooperation (firm pricing), 2. Immediately retaliate if the rival cuts price, 3. Instantly forgive and restore normal pricing when the competitor cooperates."
+          "Robert Axelrod proved the optimal repeated-game strategy is 'Tit-for-Tat': 1. Start with Cooperation (firm pricing), 2. Immediately retaliate if the rival cuts price, 3. Instantly forgive and restore normal pricing when the competitor cooperates.",
+          "Action in Terminal: In the simulator below, pick Tit-for-Tat or Aggressive Undercutter from the left strategy panel; click 'Step Simulation' to advance rounds. Watch on the Recharts Cumulative Payoff graph on the right how disciplined retaliation outperforms destructive price wars."
         ],
         interactiveWidgetId: "game-theory",
         analogyBox: {
@@ -691,7 +698,8 @@ export const MODULES_DATA_EN: LearningModule[] = [
           "In the DuPont mathematical identity, Sales cancels out: (NOPAT / Sales) × (Sales / Invested Capital) = NOPAT / Invested Capital = ROIC.",
           "Differentiation Path (High Margin / Low Turnover): Coca-Cola (26.2% margin, 0.61x turnover = 16.0% ROIC), Apple, Ferrari.",
           "Cost Leadership Path (Low Margin / High Turnover): Costco (3.8% margin, 4.21x turnover = 16.0% ROIC), Walmart.",
-          "Costco and Coca-Cola produce the identical 16% ROIC, but one wins via pricing power while the other wins via asset velocity!"
+          "Costco and Coca-Cola produce the identical 16% ROIC, but one wins via pricing power while the other wins via asset velocity!",
+          "Action in Terminal: In the simulator below, test Coca-Cola (Margin) vs Costco (Turnover) from the preset buttons, or adjust margin and asset turnover sliders. Discover on the DuPont Scatter Matrix on the right which operational axis powers your firm's return engine."
         ],
         formulaBox: {
           title: "DuPont ROIC Decomposition",
@@ -721,7 +729,8 @@ export const MODULES_DATA_EN: LearningModule[] = [
           "Cash Conversion Cycle (CCC) = Days Inventory Outstanding (DIO) + Days Sales Outstanding (DSO) - Days Payable Outstanding (DPO).",
           "1999 Barnes & Noble: Kept books on shelves for 149 days, collected cash in 6 days, paid publishers in 75 days. CCC = 149 + 6 - 75 = +80 Days! (Cash locked up in inventory for 80 days).",
           "1999 Amazon: Sold books in 29 days, collected credit card cash in 2 days, paid publishers in 60 days. CCC = 29 + 2 - 60 = -29 Days!",
-          "Amazon held customer cash for nearly two months before paying suppliers, generating interest-free working capital float to fund hyper-expansion."
+          "Amazon held customer cash for nearly two months before paying suppliers, generating interest-free working capital float to fund hyper-expansion.",
+          "Action in Terminal: In the simulator below, select Amazon vs Barnes & Noble from the company presets or adjust DIO, DSO, and DPO sliders. Watch the Recharts Waterfall chart on the right as negative working capital days create a massive interest-free liquidity engine."
         ],
         formulaBox: {
           title: "Cash Conversion Cycle (CCC)",
@@ -795,7 +804,8 @@ export const MODULES_DATA_EN: LearningModule[] = [
           "In traditional DCF models, analysts attempt to forecast cash flows 10 years out, often with large forecasting error.",
           "Mauboussin's Reverse DCF: Invert the question: 'What future growth rate and Competitive Advantage Period (CAP) must this firm achieve to justify its current stock price?'",
           "Stock Price = Steady-State Value (NOPAT / WACC) + Present Value of Growth Opportunities (PVGO / CAP Years).",
-          "If the market prices in 25 years of uncontested wide moat (CAP) in a fast-moving industry, the stock is priced for perfection. If the market prices in only 4 years of CAP for a company with 15-year patents, it presents a compelling margin of safety."
+          "If the market prices in 25 years of uncontested wide moat (CAP) in a fast-moving industry, the stock is priced for perfection. If the market prices in only 4 years of CAP for a company with 15-year patents, it presents a compelling margin of safety.",
+          "Action in Terminal: In the simulator below, adjust Stock Price, Current NOPAT, Growth Rate, and WACC sliders or click preset scenarios (Apple, Coca-Cola, Overpriced Tech). Discover the split between Steady-State Value and PVGO Future Value, and determine the market's implied CAP (Moat) longevity on the right."
         ],
         formulaBox: {
           title: "Michael Mauboussin Reverse DCF & Implied CAP",
@@ -843,7 +853,8 @@ export const MODULES_DATA_EN: LearningModule[] = [
           "2. Entry Barriers & Scale Advantages (MES, Wright's Law, Network Effects)",
           "3. Customer Advantages & Switching Costs (WTP ceiling, Lock-in)",
           "4. Management Capital Allocation Discipline (M&A avoidance, buyback timing)",
-          "5. Moat Durability & Disruption Threat (CAP horizon, technological substitutes)"
+          "5. Moat Durability & Disruption Threat (CAP horizon, technological substitutes)",
+          "Action in Terminal: In the simulator below, check items across the 5 categories on the left or load preset company audits (Apple Inc., Costco, Average Airline). Evaluate the fortress score and economic verdict on the Recharts Radar Breakdown on the right."
         ],
         interactiveWidgetId: "checklist",
         analogyBox: {
