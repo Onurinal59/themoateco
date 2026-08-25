@@ -19,7 +19,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { CompanyAuditDossier } from "../types";
-import { calculateFinancialOutputs, computeMoatScore } from "../data/companyAuditData";
+import { calculateFinancialOutputs, computeMoatScore, translateMoatDriver, translateMoatWidth, translateMoatType } from "../data/companyAuditData";
 
 interface MoatDuelViewProps {
   dossiers: CompanyAuditDossier[];
@@ -329,7 +329,7 @@ ${
             <div className="flex flex-wrap gap-1.5">
               {comp1.competitiveAdvantage.subDrivers.map((driver, idx) => (
                 <span key={idx} className="px-2 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-[11px] font-semibold border border-indigo-200 dark:border-indigo-800">
-                  {driver}
+                  {translateMoatDriver(driver, isEnglish)}
                 </span>
               ))}
             </div>
@@ -425,7 +425,7 @@ ${
             <div className="flex flex-wrap gap-1.5">
               {comp2.competitiveAdvantage.subDrivers.map((driver, idx) => (
                 <span key={idx} className="px-2 py-0.5 rounded-lg bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 text-[11px] font-semibold border border-rose-200 dark:border-rose-800">
-                  {driver}
+                  {translateMoatDriver(driver, isEnglish)}
                 </span>
               ))}
             </div>
@@ -516,8 +516,8 @@ ${
               {/* Moat Width */}
               <tr>
                 <td className="py-3 px-4 font-bold text-slate-700 dark:text-slate-300">{isEnglish ? "Diagnosed Moat Classification" : "Teşhis Edilen Hendek Genişliği"}</td>
-                <td className="py-3 px-4 font-bold text-indigo-700 dark:text-indigo-300">{score1.diagnosedMoat}</td>
-                <td className="py-3 px-4 font-bold text-rose-700 dark:text-rose-300">{score2.diagnosedMoat}</td>
+                <td className="py-3 px-4 font-bold text-indigo-700 dark:text-indigo-300">{translateMoatWidth(score1.diagnosedMoat, isEnglish)}</td>
+                <td className="py-3 px-4 font-bold text-rose-700 dark:text-rose-300">{translateMoatWidth(score2.diagnosedMoat, isEnglish)}</td>
                 <td className="py-3 px-4 text-slate-600 dark:text-slate-400">
                   {isEnglish ? "Mauboussin 5-step qualitative and quantitative score" : "Mauboussin 5 adımlı nitel ve nicel hendek puanı"}
                 </td>

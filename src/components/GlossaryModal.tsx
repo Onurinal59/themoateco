@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Search, X, BookOpen, Sparkles, Tag, HelpCircle } from "lucide-react";
 import { GlossaryTerm } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+import { translateCategory } from "../data/companyAuditData";
 
 interface GlossaryModalProps {
   isOpen: boolean;
@@ -30,7 +31,7 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
   const categories = isEnglish
     ? [
         { id: "all", label: "All" },
-        { id: "Core Finance", label: "Core Finance" },
+        { id: "Fundamental Finance", label: "Fundamental Finance" },
         { id: "Strategy", label: "Strategy" },
         { id: "Microeconomics", label: "Microeconomics" },
         { id: "Industry Analysis", label: "Industry Analysis" },
@@ -53,11 +54,8 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
     const matchesCategory =
       selectedCategory === "all" ||
       item.category === selectedCategory ||
-      (selectedCategory === "Core Finance" && item.category === "Temel Finans") ||
-      (selectedCategory === "Strategy" && item.category === "Strateji") ||
-      (selectedCategory === "Microeconomics" && item.category === "Mikroekonomi") ||
-      (selectedCategory === "Industry Analysis" && item.category === "Sektör Analizi") ||
-      (selectedCategory === "Innovation & Game Theory" && item.category === "İnovasyon & Oyun Teorisi");
+      translateCategory(item.category, isEnglish) === selectedCategory ||
+      translateCategory(item.category, !isEnglish) === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -163,7 +161,7 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
                     <div className="flex items-center justify-between">
                       <span className="font-semibold text-xs text-slate-900 dark:text-slate-100">{term.term}</span>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700/80 text-slate-600 dark:text-slate-300 font-medium border border-slate-200 dark:border-slate-700">
-                        {term.category}
+                        {translateCategory(term.category, isEnglish)}
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">{term.shortDefinition}</p>
@@ -180,7 +178,7 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50 uppercase">
-                      {currentActiveTerm.category}
+                      {translateCategory(currentActiveTerm.category, isEnglish)}
                     </span>
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1.5">{currentActiveTerm.term}</h3>

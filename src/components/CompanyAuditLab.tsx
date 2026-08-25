@@ -38,7 +38,12 @@ import {
   calculateFinancialOutputs,
   computeMoatScore,
   getBalanceSheetGuide,
-  getInitialPresetDossiers
+  getInitialPresetDossiers,
+  translateMoatDriver,
+  translateMoatType,
+  translateMoatWidth,
+  translateSummaryTag,
+  translateCategory
 } from "../data/companyAuditData";
 import { useLanguage } from "../context/LanguageContext";
 import { MyWorkspacesView } from "./MyWorkspacesView";
@@ -1032,24 +1037,26 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {[
-                    { id: "Geçiş Maliyeti", label: isEnglish ? "Switching Costs" : "Geçiş Maliyeti" },
-                    { id: "Ağ Etkisi", label: isEnglish ? "Network Effects" : "Ağ Etkisi" },
-                    { id: "Marka/Arama Maliyeti", label: isEnglish ? "Brand / Search Costs" : "Marka/Arama Maliyeti" },
-                    { id: "Patent/Lisans", label: isEnglish ? "Patents / Licenses" : "Patent/Lisans" },
-                    { id: "Süreç Üstünlüğü", label: isEnglish ? "Process Superiority" : "Süreç Üstünlüğü" },
-                    { id: "Ölçek Ekonomisi", label: isEnglish ? "Economies of Scale" : "Ölçek Ekonomisi" }
+                    { id: "Ölçek Ekonomisi", labelTr: "Ölçek Ekonomisi", labelEn: "Economies of Scale" },
+                    { id: "Geçiş Maliyeti", labelTr: "Geçiş Maliyeti", labelEn: "Switching Costs" },
+                    { id: "Süreç Üstünlüğü", labelTr: "Süreç Üstünlüğü", labelEn: "Process Advantage" },
+                    { id: "Nitelikli Tedarikçi Pazarlığı", labelTr: "Nitelikli Tedarikçi Pazarlığı", labelEn: "Supplier Bargaining Power" },
+                    { id: "Marka/Arama Maliyeti", labelTr: "Marka/Arama Maliyeti", labelEn: "Brand and Search Costs" },
+                    { id: "Ağ Etkisi", labelTr: "Ağ Etkisi", labelEn: "Network Effects" },
+                    { id: "Patent/Lisans", labelTr: "Patent/Lisans", labelEn: "Patents / Licenses" }
                   ].map((subObj) => {
-                    const hasSub =
-                      currentDossier.competitiveAdvantage.subDrivers.includes(subObj.id) ||
-                      currentDossier.competitiveAdvantage.subDrivers.includes(subObj.label);
+                    const targetEn = translateMoatDriver(subObj.id, true);
+                    const currentSubs = currentDossier.competitiveAdvantage.subDrivers;
+                    const hasSub = currentSubs.some((s) => translateMoatDriver(s, true) === targetEn);
+                    const displayLabel = isEnglish ? subObj.labelEn : subObj.labelTr;
+
                     return (
                       <button
                         key={subObj.id}
                         onClick={() => {
-                          const currentSubs = currentDossier.competitiveAdvantage.subDrivers;
                           const newSubs = hasSub
-                            ? currentSubs.filter((s) => s !== subObj.id && s !== subObj.label)
-                            : [...currentSubs, isEnglish ? subObj.label : subObj.id];
+                            ? currentSubs.filter((s) => translateMoatDriver(s, true) !== targetEn)
+                            : [...currentSubs, isEnglish ? subObj.labelEn : subObj.labelTr];
                           handleUpdateCurrentDossier({
                             competitiveAdvantage: {
                               ...currentDossier.competitiveAdvantage,
@@ -1063,7 +1070,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                             : "bg-slate-50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700"
                         }`}
                       >
-                        <span>{subObj.label}</span>
+                        <span>{displayLabel}</span>
                         {hasSub ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <div className="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-600" />}
                       </button>
                     );
@@ -1367,7 +1374,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                         key={idx}
                         className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50"
                       >
-                        {tag}
+                        {translateSummaryTag(tag, isEnglish)}
                       </span>
                     ))}
                   </div>

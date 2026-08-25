@@ -796,36 +796,205 @@ export function computeMoatScore(dossier: CompanyAuditDossier): {
 }
 
 export function translateMoatDriver(driver: string, isEnglish: boolean): string {
-  if (!isEnglish) return driver;
-  const map: Record<string, string> = {
-    "Ölçek Ekonomisi": "Scale Economics",
-    "Geçiş Maliyeti": "High Switching Costs",
+  if (!driver) return "";
+  const cleaned = driver.trim();
+  
+  const trToEn: Record<string, string> = {
+    "Ölçek Ekonomisi": "Economies of Scale",
+    "Geçiş Maliyeti": "Switching Costs",
     "Ağ Etkisi": "Network Effects",
-    "Marka/Arama Maliyeti": "Brand / Search Cost Advantage",
-    "Süreç Üstünlüğü": "Process Superiority / Culture",
-    "Nitelikli Tedarikçi Pazarlığı": "Bargaining Monopsony Power",
-    "Patent/Lisans": "Proprietary Patents & Licenses",
+    "Marka/Arama Maliyeti": "Brand and Search Costs",
+    "Arama Maliyeti/Marka": "Brand and Search Costs",
+    "Marka / Arama Maliyeti": "Brand and Search Costs",
+    "Arama Maliyeti": "Brand and Search Costs",
+    "Marka": "Brand and Search Costs",
+    "Süreç Üstünlüğü": "Process Advantage",
+    "Nitelikli Tedarikçi Pazarlığı": "Supplier Bargaining Power",
+    "Patent/Lisans": "Patents / Licenses",
+    "Patent / Lisans": "Patents / Licenses",
     "Coğrafi Hub Avantajı": "Geographic Hub Monopoly",
-    "Kargo Entegrasyonu": "Fleet & Freight Integration"
+    "Kargo Entegrasyonu": "Cargo Fleet Integration",
+    "Geliştirici Bağımlılığı (CUDA)": "Developer Lock-in (CUDA)",
+    "Ar-Ge Ölçek Ekonomisi": "Scale Economics in R&D",
+    "Tam Katmanlı Ağ Mimarisi": "Full-Stack Network Architecture",
+    // In case English synonyms are passed
+    "Scale Economics": "Economies of Scale",
+    "Economies of Scale": "Economies of Scale",
+    "High Switching Costs": "Switching Costs",
+    "Switching Costs": "Switching Costs",
+    "Process Superiority": "Process Advantage",
+    "Process Advantage": "Process Advantage",
+    "Process Superiority / Culture": "Process Advantage",
+    "Monopsony Bargaining Power": "Supplier Bargaining Power",
+    "Bargaining Monopsony Power": "Supplier Bargaining Power",
+    "Supplier Bargaining Power": "Supplier Bargaining Power",
+    "Brand / Search Costs": "Brand and Search Costs",
+    "Brand / Search Cost Advantage": "Brand and Search Costs",
+    "Brand Loyalty & Search Costs": "Brand and Search Costs",
+    "Brand and Search Costs": "Brand and Search Costs",
+    "Proprietary Patents & Licenses": "Patents / Licenses",
+    "Patents / Licenses": "Patents / Licenses",
+    "Geographic Hub Monopoly": "Geographic Hub Monopoly",
+    "Fleet & Freight Integration": "Cargo Fleet Integration",
+    "Cargo Fleet Integration": "Cargo Fleet Integration"
   };
-  return map[driver] || driver;
+
+  const enToTr: Record<string, string> = {
+    "Economies of Scale": "Ölçek Ekonomisi",
+    "Scale Economics": "Ölçek Ekonomisi",
+    "Switching Costs": "Geçiş Maliyeti",
+    "High Switching Costs": "Geçiş Maliyeti",
+    "Network Effects": "Ağ Etkisi",
+    "Network Effect": "Ağ Etkisi",
+    "Brand and Search Costs": "Marka/Arama Maliyeti",
+    "Brand / Search Costs": "Marka/Arama Maliyeti",
+    "Brand / Search Cost Advantage": "Marka/Arama Maliyeti",
+    "Brand Loyalty & Search Costs": "Marka/Arama Maliyeti",
+    "Process Advantage": "Süreç Üstünlüğü",
+    "Process Superiority": "Süreç Üstünlüğü",
+    "Process Superiority / Culture": "Süreç Üstünlüğü",
+    "Supplier Bargaining Power": "Nitelikli Tedarikçi Pazarlığı",
+    "Monopsony Bargaining Power": "Nitelikli Tedarikçi Pazarlığı",
+    "Bargaining Monopsony Power": "Nitelikli Tedarikçi Pazarlığı",
+    "Patents / Licenses": "Patent/Lisans",
+    "Proprietary Patents & Licenses": "Patent/Lisans",
+    "Geographic Hub Monopoly": "Coğrafi Hub Avantajı",
+    "Cargo Fleet Integration": "Kargo Entegrasyonu",
+    "Fleet & Freight Integration": "Kargo Entegrasyonu",
+    "Developer Lock-in (CUDA)": "Geliştirici Bağımlılığı (CUDA)",
+    "Scale Economics in R&D": "Ar-Ge Ölçek Ekonomisi",
+    "Full-Stack Network Architecture": "Tam Katmanlı Ağ Mimarisi",
+    "Ölçek Ekonomisi": "Ölçek Ekonomisi",
+    "Geçiş Maliyeti": "Geçiş Maliyeti",
+    "Ağ Etkisi": "Ağ Etkisi",
+    "Marka/Arama Maliyeti": "Marka/Arama Maliyeti",
+    "Arama Maliyeti/Marka": "Marka/Arama Maliyeti",
+    "Süreç Üstünlüğü": "Süreç Üstünlüğü",
+    "Nitelikli Tedarikçi Pazarlığı": "Nitelikli Tedarikçi Pazarlığı",
+    "Patent/Lisans": "Patent/Lisans",
+    "Coğrafi Hub Avantajı": "Coğrafi Hub Avantajı",
+    "Kargo Entegrasyonu": "Kargo Entegrasyonu"
+  };
+
+  if (isEnglish) {
+    return trToEn[cleaned] || cleaned;
+  } else {
+    return enToTr[cleaned] || cleaned;
+  }
+}
+
+export function translateCategory(category: string, isEnglish: boolean): string {
+  if (!category) return "";
+  const cleaned = category.trim();
+  
+  const trToEn: Record<string, string> = {
+    "Strateji": "Strategy",
+    "Temel Finans": "Fundamental Finance",
+    "Core Finance": "Fundamental Finance",
+    "Mikroekonomi": "Microeconomics",
+    "Sektör Analizi": "Industry Analysis",
+    "İnovasyon & Oyun Teorisi": "Innovation & Game Theory",
+    "1. Giriş & Getiri (Introduction)": "1. Introduction & Return",
+    "2. Sektör Haritası (Lay of the Land)": "2. Industry Map (Lay of the Land)",
+    "3. Porter 5 Güç (Tedarikçi, Alıcı, İkame)": "3. Porter's Five Forces",
+    "4. Giriş Engelleri & 7 Moat": "4. Barriers to Entry & 7 Moats",
+    "5. Bilanço & 10-K Röntgeni": "5. Balance Sheet & 10-K Diagnostic",
+    "6. Değer Çubuğu & Şirket Analizi": "6. Value Stick & Firm Analysis",
+    "7. Oyun Teorisi & Marka Gücü": "7. Game Theory & Brand Moat"
+  };
+
+  const enToTr: Record<string, string> = {
+    "Strategy": "Strateji",
+    "Fundamental Finance": "Temel Finans",
+    "Core Finance": "Temel Finans",
+    "Microeconomics": "Mikroekonomi",
+    "Industry Analysis": "Sektör Analizi",
+    "Innovation & Game Theory": "İnovasyon & Oyun Teorisi",
+    "1. Introduction & Return": "1. Giriş & Getiri (Introduction)",
+    "2. Industry Map (Lay of the Land)": "2. Sektör Haritası (Lay of the Land)",
+    "3. Porter's Five Forces": "3. Porter 5 Güç (Tedarikçi, Alıcı, İkame)",
+    "4. Barriers to Entry & 7 Moats": "4. Giriş Engelleri & 7 Moat",
+    "5. Balance Sheet & 10-K Diagnostic": "5. Bilanço & 10-K Röntgeni",
+    "6. Value Stick & Firm Analysis": "6. Değer Çubuğu & Şirket Analizi",
+    "7. Game Theory & Brand Moat": "7. Oyun Teorisi & Marka Gücü"
+  };
+
+  if (isEnglish) {
+    return trToEn[cleaned] || cleaned;
+  } else {
+    return enToTr[cleaned] || cleaned;
+  }
+}
+
+export function translateSummaryTag(tag: string, isEnglish: boolean): string {
+  if (!tag) return "";
+  const cleaned = tag.trim();
+  
+  const trToEn: Record<string, string> = {
+    "High Switching Costs": "High Switching Costs",
+    "Geçiş Maliyeti": "High Switching Costs",
+    "Yüksek Geçiş Maliyeti": "High Switching Costs",
+    "Network Effects": "Network Effects",
+    "Ağ Etkisi": "Network Effects",
+    "Scale Economics": "Economies of Scale",
+    "Ölçek Ekonomisi": "Economies of Scale",
+    "Economies of Scale": "Economies of Scale",
+    "Brand / Search Advantage": "Brand and Search Costs",
+    "Brand / Search Cost Advantage": "Brand and Search Costs",
+    "Marka / Arama Avantajı": "Brand and Search Costs",
+    "Marka/Arama Maliyeti": "Brand and Search Costs",
+    "Process Advantage": "Process Advantage",
+    "Süreç Üstünlüğü": "Process Advantage",
+    "Supplier Bargaining Power": "Supplier Bargaining Power",
+    "Nitelikli Tedarikçi Pazarlığı": "Supplier Bargaining Power",
+    "High Pricing Power": "High Pricing Power",
+    "Yüksek Fiyatlama Gücü": "Yüksek Fiyatlama Gücü",
+    "Patents & IP": "Patents & Licenses",
+    "Patent/Lisans": "Patents & Licenses"
+  };
+
+  const enToTr: Record<string, string> = {
+    "High Switching Costs": "Yüksek Geçiş Maliyeti",
+    "Switching Costs": "Geçiş Maliyeti",
+    "Network Effects": "Ağ Etkisi",
+    "Scale Economics": "Ölçek Ekonomisi",
+    "Economies of Scale": "Ölçek Ekonomisi",
+    "Brand and Search Costs": "Marka/Arama Maliyeti",
+    "Brand / Search Advantage": "Marka / Arama Avantajı",
+    "Brand / Search Cost Advantage": "Marka/Arama Maliyeti",
+    "Process Advantage": "Süreç Üstünlüğü",
+    "Supplier Bargaining Power": "Nitelikli Tedarikçi Pazarlığı",
+    "High Pricing Power": "Yüksek Fiyatlama Gücü",
+    "Patents & Licenses": "Patentler & Lisanslar",
+    "Patents & IP": "Patentler & Fikri Mülkiyet"
+  };
+
+  if (isEnglish) {
+    return trToEn[cleaned] || cleaned;
+  } else {
+    return enToTr[cleaned] || cleaned;
+  }
 }
 
 export function translateMoatType(type: string, isEnglish: boolean): string {
   if (!isEnglish) {
-    if (type === "tüketici_avantajı") return "Tüketici Avantajı (WTP Artışı)";
-    if (type === "üretim_avantajı") return "Üretim/Maliyet Avantajı (WTS İndirimi)";
-    if (type === "ölçek_avantajı") return "Ölçek Ekonomisi & Süreç Üstünlüğü";
-    return type;
+    if (type === "tüketici_avantajı" || type === "customer_advantage") return "Tüketici Avantajı (WTP Artışı)";
+    if (type === "üretim_avantajı" || type === "production_advantage") return "Üretim/Maliyet Avantajı (WTS İndirimi)";
+    if (type === "ölçek_avantajı" || type === "scale_advantage") return "Ölçek Ekonomisi & Süreç Üstünlüğü";
+    return type.replace(/_/g, " ");
   }
-  if (type === "tüketici_avantajı") return "Customer Advantage (WTP Expansion)";
-  if (type === "üretim_avantajı") return "Production/Cost Advantage (WTS Reduction)";
-  if (type === "ölçek_avantajı") return "Scale Economics & Process Advantage";
-  return type;
+  if (type === "tüketici_avantajı" || type === "customer_advantage") return "Customer Advantage (WTP Expansion)";
+  if (type === "üretim_avantajı" || type === "production_advantage") return "Production/Cost Advantage (WTS Reduction)";
+  if (type === "ölçek_avantajı" || type === "scale_advantage") return "Scale Economics & Process Advantage";
+  return type.replace(/_/g, " ");
 }
 
 export function translateMoatWidth(width: string, isEnglish: boolean): string {
-  if (!isEnglish) return width;
+  if (!isEnglish) {
+    if (width.includes("Wide") || width.includes("Geniş")) return "Geniş Hendek (Wide Moat)";
+    if (width.includes("Narrow") || width.includes("Dar")) return "Dar Hendek (Narrow Moat)";
+    return "Hendek Yok (No Moat)";
+  }
   if (width.includes("Geniş") || width.includes("Wide")) return "Wide Moat";
   if (width.includes("Dar") || width.includes("Narrow")) return "Narrow Moat";
   return "No Moat";

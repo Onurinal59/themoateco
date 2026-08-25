@@ -27,7 +27,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import { CompanyAuditDossier } from "../types";
-import { calculateFinancialOutputs, computeMoatScore, MAUBOUSSIN_GUIDED_TEMPLATE } from "../data/companyAuditData";
+import { calculateFinancialOutputs, computeMoatScore, MAUBOUSSIN_GUIDED_TEMPLATE, translateMoatDriver, translateMoatType } from "../data/companyAuditData";
 
 interface MyWorkspacesViewProps {
   dossiers: CompanyAuditDossier[];
@@ -557,7 +557,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                     <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
                       <span className="font-semibold">{t("workspaces.moatDrivers", "Hendek Motorları:")}</span>
                       <span className="text-indigo-600 dark:text-indigo-400 capitalize">
-                        {dossier.competitiveAdvantage.primaryType.replace("_", " ")}
+                        {translateMoatType(dossier.competitiveAdvantage.primaryType, isEnglish)}
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-1">
@@ -566,7 +566,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                           key={i}
                           className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
                         >
-                          {sub}
+                          {translateMoatDriver(sub, isEnglish)}
                         </span>
                       ))}
                       {dossier.competitiveAdvantage.subDrivers.length > 3 && (
