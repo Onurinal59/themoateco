@@ -14,6 +14,7 @@ import { CashConversionSim } from "./simulators/CashConversionSim";
 import { ReverseDCFSim } from "./simulators/ReverseDCFSim";
 import { MoatChecklistSim } from "./simulators/MoatChecklistSim";
 import { SimTab } from "./SimulationsView";
+import { MathFormula } from "./MathFormula";
 import {
   DickinsonLifecycleVisual,
   ValueStickVisual,
@@ -436,21 +437,21 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
             {/* Structured Formula Box */}
             {section.formulaBox && (
-              <div className="rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-900 text-slate-100 shadow-xl">
+              <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 text-slate-800 dark:text-slate-100 shadow-sm dark:shadow-xl">
                 {/* Header */}
-                <div className="px-4 sm:px-5 py-3 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between gap-3">
+                <div className="px-4 sm:px-5 py-3 bg-slate-100 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 font-mono text-[10px] font-black uppercase tracking-wider border border-amber-400/30">
+                    <span className="px-2 py-0.5 rounded-md bg-amber-500/10 dark:bg-amber-400/20 text-amber-700 dark:text-amber-300 font-mono text-[10px] font-black uppercase tracking-wider border border-amber-500/20 dark:border-amber-400/30">
                       📐 {isEnglish ? "CORE EQUATION" : "TEMEL EŞİTLİK"}
                     </span>
-                    <span className="text-xs sm:text-sm font-bold text-slate-200">
+                    <span className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                       {section.formulaBox.title}
                     </span>
                   </div>
                   {section.formulaDeepDiveId && (
                     <button
                       onClick={() => onOpenFormulaWorkshop?.(section.formulaDeepDiveId!)}
-                      className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-600/80 hover:bg-indigo-600 text-white text-[11px] font-bold transition-all cursor-pointer"
+                      className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold transition-all cursor-pointer shadow-xs"
                     >
                       <Calculator className="w-3.5 h-3.5" />
                       <span>{isEnglish ? "Calculate in Workshop" : "Formül Sayfasında Hesapla"}</span>
@@ -459,29 +460,27 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
                 </div>
 
                 {/* Main Equation Box */}
-                <div className="p-4 sm:p-5 bg-slate-900 dark:bg-slate-950 space-y-4">
-                  <div className="p-3.5 sm:p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm text-amber-300 tracking-wide leading-relaxed shadow-inner overflow-x-auto">
-                    <pre className="font-mono font-bold whitespace-pre-wrap">{section.formulaBox.equation}</pre>
-                  </div>
+                <div className="p-4 sm:p-5 bg-white dark:bg-slate-950 space-y-4">
+                  <MathFormula equation={section.formulaBox.equation} size="md" />
 
                   {/* Variables Breakdown Pills */}
                   {section.formulaBox.variables && section.formulaBox.variables.length > 0 && (
                     <div className="space-y-1.5">
-                      <div className="text-[11px] font-bold text-slate-300 dark:text-slate-400 uppercase tracking-wider">
+                      <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                         {isEnglish ? "Variables & Parameters" : "Değişkenler & Parametre Açıklamaları"}
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {section.formulaBox.variables.map((v, vIdx) => (
                           <div
                             key={vIdx}
-                            className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-start gap-2.5 text-xs"
+                            className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 flex items-start gap-2.5 text-xs"
                           >
-                            <span className="px-2 py-0.5 rounded-md bg-indigo-950 text-indigo-300 font-mono font-black border border-indigo-800/60 shrink-0">
+                            <span className="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-mono font-black border border-indigo-200 dark:border-indigo-800/60 shrink-0">
                               {v.symbol}
                             </span>
                             <div className="min-w-0">
-                              <div className="font-bold text-slate-100">{v.label}</div>
-                              {v.desc && <div className="text-[11px] text-slate-300 dark:text-slate-400 leading-tight mt-0.5">{v.desc}</div>}
+                              <div className="font-bold text-slate-900 dark:text-slate-100">{v.label}</div>
+                              {v.desc && <div className="text-[11px] text-slate-600 dark:text-slate-400 leading-tight mt-0.5">{v.desc}</div>}
                             </div>
                           </div>
                         ))}
@@ -491,12 +490,12 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
                   {/* Example Calculation */}
                   {section.formulaBox.exampleCalculation && (
-                    <div className="p-3.5 rounded-xl bg-indigo-950/60 border border-indigo-800/60 space-y-1.5">
-                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-indigo-300 uppercase tracking-wider">
-                        <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+                    <div className="p-3.5 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-800/60 space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-indigo-800 dark:text-indigo-300 uppercase tracking-wider">
+                        <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                         <span>{isEnglish ? "Numerical Proof & Example" : "Sayısal Örnek Sağlaması"}</span>
                       </div>
-                      <pre className="font-mono text-xs text-indigo-200 whitespace-pre-wrap leading-relaxed overflow-x-auto">
+                      <pre className="font-mono text-xs text-indigo-900 dark:text-indigo-200 whitespace-pre-wrap leading-relaxed overflow-x-auto">
                         {section.formulaBox.exampleCalculation}
                       </pre>
                     </div>
@@ -507,9 +506,9 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
             {/* Step-by-Step Math or Breakdown */}
             {section.stepByStepMath && (
-              <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 text-slate-100 dark:bg-slate-950 border border-slate-800 space-y-3 font-mono text-xs shadow-inner">
-                <div className="flex items-center gap-2 font-sans font-bold text-amber-400 text-xs uppercase tracking-wider">
-                  <Calculator className="w-4 h-4 text-amber-400" />
+              <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-800 space-y-3 font-mono text-xs shadow-xs">
+                <div className="flex items-center gap-2 font-sans font-bold text-indigo-700 dark:text-amber-400 text-xs uppercase tracking-wider">
+                  <Calculator className="w-4 h-4 text-indigo-600 dark:text-amber-400" />
                   <span>{isEnglish ? "Step-by-Step Diagnostic Breakdown" : "Adım Adım Hesaplama Röntgeni"}</span>
                 </div>
                 <div className="space-y-2">
@@ -520,16 +519,16 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
                         key={sIdx}
                         className={`p-2.5 rounded-xl ${
                           isStep
-                            ? "bg-slate-800/80 border border-slate-700/60 text-slate-200 flex items-start gap-2.5"
-                            : "text-slate-300 pl-2"
+                            ? "bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 text-slate-800 dark:text-slate-200 flex items-start gap-2.5 shadow-xs"
+                            : "text-slate-600 dark:text-slate-300 pl-2"
                         }`}
                       >
                         {isStep && (
-                          <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 font-sans font-bold text-[10px] uppercase shrink-0">
+                          <span className="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-400/20 text-amber-800 dark:text-amber-300 font-sans font-bold text-[10px] uppercase shrink-0 border border-amber-200 dark:border-amber-400/30">
                             {stepLine.split(":")[0]}
                           </span>
                         )}
-                        <span className="leading-relaxed">
+                        <span className="leading-relaxed font-sans sm:font-mono">
                           {isStep ? stepLine.substring(stepLine.indexOf(":") + 1).trim() : stepLine}
                         </span>
                       </div>
@@ -756,20 +755,20 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
       {/* "Kendin Dene" Interactive Lab Gateway Banner */}
       {labConfig && onOpenLabSim && (
-        <div className="p-5 sm:p-7 rounded-3xl bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white shadow-lg border border-indigo-700/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+        <div className="p-5 sm:p-7 rounded-3xl bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 dark:from-indigo-950 dark:via-slate-900 dark:to-slate-950 text-white shadow-lg border border-indigo-700/60 dark:border-indigo-800/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <div className="space-y-2 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-white/20 dark:bg-indigo-500/30 text-white dark:text-indigo-200 border border-white/30 dark:border-indigo-400/30 uppercase tracking-wider">
                 🧪 {labConfig.badge}
               </span>
-              <span className="text-xs text-indigo-300 font-medium">
+              <span className="text-xs text-indigo-200 dark:text-indigo-300 font-medium">
                 {isEnglish ? "Hands-On Lab" : "Uygulamalı Atölye"}
               </span>
             </div>
             <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
               {labConfig.title}
             </h3>
-            <p className="text-xs text-indigo-200/90 leading-relaxed max-w-xl">
+            <p className="text-xs text-indigo-100/90 dark:text-indigo-200/90 leading-relaxed max-w-xl">
               {labConfig.description}
             </p>
           </div>
@@ -788,21 +787,21 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
 
       {/* Pedagogical Bridge to Next Step */}
       {module.moduleBridge?.whyNext && (
-        <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-500/30 shadow-md space-y-3">
-          <div className="flex items-center gap-2 text-xs font-bold text-indigo-300">
-            <Milestone className="w-4 h-4 text-indigo-400" />
+        <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-indigo-50/80 via-white to-slate-50 dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900 text-slate-800 dark:text-white border border-indigo-100 dark:border-indigo-500/30 shadow-xs dark:shadow-md space-y-3">
+          <div className="flex items-center gap-2 text-xs font-bold text-indigo-700 dark:text-indigo-300">
+            <Milestone className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
             <span>
               {isEnglish
                 ? `🚀 Next Piece of the Puzzle: Why ${module.moduleBridge.nextTitle}?`
                 : `🚀 Yapbozun Sıradaki Parçası: Neden ${module.moduleBridge.nextTitle}?`}
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-200 leading-relaxed">
             {module.moduleBridge.whyNext}
           </p>
           {module.moduleBridge.previewQuestion && (
-            <div className="p-3 rounded-xl bg-indigo-900/50 border border-indigo-400/30 text-xs font-semibold text-indigo-200 flex items-start gap-2">
-              <span className="text-amber-400">{isEnglish ? "❓ Key Question Ahead:" : "❓ Sıradaki Merak Sorusu:"}</span>
+            <div className="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-900/50 border border-indigo-200 dark:border-indigo-400/30 text-xs font-semibold text-indigo-900 dark:text-indigo-200 flex items-start gap-2">
+              <span className="text-amber-600 dark:text-amber-400 font-bold">{isEnglish ? "❓ Key Question Ahead:" : "❓ Sıradaki Merak Sorusu:"}</span>
               <span>{module.moduleBridge.previewQuestion}</span>
             </div>
           )}

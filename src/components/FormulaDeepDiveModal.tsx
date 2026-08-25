@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { FormulaGuide } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+import { MathFormula } from "./MathFormula";
 import {
   Calculator,
   X,
@@ -200,21 +201,21 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white flex items-center justify-between shrink-0">
+            <div className="p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900 text-slate-800 dark:text-white flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-2xl bg-indigo-600/80 text-white border border-indigo-400/40 shadow-xs">
+                <div className="p-2.5 rounded-2xl bg-indigo-50 dark:bg-indigo-600/80 text-indigo-600 dark:text-white border border-indigo-200 dark:border-indigo-400/40 shadow-xs">
                   <Calculator className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-black bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 uppercase tracking-wider">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-black bg-indigo-50 dark:bg-indigo-500/30 text-indigo-700 dark:text-indigo-200 border border-indigo-200 dark:border-indigo-400/30 uppercase tracking-wider">
                       {currentGuide.badge}
                     </span>
-                    <span className="text-xs text-indigo-300 font-medium">
+                    <span className="text-xs text-slate-500 dark:text-indigo-300 font-medium">
                       {isEnglish ? "Step-by-Step Formula & Calculation Workshop" : "Adım Adım Formül & Hesaplama Atölyesi"}
                     </span>
                   </div>
-                  <h2 className="text-base sm:text-xl font-bold tracking-tight text-white mt-0.5">
+                  <h2 className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white mt-0.5">
                     {currentGuide.title}
                   </h2>
                 </div>
@@ -227,7 +228,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                       onOpenFullPage(activeId);
                       onClose();
                     }}
-                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
                     title={isEnglish ? "Open in Full Page Workshop" : "Tam Sayfa Formül Atölyesi Olarak Aç"}
                   >
                     <BookOpen className="w-3.5 h-3.5" />
@@ -236,7 +237,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                 )}
                 <button
                   onClick={onClose}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 text-slate-700 dark:text-white text-xs font-semibold transition-colors cursor-pointer border border-slate-200 dark:border-transparent"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span className="hidden sm:inline">{isEnglish ? "Return to Module" : "Modüle Geri Dön"}</span>
@@ -244,7 +245,7 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                 </button>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg text-slate-500 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -302,10 +303,11 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                   </span>
                 </div>
 
-                <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-900/40 text-center">
-                  <div className="font-mono text-base sm:text-2xl font-black text-indigo-950 dark:text-indigo-200 tracking-tight select-all">
-                    {currentGuide.coreEquation}
-                  </div>
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-black text-indigo-700 dark:text-amber-400 uppercase tracking-wider px-1">
+                    {isEnglish ? "Core Mathematical Equation" : "Temel Matematiksel Eşitlik"}
+                  </span>
+                  <MathFormula equation={currentGuide.coreEquation} size="md" />
                 </div>
 
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -743,16 +745,16 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
                     {(() => {
                       const diag = getDickinsonStage();
                       return (
-                        <div className="p-4 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
                           <div>
-                            <div className="text-xs text-indigo-300 font-bold uppercase tracking-wider">
+                            <div className="text-xs text-indigo-700 dark:text-indigo-300 font-bold uppercase tracking-wider">
                               {isEnglish ? `Diagnosed Dickinson Stage (${dickCfo} , ${dickCfi} , ${dickCff})` : `Teşhis Edilen Dickinson Evresi (${dickCfo} , ${dickCfi} , ${dickCff})`}
                             </div>
                             <div className={`text-xl sm:text-2xl font-black mt-0.5 ${diag.color}`}>
                               {diag.stage}
                             </div>
                           </div>
-                          <p className="text-xs text-slate-300 max-w-sm leading-relaxed text-right sm:text-left">
+                          <p className="text-xs text-slate-600 dark:text-slate-300 max-w-sm leading-relaxed text-right sm:text-left">
                             {diag.desc}
                           </p>
                         </div>

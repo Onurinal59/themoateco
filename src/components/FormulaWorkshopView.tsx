@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { FormulaGuide } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+import { MathFormula } from "./MathFormula";
 import {
   Calculator,
   Sparkles,
@@ -225,21 +226,21 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
   return (
     <div className="space-y-8 pb-16">
       {/* Page Hero Header */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border border-indigo-900/60 shadow-xl relative overflow-hidden">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900 text-slate-800 dark:text-white border border-slate-200 dark:border-indigo-900/60 shadow-sm dark:shadow-xl relative overflow-hidden">
         {/* Subtle decorative glow */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
+        <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-black uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-400/30 text-xs font-black uppercase tracking-wider">
               <Calculator className="w-3.5 h-3.5" />
               <span>{isEnglish ? "Full-Screen Formula & Diagnostic Lab" : "Tam Ekran Formül & Röntgen Atölyesi"}</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
               {isEnglish ? "Financial Math & Valuation Formulas" : "Finansal Matematik & Değerleme Formülleri"}
             </h1>
-            <p className="text-sm text-slate-300 leading-relaxed">
+            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               {isEnglish
                 ? "8 fundamental economic moat and corporate finance formulas used by Michael Mauboussin and Morgan Stanley. Test the formulas directly and observe real-time impacts on capital returns and stock valuation."
                 : "Michael Mauboussin ve Morgan Stanley analizlerinde kullanılan 8 temel ekonomik hendek formülü. Formülleri doğrudan test edin, sayıları değiştirerek sermaye getirisi ve hisse değerlemesi üzerindeki etkisini canlı izleyin."}
@@ -248,13 +249,13 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
 
           {/* Quick Stat Highlights */}
           <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 shrink-0">
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
-              <div className="text-2xl font-black text-amber-400 font-mono">8</div>
-              <div className="text-[11px] font-bold text-slate-300 mt-0.5">{isEnglish ? "Corporate Formulas" : "Kurumsal Formül"}</div>
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-xs">
+              <div className="text-2xl font-black text-amber-600 dark:text-amber-400 font-mono">8</div>
+              <div className="text-[11px] font-bold text-slate-600 dark:text-slate-300 mt-0.5">{isEnglish ? "Corporate Formulas" : "Kurumsal Formül"}</div>
             </div>
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xs">
-              <div className="text-2xl font-black text-emerald-400 font-mono">100%</div>
-              <div className="text-[11px] font-bold text-slate-300 mt-0.5">{isEnglish ? "Interactive Sandbox" : "İnteraktif Simülatör"}</div>
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-xs">
+              <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">100%</div>
+              <div className="text-[11px] font-bold text-slate-600 dark:text-slate-300 mt-0.5">{isEnglish ? "Interactive Sandbox" : "İnteraktif Simülatör"}</div>
             </div>
           </div>
         </div>
@@ -355,13 +356,11 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
             </div>
 
             {/* Core Equation Box */}
-            <div className="p-5 rounded-2xl bg-indigo-50/70 dark:bg-slate-950 border border-indigo-200/80 dark:border-slate-800 shadow-xs text-center">
-              <div className="text-[10px] font-black uppercase text-indigo-700 dark:text-amber-400 tracking-wider mb-1">
+            <div className="space-y-1.5">
+              <div className="text-[10px] font-black uppercase text-indigo-700 dark:text-amber-400 tracking-wider px-1">
                 {isEnglish ? "CORE MATHEMATICAL EQUATION" : "MATEMATİKSEL TEMEL EŞİTLİK"}
               </div>
-              <div className="font-mono text-base sm:text-xl md:text-2xl font-black text-indigo-950 dark:text-amber-300 tracking-wide select-all py-1">
-                {currentGuide.coreEquation}
-              </div>
+              <MathFormula equation={currentGuide.coreEquation} size="lg" />
             </div>
 
             <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
@@ -816,13 +815,13 @@ export const FormulaWorkshopView: React.FC<FormulaWorkshopViewProps> = ({
                 {(() => {
                   const diag = getDickinsonStage();
                   return (
-                    <div className="p-5 rounded-2xl bg-slate-900 text-white border border-slate-800 space-y-2">
+                    <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
                       <div className="flex items-center gap-2">
                         <span className={`px-2.5 py-0.5 rounded-full text-xs font-black ${diag.badgeBg}`}>
                           {diag.stage}
                         </span>
                       </div>
-                      <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                         {diag.desc}
                       </p>
                     </div>

@@ -496,65 +496,65 @@ export const FootnoteDetectiveLab: React.FC = () => {
       </div>
 
       {/* Primary KPI Spread Summary Banner */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white shadow-md">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 rounded-2xl bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-md">
         {/* Metric 1: NOPAT */}
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400">{isEnglish ? "Net Operating Profit (NOPAT)" : "Net Faaliyet Kârı (NOPAT)"}</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">{isEnglish ? "Net Operating Profit (NOPAT)" : "Net Faaliyet Kârı (NOPAT)"}</span>
           <div className="flex items-baseline gap-2">
-            <span className="text-xl font-extrabold text-white">
+            <span className="text-xl font-extrabold text-slate-900 dark:text-white">
               {Math.round(adjNopat).toLocaleString()} {currencyLabel}
             </span>
             {deltaNopat !== 0 && (
-              <span className="text-xs font-bold text-emerald-400">
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
                 +{Math.round(deltaNopat).toLocaleString()}
               </span>
             )}
           </div>
-          <span className="text-[11px] text-slate-400 block">{isEnglish ? "Raw Accounting: " : "Ham Muhasebe: "}{Math.round(rawNopat).toLocaleString()}</span>
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 block">{isEnglish ? "Raw Accounting: " : "Ham Muhasebe: "}{Math.round(rawNopat).toLocaleString()}</span>
         </div>
 
         {/* Metric 2: Invested Capital */}
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400">{isEnglish ? "Invested Capital (IC)" : "Yatırılan Sermaye (IC)"}</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">{isEnglish ? "Invested Capital (IC)" : "Yatırılan Sermaye (IC)"}</span>
           <div className="flex items-baseline gap-2">
-            <span className="text-xl font-extrabold text-white">
+            <span className="text-xl font-extrabold text-slate-900 dark:text-white">
               {Math.round(adjInvestedCapital).toLocaleString()} {currencyLabel}
             </span>
             {deltaInvestedCapital !== 0 && (
-              <span className={`text-xs font-bold ${deltaInvestedCapital < 0 ? "text-emerald-400" : "text-amber-400"}`}>
+              <span className={`text-xs font-bold ${deltaInvestedCapital < 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
                 {deltaInvestedCapital > 0 ? `+${deltaInvestedCapital.toLocaleString()}` : `${deltaInvestedCapital.toLocaleString()}`}
               </span>
             )}
           </div>
-          <span className="text-[11px] text-slate-400 block">{isEnglish ? "Raw Balance Sheet: " : "Ham Bilanço: "}{Math.round(rawInvestedCapital).toLocaleString()}</span>
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 block">{isEnglish ? "Raw Balance Sheet: " : "Ham Bilanço: "}{Math.round(rawInvestedCapital).toLocaleString()}</span>
         </div>
 
         {/* Metric 3: ROIC & WACC */}
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400">{isEnglish ? "Adjusted ROIC vs WACC" : "Düzeltilmiş ROIC vs WACC"}</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">{isEnglish ? "Adjusted ROIC vs WACC" : "Düzeltilmiş ROIC vs WACC"}</span>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-amber-300">
+            <span className="text-2xl font-black text-amber-600 dark:text-amber-300">
               %{adjRoic.toFixed(1)}
             </span>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-500 dark:text-slate-400">
               / WACC %{adjWacc.toFixed(1)}
             </span>
           </div>
-          <span className="text-[11px] text-slate-400 block">{isEnglish ? "Raw ROIC: %" : "Ham ROIC: %"}{rawRoic.toFixed(1)}</span>
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 block">{isEnglish ? "Raw ROIC: %" : "Ham ROIC: %"}{rawRoic.toFixed(1)}</span>
         </div>
 
         {/* Metric 4: Economic Moat Spread */}
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400">{isEnglish ? "Moat Spread (ROIC - WACC)" : "Hendek Yayılımı (ROIC - WACC)"}</span>
+          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">{isEnglish ? "Moat Spread (ROIC - WACC)" : "Hendek Yayılımı (ROIC - WACC)"}</span>
           <div className="flex items-baseline gap-2">
-            <span className={`text-2xl font-black ${adjSpread >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
+            <span className={`text-2xl font-black ${adjSpread >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
               {adjSpread >= 0 ? `+%{${adjSpread.toFixed(1)}}` : `%{${adjSpread.toFixed(1)}}`}
             </span>
-            <span className="text-[11px] text-slate-400">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
               {adjSpread > 5 ? (isEnglish ? "Wide Moat" : "Geniş Hendek") : adjSpread > 0 ? (isEnglish ? "Narrow Moat" : "Dar Hendek") : (isEnglish ? "Value Destroyer" : "Değer Yıkımı")}
             </span>
           </div>
-          <span className="text-[11px] text-slate-400 block">{isEnglish ? "Raw Spread: %" : "Ham Yayılım: %"}{rawSpread.toFixed(1)}</span>
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 block">{isEnglish ? "Raw Spread: %" : "Ham Yayılım: %"}{rawSpread.toFixed(1)}</span>
         </div>
       </div>
 

@@ -159,25 +159,25 @@ export const InvestmentCommitteeModal: React.FC<InvestmentCommitteeModalProps> =
             className="relative z-10 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden"
           >
             {/* Modal Header */}
-            <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white dark:bg-gradient-to-r dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900 text-slate-800 dark:text-white">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
-                    <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />{" "}
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30 flex items-center gap-1">
+                    <ShieldAlert className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />{" "}
                     {isEnglish ? "Investment Committee Simulation" : "Yatırım Komitesi Simülasyonu"}
                   </span>
-                  <span className="text-xs text-slate-300 font-mono">
+                  <span className="text-xs text-slate-500 dark:text-slate-300 font-mono">
                     {dossier.ticker} — {dossier.companyName}
                   </span>
                 </div>
-                <h2 className="text-lg sm:text-xl font-extrabold tracking-tight">
+                <h2 className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                   {isEnglish ? "Devil's Advocate: Defend Your Investment Thesis" : "Şeytanın Avukatı (Devil's Advocate): Tezinizi Savunun"}
                 </h2>
               </div>
 
               <button
                 onClick={onClose}
-                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer border border-slate-200 dark:border-transparent"
               >
                 <X className="w-5 h-5" />
               </button>

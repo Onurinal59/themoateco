@@ -339,7 +339,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
   const balanceSheetGuideList = getBalanceSheetGuide(isEnglish);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto px-2 sm:px-4" id="company-audit-laboratory">
+    <div className="space-y-6 w-full mx-auto" id="company-audit-laboratory">
       {/* Top Workspace / Studio Toggle Bar */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-2.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-xs">
         <div className="flex items-center gap-2">
@@ -1458,15 +1458,15 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
               </div>
 
               {/* Challenge Your Thesis: Investment Committee (Devil's Advocate) Callout */}
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md">
+              <div className="p-4 rounded-2xl bg-amber-50/80 dark:bg-gradient-to-r dark:from-slate-900 dark:to-indigo-950 text-slate-800 dark:text-white flex flex-col sm:flex-row items-center justify-between gap-3 border border-amber-200/80 dark:border-indigo-900/50 shadow-xs dark:shadow-md">
                 <div className="space-y-1 text-center sm:text-left">
                   <div className="flex items-center justify-center sm:justify-start gap-2">
-                    <ShieldAlert className="w-4 h-4 text-amber-400" />
-                    <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
+                    <ShieldAlert className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                    <span className="text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
                       {isEnglish ? "Investment Committee Defense (Devil's Advocate)" : "Yatırım Komitesi Savunması (Devil's Advocate)"}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-300 max-w-lg">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 max-w-lg">
                     {isEnglish
                       ? "Stress-test your thesis before the skeptical Mauboussin investment committee. Defend against the company's biggest vulnerabilities!"
                       : "Analizinizi şüpheci Mauboussin yatırım komitesi önünde test edin. Şirketin en zayıf noktalarına karşı tezinizi savunun ve puan alın!"}
@@ -1478,7 +1478,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setIsCommitteeModalOpen(true)}
-                  className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shrink-0 shadow-sm"
+                  className="px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-black text-xs flex items-center gap-1.5 transition-all cursor-pointer shrink-0 shadow-xs"
                 >
                   <ShieldAlert className="w-4 h-4" />
                   <span>{isEnglish ? "Present to Committee" : "Komiteye Sun"}</span>

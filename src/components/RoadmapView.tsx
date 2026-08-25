@@ -49,8 +49,8 @@ export const RoadmapView: React.FC<RoadmapViewProps> = ({
       id="roadmap-view"
     >
       {/* Hero Welcome & Institutional Mastery Mission */}
-      <div className="relative rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-8 overflow-hidden shadow-xs">
-        <div className="relative z-10 max-w-3xl">
+      <div className="relative rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-8 overflow-hidden shadow-xs w-full">
+        <div className="relative z-10 w-full">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 dark:bg-indigo-950/70 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/80">
               <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />

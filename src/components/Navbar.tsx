@@ -180,22 +180,22 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <>
       {/* Apple-style Translucent Sticky Navigation Header */}
-      <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800/70 transition-colors duration-200">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-          <div className="flex items-center justify-between h-14 sm:h-16 gap-2 lg:gap-3">
+      <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-950/85 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800/70 transition-colors duration-500 ease-in-out">
+        <div className="max-w-7xl mx-auto w-full px-2 sm:px-4 lg:px-6">
+          <div className="flex items-center justify-between min-h-14 sm:h-16 gap-1 sm:gap-2 lg:gap-3 w-full flex-wrap sm:flex-nowrap py-1 sm:py-0">
             
-            {/* Left: Brand Identity */}
+            {/* Left: Brand Identity (flex-1 justify-start) */}
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-2 cursor-pointer select-none shrink-0"
+              className="flex-1 flex justify-start items-center gap-1.5 sm:gap-2 cursor-pointer select-none shrink-0"
               onClick={() => handleTabClick("roadmap")}
             >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-indigo-700 via-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/20 ring-1 ring-white/20">
-                <Compass className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+              <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-indigo-700 via-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-sm shadow-indigo-500/20 ring-1 ring-white/20 shrink-0">
+                <Compass className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5" />
               </div>
               <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1 sm:gap-1.5">
                   <span className="font-extrabold text-xs sm:text-sm md:text-base tracking-tight text-slate-900 dark:text-slate-100 font-display whitespace-nowrap">
                     {isEnglish ? "Economic Moat" : "Ekonomik Hendek"}
                   </span>
@@ -209,8 +209,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </motion.div>
 
-            {/* Center: Apple-inspired Compact Segmented Navigation Bar (Desktop lg+) */}
-            <nav className="hidden lg:flex items-center bg-slate-100/90 dark:bg-slate-900/90 p-1 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs backdrop-blur-md shrink-0">
+            {/* Center: Apple-inspired Compact Segmented Navigation Bar (flex-none justify-center) */}
+            <nav className="hidden lg:flex flex-none items-center justify-center bg-slate-100/90 dark:bg-slate-900/90 p-1 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-2xs backdrop-blur-md shrink-0 transition-colors duration-500 ease-in-out">
               {PRIMARY_NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -338,13 +338,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </nav>
 
-            {/* Right Action Hub: Unified & Non-Overflowing */}
-            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+            {/* Right Action Hub: Unified & Non-Overflowing (flex-1 justify-end) */}
+            <div className="flex-1 flex justify-end items-center gap-1 sm:gap-1.5 shrink-0">
               
               {/* Daily Learning Streak Capsule */}
               <motion.div
                 whileHover={{ scale: 1.04 }}
-                className="flex items-center gap-1 px-2 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300 text-xs font-black shadow-2xs select-none"
+                className="flex items-center gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300 text-[11px] sm:text-xs font-black shadow-2xs select-none"
                 title={isEnglish ? `${userState.currentStreak} day learning streak` : `${userState.currentStreak} günlük aktif öğrenme serisi`}
               >
                 <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0 animate-pulse" />
@@ -357,7 +357,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   type="button"
                   onClick={() => setLanguage("tr")}
-                  className={`p-1.5 rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center ${
+                  className={`p-1 sm:p-1.5 rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center ${
                     language === "tr"
                       ? "bg-white dark:bg-slate-800 shadow-xs ring-1.5 ring-indigo-500/70 dark:ring-indigo-400/80 scale-105"
                       : "opacity-45 hover:opacity-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
@@ -365,12 +365,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   title="Türkçe"
                   aria-label="Türkçe"
                 >
-                  <TurkishFlag className="w-4.5 h-3 sm:w-5 sm:h-3.5" />
+                  <TurkishFlag className="w-4 h-2.5 sm:w-5 sm:h-3.5" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setLanguage("en")}
-                  className={`p-1.5 rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center ${
+                  className={`p-1 sm:p-1.5 rounded-lg transition-all duration-150 cursor-pointer flex items-center justify-center ${
                     language === "en"
                       ? "bg-white dark:bg-slate-800 shadow-xs ring-1.5 ring-indigo-500/70 dark:ring-indigo-400/80 scale-105"
                       : "opacity-45 hover:opacity-100 hover:bg-slate-200/50 dark:hover:bg-slate-800/50"
@@ -378,7 +378,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   title="English"
                   aria-label="English"
                 >
-                  <BritishFlag className="w-4.5 h-3 sm:w-5 sm:h-3.5" />
+                  <BritishFlag className="w-4 h-2.5 sm:w-5 sm:h-3.5" />
                 </button>
               </div>
 
@@ -462,7 +462,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Dark / Light Theme Toggle */}
               <button
                 onClick={onToggleDarkMode}
-                className="p-2 rounded-xl bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 text-xs font-semibold transition-colors cursor-pointer"
+                className="p-1.5 sm:p-2 rounded-xl bg-slate-100/80 hover:bg-slate-200/80 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 text-xs font-semibold transition-colors cursor-pointer shrink-0"
                 title={isDarkMode ? (isEnglish ? "Switch to Light Mode" : "Aydınlık Moda Geç") : (isEnglish ? "Switch to Dark Mode" : "Karanlık Moda Geç")}
                 aria-label="Toggle Theme"
               >
@@ -476,18 +476,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Socratic AI Coach Button */}
               <button
                 onClick={onOpenAICoach}
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold shadow-sm shadow-indigo-500/25 transition-all cursor-pointer ring-1 ring-white/20 whitespace-nowrap"
+                className="flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold shadow-sm shadow-indigo-500/25 transition-all cursor-pointer ring-1 ring-white/20 whitespace-nowrap shrink-0"
                 title={isEnglish ? "Ask Socratic AI Coach" : "Sokratik AI Koçuna Soru Sor"}
               >
-                <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
+                <Sparkles className="w-3.5 h-3.5 text-indigo-200 shrink-0" />
                 <span className="hidden sm:inline">{isEnglish ? "AI Coach" : "AI Koçu"}</span>
-                <span className="sm:hidden">{isEnglish ? "AI" : "AI"}</span>
               </button>
 
               {/* Mobile Menu Drawer Toggle (Visible on < lg) */}
               <button
                 onClick={() => setIsMobileDrawerOpen(!isMobileDrawerOpen)}
-                className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 text-xs font-semibold transition-colors cursor-pointer"
+                className="lg:hidden p-1.5 sm:p-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 text-xs font-semibold transition-colors cursor-pointer shrink-0"
                 aria-label="Open Menu"
               >
                 {isMobileDrawerOpen ? (
