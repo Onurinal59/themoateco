@@ -119,8 +119,8 @@ export const GlossaryModal: React.FC<GlossaryModalProps> = ({
             />
           </div>
 
-          {/* Category Pills - Modern Pill design with no scrollbar */}
-          <div className="flex gap-1.5 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
+          {/* Category Pills - Modern Pill design with wrap */}
+          <div className="flex flex-wrap gap-2 pb-2">
             {categories.map((cat) => (
               <button
                 key={cat.id}

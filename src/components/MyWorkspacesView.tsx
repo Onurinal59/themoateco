@@ -27,7 +27,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import { CompanyAuditDossier } from "../types";
-import { calculateFinancialOutputs, computeMoatScore, MAUBOUSSIN_GUIDED_TEMPLATE, translateMoatDriver, translateMoatType } from "../data/companyAuditData";
+import { calculateFinancialOutputs, computeMoatScore, MAUBOUSSIN_GUIDED_TEMPLATE, translateMoatDriver, translateMoatType, translateMoatWidth } from "../data/companyAuditData";
 
 interface MyWorkspacesViewProps {
   dossiers: CompanyAuditDossier[];
@@ -103,7 +103,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
       fin,
       moat,
       isValueCreating: fin.isCreatingValue,
-      isWideMoat: moat.scorePercent >= 75 || d.sustainability.moatWidth.toLowerCase().includes("geniş") || d.sustainability.moatWidth.toLowerCase().includes("wide"),
+      isWideMoat: moat.diagnosedMoat.includes("Geniş") || moat.diagnosedMoat.includes("Wide"),
     };
   });
 
@@ -189,11 +189,11 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
           onImportDossiers([parsed]);
           showToast(isEnglish ? `"${parsed.companyName}" study imported!` : `"${parsed.companyName}" analizi içe aktarıldı!`);
         } else {
-          alert(isEnglish ? "Invalid format. Please select a valid Moat Analysis JSON file." : "Geçersiz dosya formatı. Lütfen geçerli bir Hendek Analizi JSON dosyası seçin.");
+          showToast(isEnglish ? "Invalid format. Please select a valid Moat Analysis JSON file." : "Geçersiz dosya formatı. Lütfen geçerli bir Hendek Analizi JSON dosyası seçin.");
         }
       } catch (err) {
         console.error("Import error:", err);
-        alert(isEnglish ? "Error reading file. Please check JSON syntax." : "Dosya okunurken bir hata oluştu. Lütfen JSON formatını kontrol edin.");
+        showToast(isEnglish ? "Error reading file. Please check JSON syntax." : "Dosya okunurken bir hata oluştu. Lütfen JSON formatını kontrol edin.");
       }
     };
 
@@ -519,11 +519,11 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                       <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
                         isWideMoat
                           ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300"
-                          : moat.scorePercent >= 50
+                          : moat.diagnosedMoat.includes("Dar") || moat.diagnosedMoat.includes("Narrow")
                           ? "bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300"
                           : "bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300"
                       }`}>
-                        {isEnglish ? (isWideMoat ? "Wide Moat" : moat.scorePercent >= 50 ? "Narrow Moat" : "No Moat") : `${moat.diagnosedMoat.split(" ")[0]} Hendek`}
+                        {translateMoatWidth(moat.diagnosedMoat, isEnglish)}
                       </span>
                     </div>
                   </div>
@@ -584,7 +584,7 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
                       {t("workspaces.currentStep", "Kaldığın Adım:")}
                     </span>
                     <span className="font-semibold text-slate-700 dark:text-slate-300">
-                      {stepTitles[currentStepNumber] || `Adım ${currentStepNumber}`}
+                      {stepTitles[currentStepNumber] || (isEnglish ? `Step ${currentStepNumber}` : `Adım ${currentStepNumber}`)}
                     </span>
                   </div>
                 </div>
@@ -666,10 +666,8 @@ export const MyWorkspacesView: React.FC<MyWorkspacesViewProps> = ({
         </div>
         <button
           onClick={() => {
-            if (confirm(isEnglish ? "Reset default case studies (BIM, Apple, THY, Nvidia)? Your custom studies will remain intact." : "Varsayılan örnek vaka analizlerini (BİM, Apple, THY, Nvidia) sıfırlamak istiyor musunuz? Özel yaptığınız analizler korunacaktır.")) {
-              onResetToPresets();
-              showToast(isEnglish ? "Preset cases refreshed." : "Hazır vaka analizleri yenilendi.");
-            }
+            onResetToPresets();
+            showToast(isEnglish ? "Preset cases refreshed." : "Hazır vaka analizleri yenilendi.");
           }}
           className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline flex items-center gap-1 cursor-pointer whitespace-nowrap"
         >

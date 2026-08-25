@@ -1,13 +1,9 @@
 import express from "express";
 import path from "path";
-import { fileURLToPath } from "url";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3000;
@@ -173,8 +169,12 @@ ${topic ? `📘 **Konu:** ${topic}` : ""}
 app.post("/api/ask-coach", async (req, res) => {
   try {
     const { question, currentTopic, studentLevel } = req.body;
-    if (!question) {
+    if (!question || typeof question !== "string") {
       return res.status(400).json({ error: "Soru metni gereklidir." });
+    }
+    
+    if (question.length > 500) {
+      return res.status(400).json({ error: "Soru çok uzun. Lütfen daha kısa bir soru sorun." });
     }
 
     const systemPrompt = `Sen Michael Mauboussin ve Dan Callahan'ın dünyaca ünlü "Measuring the Moat: Assessing the Magnitude and Sustainability of Value Creation" (Morgan Stanley, 2024) makalesini sıfırdan finans/işletme bilmeyen öğrencilere öğreten, aynı zamanda Borsa İstanbul (BIST) ve küresel hisse piyasalarında (10-K/KAP) gerçek şirketleri analiz etmelerini sağlayan kıdemli bir Sokratik Yatırım & Hendek Analiz Koçusun.
@@ -187,10 +187,11 @@ Temel Görevin:
 3. Formülleri mantığıyla açıkla: ROIC = "İşe bağlanan her 100 TL net kaç TL nakit kâr üretiyor?", Spread = "ROIC ile WACC arasındaki fark - değer yaratımı".
 4. Yanıtının sonunda öğrencinin analiz ettiği şirketi sahada test edebilmesi için 1 somut düşündürücü soru sor (örn: "Şirketin son 3 yıldaki brüt kâr marjına baktın mı, enflasyonda fiyat artırabilmiş mi?").
 5. Samimi, teşvik edici, Türkçe ve son derece pedagojik bir ton kullan.
-Şu anki bağlam/konu: ${currentTopic || "Canlı Şirket Hendek Analizi ve Bilanço Röntgeni"}.`;
+Şu anki bağlam/konu: ${String(currentTopic || "Canlı Şirket Hendek Analizi ve Bilanço Röntgeni").substring(0, 100)}.`;
 
     try {
-      const reply = await generateWithRetry(question, systemPrompt);
+      const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 15000));
+      const reply = await Promise.race([generateWithRetry(question, systemPrompt), timeoutPromise]);
       return res.json({ reply });
     } catch (genError: any) {
       console.info("Gemini API çağrısı yerine dinamik pedagojik yedek yanıt devreye alındı:", genError?.message || genError);
@@ -202,8 +203,7 @@ Temel Görevin:
   } catch (error: any) {
     console.error("AI Coach Hatası:", error);
     res.status(500).json({
-      error: "Yapay zeka asistanına bağlanırken bir sorun oluştu.",
-      details: error.message,
+      error: "Yapay zeka asistanına bağlanırken bir sorun oluştu."
     });
   }
 });

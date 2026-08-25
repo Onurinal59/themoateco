@@ -87,7 +87,7 @@ export const MoatChecklistSim: React.FC = () => {
   let moatVerdict = isEnglish ? "No Moat (Capital Destroyer)" : "Hendek Yok (Değer Yok Eden)";
   let verdictBadge = "bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-800";
 
-  if (scorePercent >= 75) {
+  if (scorePercent >= 70) {
     moatVerdict = isEnglish ? "Wide Moat (20+ Years Durable Advantage)" : "Geniş Hendek (Wide Moat - 20+ Yıl Korumalı)";
     verdictBadge = "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800";
   } else if (scorePercent >= 45) {
@@ -219,7 +219,16 @@ export const MoatChecklistSim: React.FC = () => {
                 <div
                   key={item.id}
                   onClick={() => handleToggle(item.id)}
-                  className={`p-3 rounded-xl border transition-all cursor-pointer flex items-start gap-2.5 ${
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleToggle(item.id);
+                    }
+                  }}
+                  role="checkbox"
+                  aria-checked={isChecked}
+                  tabIndex={0}
+                  className={`p-3 rounded-xl border transition-all cursor-pointer flex items-start gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                     isChecked
                       ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 shadow-2xs"
                       : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
@@ -304,7 +313,7 @@ export const MoatChecklistSim: React.FC = () => {
             </div>
 
             <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
-              {scorePercent >= 75
+              {scorePercent >= 70
                 ? isEnglish
                   ? "Fortress Moat: The business satisfies critical hurdles across network effects, pricing power, switching costs, and capital velocity. Exceptional compounder capability."
                   : "Kale Hendek: Şirket ağ etkisi, fiyatlama gücü, geçiş maliyetleri ve sermaye hızı boyutlarında kritik eşikleri başarıyla geçti. 20+ yıl boyunca sermaye maliyetinin üzerinde getiri üretme potansiyeline sahiptir."

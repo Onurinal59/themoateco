@@ -252,8 +252,8 @@ export const FormulaDeepDiveModal: React.FC<FormulaDeepDiveModalProps> = ({
               </div>
             </div>
 
-            {/* Quick Switch Formula Bar - Modern Pill Navigation with no scrollbar */}
-            <div className="sticky top-0 z-20 px-3 sm:px-5 py-2 bg-slate-100/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 flex items-center gap-1.5 overflow-x-auto no-scrollbar shadow-2xs shrink-0">
+            {/* Quick Switch Formula Bar - Modern Pill Navigation with wrap */}
+            <div className="sticky top-0 z-20 px-3 sm:px-5 py-3 bg-slate-100/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 flex flex-wrap items-center gap-2 shadow-2xs shrink-0">
               <span className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider shrink-0 mr-1 hidden sm:inline">
                 {isEnglish ? "Formulas:" : "Formüller:"}
               </span>

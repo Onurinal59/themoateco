@@ -461,7 +461,7 @@ export const FootnoteDetectiveLab: React.FC = () => {
         </div>
 
         {/* Quick Case Switcher */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
+        <div className="flex flex-wrap items-center gap-1.5 pb-2">
           <span className="text-xs text-slate-400 font-semibold shrink-0">{isEnglish ? "Select Case:" : "Vaka Seçin:"}</span>
           {DETECTIVE_CASES.map((c) => (
             <button

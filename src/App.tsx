@@ -8,20 +8,22 @@ import {
   checkAndUpdateStreak,
 } from "./utils/spacedRepetition";
 import { Navbar, NavTab } from "./components/Navbar";
-import { RoadmapView } from "./components/RoadmapView";
-import { ModuleReader } from "./components/ModuleReader";
-import { SpacedRepetitionView } from "./components/SpacedRepetitionView";
-import { SimulationsView, SimTab } from "./components/SimulationsView";
-import { CompanyAuditLab } from "./components/CompanyAuditLab";
-import { MoatDuelView } from "./components/MoatDuelView";
 import { INITIAL_PRESET_DOSSIERS } from "./data/companyAuditData";
 import { GlossaryModal } from "./components/GlossaryModal";
 import { AICoachDrawer } from "./components/AICoachDrawer";
 import { OnboardingGuideModal } from "./components/OnboardingGuideModal";
 import { FloatingGuideWidget } from "./components/FloatingGuideWidget";
 import { FormulaDeepDiveModal } from "./components/FormulaDeepDiveModal";
-import { FormulaWorkshopView } from "./components/FormulaWorkshopView";
 import { Footer } from "./components/Footer";
+import type { SimTab } from "./components/SimulationsView";
+
+const RoadmapView = React.lazy(() => import("./components/RoadmapView").then(m => ({ default: m.RoadmapView })));
+const ModuleReader = React.lazy(() => import("./components/ModuleReader").then(m => ({ default: m.ModuleReader })));
+const SpacedRepetitionView = React.lazy(() => import("./components/SpacedRepetitionView").then(m => ({ default: m.SpacedRepetitionView })));
+const SimulationsView = React.lazy(() => import("./components/SimulationsView").then(m => ({ default: m.SimulationsView })));
+const CompanyAuditLab = React.lazy(() => import("./components/CompanyAuditLab").then(m => ({ default: m.CompanyAuditLab })));
+const MoatDuelView = React.lazy(() => import("./components/MoatDuelView").then(m => ({ default: m.MoatDuelView })));
+const FormulaWorkshopView = React.lazy(() => import("./components/FormulaWorkshopView").then(m => ({ default: m.FormulaWorkshopView })));
 
 export default function App() {
   const { getModules, isEnglish } = useLanguage();
@@ -86,8 +88,44 @@ export default function App() {
     saveUserLearningState(userState);
   }, [userState]);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode((prev) => !prev);
+  const toggleDarkMode = (e?: React.MouseEvent) => {
+    // Fallback if View Transitions API is not supported or no event is passed
+    if (!document.startViewTransition || !e) {
+      setIsDarkMode((prev) => !prev);
+      return;
+    }
+
+    // Get the click position for the wave origin
+    const x = e.clientX;
+    const y = e.clientY;
+    
+    // Calculate the distance to the furthest corner to ensure the circle covers the whole screen
+    const endRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+      setIsDarkMode((prev) => !prev);
+    });
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ];
+      
+      document.documentElement.animate(
+        {
+          clipPath: clipPath,
+        },
+        {
+          duration: 500, // Matching the previous global CSS duration but contained in a single wave
+          easing: "ease-out",
+          pseudoElement: "::view-transition-new(root)",
+        }
+      );
+    });
   };
 
   const handleSelectModule = (module: LearningModule) => {
@@ -128,7 +166,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-indigo-200 font-sans transition-colors duration-500 ease-in-out overflow-x-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col selection:bg-indigo-500/20 selection:text-indigo-900 dark:selection:text-indigo-200 font-sans overflow-x-clip">
       {/* Top Navbar */}
       <Navbar
         activeTab={activeTab}
@@ -151,16 +189,17 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-12">
-        <AnimatePresence mode="wait">
-          {activeModule ? (
-            <motion.div
-              key={`module-${activeModule.id}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-            >
-              <ModuleReader
+        <React.Suspense fallback={<div className="flex h-64 items-center justify-center text-slate-500 font-medium">Yükleniyor...</div>}>
+          <AnimatePresence mode="wait">
+            {activeModule ? (
+              <motion.div
+                key={`module-${activeModule.id}`}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+              >
+                <ModuleReader
                 module={activeModule}
                 allModules={currentModules}
                 userState={userState}
@@ -266,6 +305,7 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
+        </React.Suspense>
       </main>
 
       {/* Modern Footer with Creator LinkedIn Link */}

@@ -538,6 +538,37 @@ export const INITIAL_PRESET_DOSSIERS_TR: CompanyAuditDossier[] = [
     notes: "Nvidia, Mauboussin'in bahsettiği 'Yazılım Destekli Yüksek Geçiş Maliyeti + Ağ Etkisi' hendek kombinasyonunun en güçlü modern örneğidir.",
     updatedAt: "2026-08-22"
   }
+,
+
+  {
+    id: "thy-dossier",
+    companyName: "Türk Hava Yolları (THY)",
+    ticker: "THYAO (BIST)",
+    industry: "Havacılık & Ulaştırma",
+    description: "Yüksek sermaye yoğunluğuna sahip, döngüsel havacılık sektöründe geniş uçuş ağı ile öne çıkan küresel bayrak taşıyıcısı.",
+    financials: { revenue: 550000, operatingIncome: 65000, effectiveTaxRate: 20, totalAssets: 1100000, cashAndEquivalents: 150000, nonInterestCurrentLiabilities: 200000, wacc: 30 },
+    industryStructure: { supplierPower: "yüksek", buyerPower: "orta", threatOfNewEntrants: "düşük", threatOfSubstitutes: "orta", industryRivalry: "yüksek", profitPoolPosition: "Yoğun rekabet ve yüksek sabit maliyetler nedeniyle döngüsel kârlılık halkası." },
+    competitiveAdvantage: { primaryType: "ölçek_avantajı", subDrivers: ["Ağ Etkisi", "Ölçek Ekonomisi"], pricingPowerEvidence: "Yoğun rekabet ve elastik talep (fiyata duyarlı müşteri) nedeniyle fiyatlama gücü sınırlıdır.", costAdvantageEvidence: "Geniş uçuş ağı sabit maliyetleri dağıtır ancak yakıt ve uçak finansmanı maliyetleri dışsaldır." },
+    interactionAndDiscipline: { capacityDiscipline: "orta", priceWarRisk: "yüksek", managementCapitalAllocation: "yüksek_riskli" },
+    sustainability: { estimatedCapYears: 5, keyVulnerability: "Yakıt fiyatları, jeopolitik riskler ve makroekonomik krizler." },
+    isCustom: false, createdAt: "2026-08-22", updatedAt: "2026-08-22",
+    notes: "Havacılık sektörü tarihsel olarak 'değer yok edici' veya çok dar hendekli bir sektördür. Rekabet sert, sabit maliyetler çok yüksektir."
+  },
+
+  {
+    id: "cocacola-dossier",
+    companyName: "Coca-Cola",
+    ticker: "KO (NYSE)",
+    industry: "İçecek & Hızlı Tüketim (FMCG)",
+    description: "Dünyanın en güçlü marka değerlerinden birine sahip, şurup satışı ve şişeleme ağıyla yüksek kâr marjlı içecek devi.",
+    financials: { revenue: 45000, operatingIncome: 13500, effectiveTaxRate: 21, totalAssets: 97000, cashAndEquivalents: 13000, nonInterestCurrentLiabilities: 20000, wacc: 8 },
+    industryStructure: { supplierPower: "düşük", buyerPower: "orta", threatOfNewEntrants: "düşük", threatOfSubstitutes: "orta", industryRivalry: "orta", profitPoolPosition: "Marka gücü sayesinde kâr havuzunun aslan payını (şurup üretimi) elinde tutan lider pozisyon." },
+    competitiveAdvantage: { primaryType: "tüketici_avantajı", subDrivers: ["Marka/Arama Maliyeti", "Ölçek Ekonomisi"], pricingPowerEvidence: "Enflasyonist dönemlerde ürün fiyatlarını satış hacmi kaybetmeden artırabilme kanıtı.", costAdvantageEvidence: "Şişeleme operasyonlarını (düşük marjlı) dışarı aktarıp sadece konsantre şurup (yüksek marj) satarak sermaye hafif bir model kurmuştur." },
+    interactionAndDiscipline: { capacityDiscipline: "yüksek", priceWarRisk: "düşük", managementCapitalAllocation: "etkin" },
+    sustainability: { estimatedCapYears: 20, keyVulnerability: "Tüketici alışkanlıklarının sağlıklı içeceklere kayması." },
+    isCustom: false, createdAt: "2026-08-22", updatedAt: "2026-08-22",
+    notes: "Geleneksel 'geniş hendek' ve 'tüketici avantajı' (Consumer Advantage) kavramının ders kitabı niteliğindeki klasik örneği."
+  }
 ];
 
 export const INITIAL_PRESET_DOSSIERS_EN: CompanyAuditDossier[] = [
@@ -668,10 +699,42 @@ export const INITIAL_PRESET_DOSSIERS_EN: CompanyAuditDossier[] = [
     notes: "Premier modern example of software-backed high switching costs combined with ecosystem network effects.",
     updatedAt: "2026-08-22"
   }
+,
+
+  {
+    id: "thy-dossier",
+    companyName: "Turkish Airlines",
+    ticker: "THYAO (BIST)",
+    industry: "Airlines & Transportation",
+    description: "Global flag carrier standing out with its extensive flight network in the highly capital-intensive, cyclical airline industry.",
+    financials: { revenue: 550000, operatingIncome: 65000, effectiveTaxRate: 20, totalAssets: 1100000, cashAndEquivalents: 150000, nonInterestCurrentLiabilities: 200000, wacc: 30 },
+    industryStructure: { supplierPower: "yüksek", buyerPower: "orta", threatOfNewEntrants: "düşük", threatOfSubstitutes: "orta", industryRivalry: "yüksek", profitPoolPosition: "Cyclical profitability ring due to intense competition and high fixed costs." },
+    competitiveAdvantage: { primaryType: "ölçek_avantajı", subDrivers: ["Ağ Etkisi", "Ölçek Ekonomisi"], pricingPowerEvidence: "Limited pricing power due to intense rivalry and elastic (price-sensitive) demand.", costAdvantageEvidence: "Extensive network spreads fixed costs, but fuel and aircraft financing remain exogenous." },
+    interactionAndDiscipline: { capacityDiscipline: "orta", priceWarRisk: "yüksek", managementCapitalAllocation: "yüksek_riskli" },
+    sustainability: { estimatedCapYears: 5, keyVulnerability: "Fuel price shocks, geopolitical risks, and macroeconomic crises." },
+    isCustom: false, createdAt: "2026-08-22", updatedAt: "2026-08-22",
+    notes: "Airlines are historically known as 'value destroyers' or very narrow moat businesses. Competition is brutal and fixed costs are extremely high."
+  },
+
+  {
+    id: "cocacola-dossier",
+    companyName: "Coca-Cola",
+    ticker: "KO (NYSE)",
+    industry: "Beverages (FMCG)",
+    description: "Beverage giant with one of the world's most powerful brand values, operating a highly profitable syrup and bottling network model.",
+    financials: { revenue: 45000, operatingIncome: 13500, effectiveTaxRate: 21, totalAssets: 97000, cashAndEquivalents: 13000, nonInterestCurrentLiabilities: 20000, wacc: 8 },
+    industryStructure: { supplierPower: "düşük", buyerPower: "orta", threatOfNewEntrants: "düşük", threatOfSubstitutes: "orta", industryRivalry: "orta", profitPoolPosition: "Dominant position capturing the lion's share of the profit pool (syrup manufacturing) via brand strength." },
+    competitiveAdvantage: { primaryType: "tüketici_avantajı", subDrivers: ["Marka/Arama Maliyeti", "Ölçek Ekonomisi"], pricingPowerEvidence: "Proven ability to raise prices during inflationary periods without losing sales volume.", costAdvantageEvidence: "Asset-light model achieved by outsourcing (low-margin) bottling and focusing strictly on (high-margin) concentrate sales." },
+    interactionAndDiscipline: { capacityDiscipline: "yüksek", priceWarRisk: "düşük", managementCapitalAllocation: "etkin" },
+    sustainability: { estimatedCapYears: 20, keyVulnerability: "Consumer shift towards healthier beverages." },
+    isCustom: false, createdAt: "2026-08-22", updatedAt: "2026-08-22",
+    notes: "A textbook classic example of a 'wide moat' driven purely by Consumer Advantage (Brand)."
+  }
 ];
 
 export function getInitialPresetDossiers(isEnglish: boolean): CompanyAuditDossier[] {
-  return isEnglish ? INITIAL_PRESET_DOSSIERS_EN : INITIAL_PRESET_DOSSIERS_TR;
+  const presets = isEnglish ? INITIAL_PRESET_DOSSIERS_EN : INITIAL_PRESET_DOSSIERS_TR;
+  return JSON.parse(JSON.stringify(presets));
 }
 
 export const INITIAL_PRESET_DOSSIERS = INITIAL_PRESET_DOSSIERS_TR;
@@ -679,45 +742,70 @@ export const INITIAL_PRESET_DOSSIERS = INITIAL_PRESET_DOSSIERS_TR;
 // Calculation Helpers
 export function calculateFinancialOutputs(inputs: FinancialMetricInputs) {
   const {
-    revenue,
-    operatingIncome,
-    effectiveTaxRate,
-    totalAssets,
-    cashAndEquivalents,
-    nonInterestCurrentLiabilities,
-    wacc
+    revenue = 0,
+    operatingIncome = 0,
+    effectiveTaxRate = 0,
+    totalAssets = 0,
+    cashAndEquivalents = 0,
+    nonInterestCurrentLiabilities = 0,
+    wacc = 0
   } = inputs;
 
-  // 1. NOPAT = Operating Income * (1 - taxRate / 100)
-  const taxMultiplier = Math.max(0, 1 - (effectiveTaxRate / 100));
-  const nopat = operatingIncome * taxMultiplier;
+  const safeNum = (val: any) => {
+    const num = Number(val);
+    return isNaN(num) || !isFinite(num) ? 0 : num;
+  };
 
-  // 2. Invested Capital = (Total Assets - Cash) - NonInterestLiabilities
-  const operatingAssets = Math.max(0, totalAssets - cashAndEquivalents);
-  const investedCapital = Math.max(1, operatingAssets - nonInterestCurrentLiabilities);
+  const safeRev = Math.max(0, safeNum(revenue));
+  const safeOpInc = safeNum(operatingIncome);
+  const safeTax = safeNum(effectiveTaxRate);
+  const safeAssets = Math.max(0, safeNum(totalAssets));
+  const safeCash = Math.max(0, Math.min(safeAssets, safeNum(cashAndEquivalents)));
+  const safeLiab = safeNum(nonInterestCurrentLiabilities);
+  const safeWacc = safeNum(wacc);
 
-  // 3. ROIC = NOPAT / Invested Capital
-  const roicPercent = (nopat / investedCapital) * 100;
+  const taxMultiplier = Math.max(0, 1 - (safeTax / 100));
+  const nopat = safeOpInc * taxMultiplier;
 
-  // 4. DuPont Breakdown
-  const nopatMarginPercent = revenue > 0 ? (nopat / revenue) * 100 : 0;
-  const capitalTurnover = revenue > 0 && investedCapital > 0 ? revenue / investedCapital : 0;
+  const operatingAssets = safeAssets - safeCash;
+  const investedCapital = operatingAssets - safeLiab;
 
-  // 5. Economic Spread = ROIC - WACC
-  const spread = roicPercent - wacc;
+  let roicPercent = 0;
+  let capitalTurnover = 0;
+  let spread = 0;
+  let economicProfit = 0;
 
-  // 6. Annual Economic Profit = (ROIC - WACC) * Invested Capital
-  const economicProfit = (spread / 100) * investedCapital;
+  if (investedCapital > 0) {
+    roicPercent = (nopat / investedCapital) * 100;
+    capitalTurnover = safeRev > 0 ? safeRev / investedCapital : 0;
+    spread = roicPercent - safeWacc;
+    economicProfit = (spread / 100) * investedCapital;
+  } else {
+    // For negative or near-zero invested capital
+    if (nopat > 0) {
+      roicPercent = 999.9; // Meaningfully capped high ROIC
+      capitalTurnover = 99.9;
+      spread = roicPercent - safeWacc;
+      economicProfit = nopat; 
+    } else {
+      roicPercent = 0;
+      capitalTurnover = 0;
+      spread = 0 - safeWacc;
+      economicProfit = nopat;
+    }
+  }
+
+  const ensureSafe = (val: number) => (isNaN(val) || !isFinite(val) ? 0 : val);
 
   return {
-    nopat: Number(nopat.toFixed(1)),
-    investedCapital: Number(investedCapital.toFixed(1)),
-    roicPercent: Number(roicPercent.toFixed(1)),
-    nopatMarginPercent: Number(nopatMarginPercent.toFixed(1)),
-    capitalTurnover: Number(capitalTurnover.toFixed(2)),
-    spread: Number(spread.toFixed(1)),
-    economicProfit: Number(economicProfit.toFixed(1)),
-    isCreatingValue: spread > 0
+    nopat: Number(ensureSafe(nopat).toFixed(1)),
+    investedCapital: Number(ensureSafe(investedCapital).toFixed(1)),
+    roicPercent: Number(ensureSafe(roicPercent).toFixed(1)),
+    nopatMarginPercent: Number((safeRev > 0 ? ensureSafe((nopat / safeRev) * 100) : 0).toFixed(1)),
+    capitalTurnover: Number(ensureSafe(capitalTurnover).toFixed(2)),
+    spread: Number(ensureSafe(spread).toFixed(1)),
+    economicProfit: Number(ensureSafe(economicProfit).toFixed(1)),
+    isCreatingValue: ensureSafe(spread) > 0
   };
 }
 

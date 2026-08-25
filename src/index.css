@@ -2,11 +2,9 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Smooth color transitions and modern rendering */
+/* Smooth modern rendering */
 *, ::before, ::after {
-  transition-property: background-color, border-color, color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 500ms;
 }
 
 html {
@@ -14,6 +12,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  font-display: swap;
 }
 
 /* Custom modern scrollbar styling */
@@ -83,4 +82,16 @@ input[type="range"]:active::-webkit-slider-thumb {
 
 .animate-spin-slow {
   animation: spin-slow 8s linear infinite;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
 }

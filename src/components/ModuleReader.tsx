@@ -255,27 +255,27 @@ export const ModuleReader: React.FC<ModuleReaderProps> = ({
   const renderWidget = (widgetId?: string) => {
     switch (widgetId) {
       case "roic-wacc":
-        return <RoicWaccSim />;
+        return <RoicWaccSim isEnglish={isEnglish} />;
       case "dickinson":
-        return <DickinsonLifecycleSim />;
+        return <DickinsonLifecycleSim isEnglish={isEnglish} />;
       case "value-stick":
-        return <ValueStickSim />;
+        return <ValueStickSim isEnglish={isEnglish} />;
       case "dupont":
-        return <DuPontSim />;
+        return <DuPontSim isEnglish={isEnglish} />;
       case "profit-pool":
-        return <ProfitPoolSim />;
+        return <ProfitPoolSim isEnglish={isEnglish} />;
       case "footnote-detective":
-        return <FootnoteDetectiveLab />;
+        return <FootnoteDetectiveLab isEnglish={isEnglish} />;
       case "game-theory":
-        return <PrisonersDilemmaSim />;
+        return <PrisonersDilemmaSim isEnglish={isEnglish} />;
       case "blotto":
-        return <ColonelBlottoSim />;
+        return <ColonelBlottoSim isEnglish={isEnglish} />;
       case "ccc":
-        return <CashConversionSim />;
+        return <CashConversionSim isEnglish={isEnglish} />;
       case "reverse-dcf":
-        return <ReverseDCFSim />;
+        return <ReverseDCFSim isEnglish={isEnglish} />;
       case "checklist":
-        return <MoatChecklistSim />;
+        return <MoatChecklistSim isEnglish={isEnglish} />;
       default:
         return null;
     }

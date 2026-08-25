@@ -66,13 +66,14 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          const valid = parsed.filter(item => item && item.id && item.companyName && item.financials);
+          if (valid.length > 0) return valid;
         }
       } catch (e) {
         console.error("Dossiers parse error:", e);
       }
     }
-    return INITIAL_PRESET_DOSSIERS;
+    return getInitialPresetDossiers(isEnglish);
   });
 
   const [selectedId, setSelectedId] = useState<string>(() => {
@@ -80,7 +81,8 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
     if (lastActive) {
       return lastActive;
     }
-    return INITIAL_PRESET_DOSSIERS[0].id;
+    const presets = getInitialPresetDossiers(isEnglish);
+    return presets[0].id;
   });
 
   const [viewMode, setViewMode] = useState<"studio" | "workspaces">("workspaces");
@@ -90,6 +92,20 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
   const [lastSavedTime, setLastSavedTime] = useState<string>(() => new Date().toLocaleTimeString(isEnglish ? "en-US" : "tr-TR", { hour: "2-digit", minute: "2-digit" }));
   const [saveFlash, setSaveFlash] = useState(false);
 
+  // Auto-heal: Ensure any new preset dossiers added to the system are available to the user
+  useEffect(() => {
+    setDossiers((prev) => {
+      const presets = getInitialPresetDossiers(isEnglish);
+      const existingIds = new Set(prev.map(d => d.id));
+      const missingPresets = presets.filter(p => !existingIds.has(p.id));
+      
+      if (missingPresets.length > 0) {
+        return [...prev, ...missingPresets];
+      }
+      return prev;
+    });
+  }, []);
+
   // Sync to local storage whenever dossiers change
   useEffect(() => {
     localStorage.setItem("moat_dossiers", JSON.stringify(dossiers));
@@ -97,12 +113,47 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
     setLastSavedTime(now);
   }, [dossiers, isEnglish]);
 
+  // Translate preset dossiers when language changes
+  useEffect(() => {
+    setDossiers((prev) => {
+      const presets = getInitialPresetDossiers(isEnglish);
+      const presetMap = new Map(presets.map((p) => [p.id, p]));
+      
+      return prev.map((d) => {
+        if (!d.isCustom && presetMap.has(d.id)) {
+          const localized = presetMap.get(d.id)!;
+          return {
+            ...d,
+            companyName: localized.companyName,
+            industry: localized.industry,
+            description: localized.description,
+            notes: d.notes === "" || d.notes === "Premier modern example of software-backed high switching costs combined with ecosystem network effects." || d.notes.includes("Michael Mauboussin") ? localized.notes : d.notes,
+            industryStructure: {
+              ...d.industryStructure,
+              profitPoolPosition: localized.industryStructure.profitPoolPosition
+            },
+            competitiveAdvantage: {
+              ...d.competitiveAdvantage,
+              pricingPowerEvidence: localized.competitiveAdvantage.pricingPowerEvidence,
+              costAdvantageEvidence: localized.competitiveAdvantage.costAdvantageEvidence
+            },
+            sustainability: {
+              ...d.sustainability,
+              keyVulnerability: localized.sustainability.keyVulnerability
+            }
+          };
+        }
+        return d;
+      });
+    });
+  }, [isEnglish]);
+
   // Sync selectedId to local storage
   useEffect(() => {
     localStorage.setItem("moat_last_selected_id", selectedId);
   }, [selectedId]);
 
-  const currentDossier = dossiers.find((d) => d.id === selectedId) || dossiers[0] || INITIAL_PRESET_DOSSIERS[0];
+  const currentDossier = dossiers.find((d) => d.id === selectedId) || dossiers[0] || getInitialPresetDossiers(isEnglish)[0];
 
   // Whenever selected dossier changes, restore its lastStep
   const handleSelectDossier = (id: string, step?: 1 | 2 | 3 | 4 | 5) => {
@@ -222,7 +273,7 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
 
   const handleDeleteDossier = (id: string) => {
     if (dossiers.length <= 1) {
-      alert(isEnglish ? "At least one dossier must remain in your workspace." : "En az 1 dosya listenizde bulunmalıdır.");
+      console.warn(isEnglish ? "At least one dossier must remain in your workspace." : "En az 1 dosya listenizde bulunmalıdır.");
       return;
     }
     const filtered = dossiers.filter((d) => d.id !== id);
@@ -232,13 +283,24 @@ export function CompanyAuditLab({ onOpenAICoachWithPrompt, onOpenGlossary }: Com
   };
 
   const handleImportDossiers = (imported: CompanyAuditDossier[]) => {
+    if (!imported || imported.length === 0) return;
+    
+    // Validate required fields roughly before importing
+    const validImports = imported.filter(item => 
+      item && item.id && item.companyName && item.financials && 
+      typeof item.financials.revenue === 'number' &&
+      typeof item.financials.operatingIncome === 'number'
+    );
+    
+    if (validImports.length === 0) return;
+
     const existingIds = new Set(dossiers.map((d) => d.id));
-    const newUnique = imported.filter((item) => !existingIds.has(item.id));
+    const newUnique = validImports.filter((item) => !existingIds.has(item.id));
     if (newUnique.length > 0) {
       setDossiers((prev) => [...newUnique, ...prev]);
       setSelectedId(newUnique[0].id);
     } else {
-      setSelectedId(imported[0].id);
+      setSelectedId(validImports[0].id);
     }
   };
 
@@ -316,8 +378,8 @@ Key Vulnerability: ${currentDossier.sustainability.keyVulnerability}
 What are the critical moat risks and competitive longevity for this business?`
       : `Michael Mauboussin'in "Measuring the Moat" metodolojisine göre bu şirketi değerlendirir misin?
 
-Şirket: ${currentDossier.companyName} (${currentDossier.ticker})
-Sektör: ${currentDossier.industry}
+${isEnglish ? "Company" : "Şirket"}: ${currentDossier.companyName} (${currentDossier.ticker})
+${isEnglish ? "Industry" : "Sektör"}: ${currentDossier.industry}
 ROIC: %${finCalc.roicPercent} (WACC: %${currentDossier.financials.wacc}, Fark: %${finCalc.spread})
 NOPAT Marjı: %${finCalc.nopatMarginPercent}, Sermaye Devir Hızı: ${finCalc.capitalTurnover}x
 Hendek Türü: ${currentDossier.competitiveAdvantage.primaryType}
@@ -498,36 +560,34 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
             </div>
 
             {/* Company Quick-Switch Horizontal Bar */}
-            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4 overflow-x-auto pb-2 scrollbar-thin">
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1 shrink-0">
-                  {isEnglish ? "Switch Dossier:" : "Dosya Değiştir:"}
-                </span>
-                {dossiers.map((doss) => {
-                  const isSelected = doss.id === currentDossier.id;
-                  const isMauboussin = doss.id === MAUBOUSSIN_GUIDED_TEMPLATE.id;
-                  return (
-                    <button
-                      key={doss.id}
-                      onClick={() => handleSelectDossier(doss.id)}
-                      className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
-                        isSelected
-                          ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
-                          : "bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500"
-                      }`}
-                    >
-                      {isMauboussin && <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
-                      <span>{doss.companyName}</span>
-                      <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${isSelected ? "bg-indigo-700 text-indigo-100" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"}`}>
-                        {doss.ticker}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-start gap-2 flex-wrap pb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mr-1 shrink-0">
+                {isEnglish ? "Switch Dossier:" : "Dosya Değiştir:"}
+              </span>
+              {dossiers.map((doss) => {
+                const isSelected = doss.id === currentDossier.id;
+                const isMauboussin = doss.id === MAUBOUSSIN_GUIDED_TEMPLATE.id;
+                return (
+                  <button
+                    key={doss.id}
+                    onClick={() => handleSelectDossier(doss.id)}
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all flex items-center gap-2 cursor-pointer shrink-0 ${
+                      isSelected
+                        ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
+                        : "bg-slate-50 dark:bg-slate-800/70 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500"
+                    }`}
+                  >
+                    {isMauboussin && <Award className="w-3.5 h-3.5 text-amber-400 shrink-0" />}
+                    <span>{doss.companyName}</span>
+                    <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${isSelected ? "bg-indigo-700 text-indigo-100" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"}`}>
+                      {doss.ticker}
+                    </span>
+                  </button>
+                );
+              })}
 
               {/* Duplicate & Copy Actions for active dossier */}
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 shrink-0 ml-auto sm:ml-2">
                 <button
                   onClick={() => handleDuplicateDossier(currentDossier)}
                   className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
@@ -573,7 +633,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
             {/* Left Column: Interactive 5-Step Process (8 cols) */}
             <div className="lg:col-span-8 space-y-6">
               {/* Step Navigation Tabs */}
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-2 flex items-center justify-between gap-1 sm:gap-2 shadow-xs overflow-x-auto scrollbar-thin">
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-2 flex items-center justify-start gap-1 sm:gap-2 shadow-xs flex-wrap">
                 {[
                   { step: 1, title: isEnglish ? "1. Financial X-Ray (ROIC)" : "1. Finansal Röntgen (ROIC)", icon: Calculator },
                   { step: 2, title: isEnglish ? "2. Industry & Profit Pool" : "2. Sektör & Kâr Havuzu", icon: Layers },
@@ -1360,13 +1420,7 @@ Bu şirketin hendek genişliği, sermaye tahsisi ve uzun vadeli rekabet riski ha
                     {isEnglish ? "Diagnosed Moat Width" : "Teşhis Edilen Hendek Genişliği (Moat Width)"}
                   </div>
                   <div className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mt-1 flex items-center gap-2">
-                    {isEnglish
-                      ? moatScore.scorePercent >= 75
-                        ? "Wide Moat (Geniş Hendek)"
-                        : moatScore.scorePercent >= 45
-                        ? "Narrow Moat (Dar Hendek)"
-                        : "No Moat (Hendeksiz)"
-                      : moatScore.diagnosedMoat}
+                    {translateMoatWidth(moatScore.diagnosedMoat, isEnglish)}
                   </div>
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {moatScore.summaryTags.map((tag, idx) => (

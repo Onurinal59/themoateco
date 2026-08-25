@@ -168,7 +168,7 @@ export const SpacedRepetitionView: React.FC<SpacedRepetitionViewProps> = ({
       </div>
 
       {/* Module Filter Tabs */}
-      <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar border-b border-slate-200/80 dark:border-slate-800/80 py-1">
+      <div className="flex flex-wrap gap-2 pb-3 border-b border-slate-200/80 dark:border-slate-800/80 py-1">
         {filters.map((f) => (
           <motion.button
             key={f.id}

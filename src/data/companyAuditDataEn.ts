@@ -326,6 +326,37 @@ export const INITIAL_PRESET_DOSSIERS_EN: CompanyAuditDossier[] = [
     notes: "CUDA software lock-in + rapid architectural pacing generates astronomical 100%+ ROIC during the AI infrastructure boom.",
     updatedAt: "2026-08-23"
   }
+,
+
+  {
+    id: "thy-dossier",
+    companyName: "Turkish Airlines",
+    ticker: "THYAO (BIST)",
+    industry: "Airlines & Transportation",
+    description: "Global flag carrier standing out with its extensive flight network in the highly capital-intensive, cyclical airline industry.",
+    financials: { revenue: 550000, operatingIncome: 65000, effectiveTaxRate: 20, totalAssets: 1100000, cashAndEquivalents: 150000, nonInterestCurrentLiabilities: 200000, wacc: 30 },
+    industryStructure: { supplierPower: "yüksek", buyerPower: "orta", threatOfNewEntrants: "düşük", threatOfSubstitutes: "orta", industryRivalry: "yüksek", profitPoolPosition: "Cyclical profitability ring due to intense competition and high fixed costs." },
+    competitiveAdvantage: { primaryType: "ölçek_avantajı", subDrivers: ["Ağ Etkisi", "Ölçek Ekonomisi"], pricingPowerEvidence: "Limited pricing power due to intense rivalry and elastic (price-sensitive) demand.", costAdvantageEvidence: "Extensive network spreads fixed costs, but fuel and aircraft financing remain exogenous." },
+    interactionAndDiscipline: { capacityDiscipline: "orta", priceWarRisk: "yüksek", managementCapitalAllocation: "yüksek_riskli" },
+    sustainability: { estimatedCapYears: 5, keyVulnerability: "Fuel price shocks, geopolitical risks, and macroeconomic crises." },
+    isCustom: false, createdAt: "2026-08-22", updatedAt: "2026-08-22",
+    notes: "Airlines are historically known as 'value destroyers' or very narrow moat businesses. Competition is brutal and fixed costs are extremely high."
+  },
+
+  {
+    id: "cocacola-dossier",
+    companyName: "Coca-Cola",
+    ticker: "KO (NYSE)",
+    industry: "Beverages (FMCG)",
+    description: "Beverage giant with one of the world's most powerful brand values, operating a highly profitable syrup and bottling network model.",
+    financials: { revenue: 45000, operatingIncome: 13500, effectiveTaxRate: 21, totalAssets: 97000, cashAndEquivalents: 13000, nonInterestCurrentLiabilities: 20000, wacc: 8 },
+    industryStructure: { supplierPower: "düşük", buyerPower: "orta", threatOfNewEntrants: "düşük", threatOfSubstitutes: "orta", industryRivalry: "orta", profitPoolPosition: "Dominant position capturing the lion's share of the profit pool (syrup manufacturing) via brand strength." },
+    competitiveAdvantage: { primaryType: "tüketici_avantajı", subDrivers: ["Marka/Arama Maliyeti", "Ölçek Ekonomisi"], pricingPowerEvidence: "Proven ability to raise prices during inflationary periods without losing sales volume.", costAdvantageEvidence: "Asset-light model achieved by outsourcing (low-margin) bottling and focusing strictly on (high-margin) concentrate sales." },
+    interactionAndDiscipline: { capacityDiscipline: "yüksek", priceWarRisk: "düşük", managementCapitalAllocation: "etkin" },
+    sustainability: { estimatedCapYears: 20, keyVulnerability: "Consumer shift towards healthier beverages." },
+    isCustom: false, createdAt: "2026-08-22", updatedAt: "2026-08-22",
+    notes: "A textbook classic example of a 'wide moat' driven purely by Consumer Advantage (Brand)."
+  }
 ];
 
 export const BALANCE_SHEET_GUIDE_EN = [

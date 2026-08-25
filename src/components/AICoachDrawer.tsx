@@ -182,8 +182,8 @@ Aklına takılan kavramları sorabilir veya analiz ettiğin şirketin hendek kan
               </button>
             </div>
 
-            {/* Preset Fast Prompt Chips - Modern Pill design with no scrollbar */}
-            <div className="p-2.5 bg-slate-50/50 dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800/80 flex gap-1.5 overflow-x-auto no-scrollbar">
+            {/* Preset Fast Prompt Chips - Modern Pill design with wrap */}
+            <div className="p-2.5 bg-slate-50/50 dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800/80 flex flex-wrap gap-2">
               {presetQuestions.map((q, idx) => (
                 <button
                   key={idx}

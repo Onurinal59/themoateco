@@ -6,15 +6,14 @@ import { GLOSSARY_TERMS } from "../data/glossaryData";
 import { GLOSSARY_TERMS_EN } from "../data/glossaryDataEn";
 import { FORMULA_GUIDES_DATA } from "../data/formulaGuidesData";
 import { FORMULA_GUIDES_DATA_EN } from "../data/formulaGuidesDataEn";
-import { CHECKLIST_ITEMS } from "../data/checklistData";
-import { CHECKLIST_ITEMS_EN } from "../data/checklistDataEn";
-import { INITIAL_FLASHCARDS } from "../data/flashcardsData";
-import { INITIAL_FLASHCARDS_EN } from "../data/flashcardsDataEn";
+import { CHECKLIST_ITEMS, CHECKLIST_ITEMS_EN } from "../data/checklistData";
+import { INITIAL_FLASHCARDS, INITIAL_FLASHCARDS_EN } from "../data/flashcardsData";
 import {
   INITIAL_PRESET_DOSSIERS,
   MAUBOUSSIN_GUIDED_TEMPLATE,
   STEP_METHODOLOGY_GUIDES,
   BALANCE_SHEET_GUIDE,
+  getInitialPresetDossiers,
 } from "../data/companyAuditData";
 import {
   INITIAL_PRESET_DOSSIERS_EN,
@@ -442,7 +441,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const getInitialDossiers = (): CompanyAuditDossier[] => {
-    return language === "en" ? INITIAL_PRESET_DOSSIERS_EN : INITIAL_PRESET_DOSSIERS;
+    return getInitialPresetDossiers(language === "en");
   };
 
   const getBalanceSheetGuide = (): any[] => {

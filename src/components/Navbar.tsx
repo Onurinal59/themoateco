@@ -77,7 +77,7 @@ interface NavbarProps {
   onOpenGuide?: () => void;
   onOpenFormulas?: () => void;
   isDarkMode: boolean;
-  onToggleDarkMode: () => void;
+  onToggleDarkMode: (e?: React.MouseEvent) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -478,6 +478,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={onOpenAICoach}
                 className="flex items-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-bold shadow-sm shadow-indigo-500/25 transition-all cursor-pointer ring-1 ring-white/20 whitespace-nowrap shrink-0"
                 title={isEnglish ? "Ask Socratic AI Coach" : "Sokratik AI Koçuna Soru Sor"}
+                aria-label={isEnglish ? "Ask Socratic AI Coach" : "Sokratik AI Koçuna Soru Sor"}
               >
                 <Sparkles className="w-3.5 h-3.5 text-indigo-200 shrink-0" />
                 <span className="hidden sm:inline">{isEnglish ? "AI Coach" : "AI Koçu"}</span>

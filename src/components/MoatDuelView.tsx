@@ -114,13 +114,13 @@ ${
 }`
       : `⚔️ MAUBOUSSIN HENDEK DÜELLOSU RAPORU:
 ------------------------------------------
-Şirket 1: ${comp1.companyName} (${comp1.ticker})
+${isEnglish ? "Company 1" : "Şirket 1"}: ${comp1.companyName} (${comp1.ticker})
 - ROIC: %${fin1.roicPercent} | WACC: %${comp1.financials.wacc} | Spread: %${fin1.spread}
 - NOPAT Marjı: %${fin1.nopatMarginPercent} | Sermaye Devir Hızı: ${fin1.capitalTurnover}x
 - Hendek Genişliği: ${score1.diagnosedMoat} (Skor: ${score1.scorePercent}/100)
 - Tahmini CAP: ${comp1.sustainability.estimatedCapYears} Yıl
 
-Şirket 2: ${comp2.companyName} (${comp2.ticker})
+${isEnglish ? "Company 2" : "Şirket 2"}: ${comp2.companyName} (${comp2.ticker})
 - ROIC: %${fin2.roicPercent} | WACC: %${comp2.financials.wacc} | Spread: %${fin2.spread}
 - NOPAT Marjı: %${fin2.nopatMarginPercent} | Sermaye Devir Hızı: ${fin2.capitalTurnover}x
 - Hendek Genişliği: ${score2.diagnosedMoat} (Skor: ${score2.scorePercent}/100)

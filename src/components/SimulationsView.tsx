@@ -166,23 +166,24 @@ export const SimulationsView: React.FC<SimulationsViewProps> = ({
           transition={{ duration: 0.2, ease: "easeOut" }}
           className="w-full"
         >
-          {activeSim === "roic-wacc" && <RoicWaccSim />}
-          {activeSim === "dickinson" && <DickinsonLifecycleSim />}
-          {activeSim === "value-stick" && <ValueStickSim />}
-          {activeSim === "profit-pool" && <ProfitPoolSim />}
-          {activeSim === "footnote-detective" && <FootnoteDetectiveLab />}
-          {activeSim === "game-theory" && <PrisonersDilemmaSim />}
-          {activeSim === "blotto" && <ColonelBlottoSim />}
-          {activeSim === "dupont" && <DuPontSim />}
-          {activeSim === "ccc" && <CashConversionSim />}
+          {activeSim === "roic-wacc" && <RoicWaccSim isEnglish={isEnglish} />}
+          {activeSim === "dickinson" && <DickinsonLifecycleSim isEnglish={isEnglish} />}
+          {activeSim === "value-stick" && <ValueStickSim isEnglish={isEnglish} />}
+          {activeSim === "profit-pool" && <ProfitPoolSim isEnglish={isEnglish} />}
+          {activeSim === "footnote-detective" && <FootnoteDetectiveLab isEnglish={isEnglish} />}
+          {activeSim === "game-theory" && <PrisonersDilemmaSim isEnglish={isEnglish} />}
+          {activeSim === "blotto" && <ColonelBlottoSim isEnglish={isEnglish} />}
+          {activeSim === "dupont" && <DuPontSim isEnglish={isEnglish} />}
+          {activeSim === "ccc" && <CashConversionSim isEnglish={isEnglish} />}
           {activeSim === "reverse-dcf" && (
             <ReverseDCFSim
+              isEnglish={isEnglish}
               onAskAICoach={(prompt) => {
                 if (onOpenAICoachWithPrompt) onOpenAICoachWithPrompt(prompt);
               }}
             />
           )}
-          {activeSim === "checklist" && <MoatChecklistSim />}
+          {activeSim === "checklist" && <MoatChecklistSim isEnglish={isEnglish} />}
         </motion.div>
       </AnimatePresence>
     </motion.div>

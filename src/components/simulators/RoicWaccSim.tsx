@@ -571,31 +571,32 @@ export const RoicWaccSim: React.FC = () => {
                             const d = payload[0].payload;
                             return (
                               <div className="p-3 rounded-xl bg-slate-900/95 text-white border border-slate-700 text-xs space-y-1 backdrop-blur-md">
-                                <div className="font-bold text-amber-300">{d.year} {isEnglish ? "Projection" : "Projeksiyonu"}</div>
-                                <div className="font-mono">ROIC: %{d.roic} | WACC: %{d.wacc}</div>
-                                <div className="font-mono font-bold text-emerald-400">
-                                  {isEnglish ? "Annual Value" : "Yıllık Değer"}: ${d.wealth}M
-                                </div>
+
+                              <div className="font-bold text-amber-300">{d.year} {isEnglish ? "Projection" : "Projeksiyonu"}</div>
+                              <div className="font-mono">ROIC: %{d.roic} | WACC: %{d.wacc}</div>
+                              <div className="font-mono font-bold text-emerald-400">
+                                {isEnglish ? "Annual Value" : "Yıllık Değer"}: $${d.wealth}M
                               </div>
-                            );
-                          }
-                          return null;
-                        }}
-                      />
-                      <ReferenceLine y={wacc} stroke="#64748B" strokeDasharray="4 4" label={{ value: "WACC", position: "right", fill: "#64748B", fontSize: 10 }} />
-                      <Area
-                        type="monotone"
-                        dataKey="roic"
-                        stroke={isValueCreating ? "#10B981" : "#F43F5E"}
-                        strokeWidth={2.5}
-                        fillOpacity={1}
-                        fill="url(#roicGradient)"
-                        animationDuration={500}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <ReferenceLine y={wacc} stroke="#64748B" strokeDasharray="4 4" label={{ value: "WACC", position: "right", fill: "#64748B", fontSize: 10 }} />
+                    <Area
+                      type="monotone"
+                      dataKey="roic"
+                      stroke={isValueCreating ? "#10B981" : "#F43F5E"}
+                      strokeWidth={2.5}
+                      fillOpacity={1}
+                      fill="url(#roicGradient)"
+                      animationDuration={500}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
+            </div>
             )}
           </div>
 
@@ -608,8 +609,8 @@ export const RoicWaccSim: React.FC = () => {
                 : "bg-rose-50/90 dark:bg-rose-950/40 border-rose-300/80 dark:border-rose-700/60 shadow-lg shadow-rose-500/15 ring-1 ring-rose-400/30"
             }`}
           >
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3.5">
+            <div className="flex flex-col gap-4 w-full">
+              <div className="flex items-center gap-3.5 w-full">
                 <div
                   className={`w-14 h-14 rounded-2xl flex flex-col items-center justify-center font-mono font-black text-lg shrink-0 shadow-md ${
                     isValueCreating
@@ -620,11 +621,10 @@ export const RoicWaccSim: React.FC = () => {
                   <span className="text-[10px] font-sans font-bold opacity-80 leading-none">ROIC</span>
                   <span>%{roic.toFixed(1)}</span>
                 </div>
-
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-1.5">
+                <div className="space-y-1 flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
                     <span
-                      className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                      className={`text-[10px] sm:text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full whitespace-normal text-left leading-tight ${
                         isValueCreating
                           ? "bg-emerald-200/70 dark:bg-emerald-900/60 text-emerald-900 dark:text-emerald-200"
                           : "bg-rose-200/70 dark:bg-rose-900/60 text-rose-900 dark:text-rose-200"
@@ -635,8 +635,7 @@ export const RoicWaccSim: React.FC = () => {
                         : isEnglish ? "VALUE DESTROYER (Capital Drain)" : "DEĞER YOK EDİCİ (Sermaye Tüketimi)"}
                     </span>
                   </div>
-
-                  <h4 className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-slate-100">
+                  <h4 className="text-sm sm:text-base md:text-lg font-black tracking-tight text-slate-900 dark:text-slate-100 break-words leading-snug">
                     {isValueCreating
                       ? isEnglish
                         ? `+${spread.toFixed(2)}% Spread (+$${Math.round(economicProfit).toLocaleString()}M / Year)`
@@ -649,12 +648,12 @@ export const RoicWaccSim: React.FC = () => {
               </div>
 
               {/* Economic Formula Breakdown Tag */}
-              <div className="text-left sm:text-right font-mono text-[11px] text-slate-600 dark:text-slate-300 bg-white/60 dark:bg-slate-900/60 px-3 py-2 rounded-xl border border-slate-200/60 dark:border-slate-700/60 shrink-0">
+              <div className="text-left font-mono text-[11px] text-slate-600 dark:text-slate-300 bg-white/60 dark:bg-slate-900/60 px-3 py-2 rounded-xl border border-slate-200/60 dark:border-slate-700/60 w-full">
                 <div className="font-bold text-slate-900 dark:text-slate-100">
                   Spread = %{roic.toFixed(1)} - %{wacc.toFixed(1)} = {spread >= 0 ? `+${spread.toFixed(1)}%` : `${spread.toFixed(1)}%`}
                 </div>
                 <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
-                  Ekonomik Kâr = ${investedCapital.toLocaleString()}M × {spread.toFixed(1)}%
+                  {isEnglish ? "Economic Profit" : "Ekonomik Kâr"} = ${investedCapital.toLocaleString()}M × {spread.toFixed(1)}%
                 </div>
               </div>
             </div>
