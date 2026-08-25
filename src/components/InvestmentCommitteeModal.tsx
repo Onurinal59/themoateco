@@ -14,7 +14,7 @@ import {
   RotateCcw
 } from "lucide-react";
 import { CompanyAuditDossier } from "../types";
-import { calculateFinancialOutputs, computeMoatScore } from "../data/companyAuditData";
+import { calculateFinancialOutputs, computeMoatScore, translateMoatDriver } from "../data/companyAuditData";
 import { useLanguage } from "../context/LanguageContext";
 
 interface InvestmentCommitteeModalProps {
@@ -117,12 +117,16 @@ export const InvestmentCommitteeModal: React.FC<InvestmentCommitteeModalProps> =
         ? "ŞARTLI ONAY (Dar Hendek)"
         : "EK İNCELEME GEREKLİ";
 
+      const formattedDrivers = dossier.competitiveAdvantage.subDrivers
+        .map((d) => translateMoatDriver(d, isEnglish))
+        .join(", ");
+
       const feedback = isEnglish
         ? hasLength
-          ? `The Investment Committee reviewed your defense. The arguments defending ${dossier.competitiveAdvantage.subDrivers.join(", ")} are supported by historical economic spread (ROIC ${fin.roicPercent}% vs WACC ${dossier.financials.wacc}%). Thesis approved.`
+          ? `The Investment Committee reviewed your defense. The arguments defending ${formattedDrivers || "competitive moats"} are supported by historical economic spread (ROIC ${fin.roicPercent}% vs WACC ${dossier.financials.wacc}%). Thesis approved.`
           : `The Committee found the defense arguments too brief and generic. Please substantiate switching costs and pricing power with quantitative evidence.`
         : hasLength
-        ? `Yatırım Komitesi analizinizi inceledi. Şirketin ${dossier.competitiveAdvantage.subDrivers.join(", ")} savunmaları makul bulundu. ROIC (%${fin.roicPercent}) ve WACC (%${dossier.financials.wacc}) yayılımı neticesinde tez kabul edildi.`
+        ? `Yatırım Komitesi analizinizi inceledi. Şirketin ${formattedDrivers || "hendek"} savunmaları makul bulundu. ROIC (%${fin.roicPercent}) ve WACC (%${dossier.financials.wacc}) yayılımı neticesinde tez kabul edildi.`
         : `Komite, verilen savunma cevaplarını çok kısa ve yüzeysel buldu. Lütfen geçiş maliyeti ve fiyatlama gücü kanıtlarını daha somut örneklerle destekleyin.`;
 
       // simulate evaluation brief delay

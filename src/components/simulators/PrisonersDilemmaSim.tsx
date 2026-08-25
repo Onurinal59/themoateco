@@ -155,7 +155,7 @@ export const PrisonersDilemmaSim: React.FC = () => {
                 {isEnglish ? "Win-Win: $300M / $300M" : "Kazan-Kazan: 300M$ / 300M$"}
               </td>
               <td className="p-3 border border-slate-200 dark:border-slate-700 bg-rose-50/50 dark:bg-rose-950/30 text-slate-700 dark:text-slate-300">
-                {isEnglish ? "Siz: $120M / Rakip: $320M" : "Siz: 120M$ / Rakip: 320M$"}
+                {isEnglish ? "You: $120M / Rival: $320M" : "Siz: 120M$ / Rakip: 320M$"}
               </td>
             </tr>
             <tr>
@@ -163,7 +163,7 @@ export const PrisonersDilemmaSim: React.FC = () => {
                 {isEnglish ? "You: Slash Price ($200)" : "Siz: Fiyat Kır ($200)"}
               </td>
               <td className="p-3 border border-slate-200 dark:border-slate-700 bg-amber-50/50 dark:bg-amber-950/30 text-slate-700 dark:text-slate-300">
-                {isEnglish ? "Siz: $320M / Rakip: $120M" : "Siz: 320M$ / Rakip: 120M$"}
+                {isEnglish ? "You: $320M / Rival: $120M" : "Siz: 320M$ / Rakip: 120M$"}
               </td>
               <td className="p-3 border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 font-bold text-rose-600 dark:text-rose-400">
                 {isEnglish ? "Nash Trap: $200M / $200M" : "Nash Tuzağı: 200M$ / 200M$"}
